@@ -20,7 +20,6 @@
     #define XPLUGIN_API
 #endif
 
-// Project version
 #define XPLUGIN_VERSION_MAJOR 0
 #define XPLUGIN_VERSION_MINOR 0
 #define XPLUGIN_VERSION_PATCH 0
