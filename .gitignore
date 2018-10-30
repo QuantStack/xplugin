@@ -16,10 +16,6 @@
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
-
 # Compiled Static libraries
 *.lai
 *.la
@@ -30,3 +26,28 @@
 *.exe
 *.out
 *.app
+
+# Vim tmp files
+*.swp
+
+# Build directory
+build/
+
+# Test build artefacts
+test/test_xtensor
+test/CMakeCache.txt
+test/Makefile
+test/CMakeFiles/
+test/cmake_install.cmake
+
+# Documentation build artefacts
+docs/CMakeCache.txt
+docs/xml/
+docs/build/
+docs/*.tmp
+
+# Jupyter artefacts
+.ipynb_checkpoints/
+
+# Generated files
+*.pc
