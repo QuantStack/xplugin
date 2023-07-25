@@ -6,7 +6,7 @@
 *                                                                          *
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
-
+#pragma once
 #ifndef XPLUGIN_CONFIG_HPP
 #define XPLUGIN_CONFIG_HPP
 

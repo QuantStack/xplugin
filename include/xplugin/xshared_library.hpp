@@ -6,7 +6,7 @@
 *                                                                          *
 * The full license is in the file LICENSE, distributed with this software. *
 ****************************************************************************/
-
+#pragma once
 #include <string>
 
 #include "xplugin_config.hpp"
@@ -38,13 +38,13 @@ namespace xp
 
     private:
 
-        virtual void* find_symbol(const std::string& name) = 0;
+        virtual void* find_symbol_impl(const std::string& name) = 0;
     };
 
     template <class T>
     inline T xshared_library::find_symbol(const std::string& name)
     {
-        return reinterpret_cast<T>(name);
+        return reinterpret_cast<T>(this->find_symbol_impl(name));
     }
 
     inline void xshared_library::close(xshared_library* library)

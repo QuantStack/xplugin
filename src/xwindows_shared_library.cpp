@@ -25,7 +25,7 @@ namespace xp
 
     private:
 
-        void* find_symbol(const std::string& name);
+        void* find_symbol_impl(const std::string& name);
 
         HINSTANCE m_handle;
     };
@@ -40,7 +40,7 @@ namespace xp
         FreeLibrary(m_handle);
     }
 
-    void* xindows_shared_library::find_symbol(const std::string& name)
+    void* xindows_shared_library::find_symbol_impl(const std::string& name)
     {
         void* sym = GetProcAddress(name.c_str());
         return sym;

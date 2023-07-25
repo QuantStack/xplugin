@@ -23,7 +23,7 @@ namespace xp
 
     private:
 
-        void* find_symbol(const std::string& name);
+        void* find_symbol_impl(const std::string& name);
 
         void* m_handle;
     };
@@ -39,7 +39,7 @@ namespace xp
         m_handle = nullptr;
     }
 
-    void* xunix_shared_library::find_symbol(const std::string& name)
+    void* xunix_shared_library::find_symbol_impl(const std::string& name)
     {
         void* sym = dlsym(m_handle, name.c_str());
         return sym;
