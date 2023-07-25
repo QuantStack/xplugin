@@ -1,5 +1,6 @@
 #include <accumulator_base.hpp>
 
+#include <xplugin/xfactory.hpp>
 
 class AccumulatorMin : public acc::AccumulatorBase
 {
@@ -8,9 +9,9 @@ class AccumulatorMin : public acc::AccumulatorBase
         AccumulatorMin() = default;
         virtual ~AccumulatorMin() = default;
 
-        virtual std::vector<double> accumulate(const std::vector<double>& data) override
+        virtual double accumulate(const std::vector<double>& data) override
         {
-            return std::vector<double>(1,*std::min_element(data.begin(), data.end()));
+            return *std::min_element(data.begin(), data.end());
         }
         virtual std::string name() const override{
             return "min";

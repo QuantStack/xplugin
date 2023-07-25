@@ -1,5 +1,6 @@
 #include <accumulator_base.hpp>
 
+#include <xplugin/xfactory.hpp>
 
 class AccumulatorMax : public acc::AccumulatorBase
 {
@@ -8,9 +9,9 @@ class AccumulatorMax : public acc::AccumulatorBase
         AccumulatorMax() = default;
         virtual ~AccumulatorMax() = default;
 
-        virtual std::vector<double> accumulate(const std::vector<double>& data) override
+        virtual double accumulate(const std::vector<double>& data) override
         {
-            return std::vector<double>(1,*std::max_element(data.begin(), data.end()));
+            return *std::max_element(data.begin(), data.end());
         }
         virtual std::string name() const override{
             return "max";
@@ -18,7 +19,7 @@ class AccumulatorMax : public acc::AccumulatorBase
 };
 
 class AccumulatorMaxFactory : public xp::xfactory_base<acc::AccumulatorBase>
-{
+{ 
     public:
         AccumulatorMaxFactory() = default;
         std::unique_ptr<instance_type>  create() override {

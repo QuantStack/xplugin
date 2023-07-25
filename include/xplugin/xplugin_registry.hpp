@@ -48,10 +48,18 @@ namespace xp
                 }
             }
 
+            std::vector<std::string> plugin_names(){
+                std::vector<std::string> res;
+                for (const auto& [key, value] : m_factories){
+                    res.push_back(key);
+                }
+                return res;
+            }
+
             std::unique_ptr<FACTORY> create_factory(const std::string & name){
                 auto find_res = m_factories.find(name);
                 if (find_res == m_factories.end()){
-                    throw std::runtime_error("Plugin not found");
+                    throw std::runtime_error("Could not find plugin factory for " + name);
                 }
 
                 // check if already open
