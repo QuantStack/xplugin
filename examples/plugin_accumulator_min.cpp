@@ -28,7 +28,7 @@ class AccumulatorMinFactory : public xp::xfactory_base<acc::AccumulatorBase>
         }
 };
 
-// extern c function to factory
+// extern c function to factory st. we get a demangled name
 extern "C" xp::xfactory_base<acc::AccumulatorBase> * create_plugin_factory(){
-    return new acc::AccumulatorFactory<AccumulatorMin>();
+    return new AccumulatorMinFactory();
 }
