@@ -18,8 +18,6 @@ class AccumulatorMin : public acc::AccumulatorBase
         }
 };
 
-
-
 class AccumulatorMinFactory : public xp::xfactory_base<acc::AccumulatorBase>
 {
     public:

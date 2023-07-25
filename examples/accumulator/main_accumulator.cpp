@@ -12,7 +12,6 @@ int main(int argc, char** argv)
     std::string plugin_directory = argv[1];
 
 
-
     using instance_type = acc::AccumulatorBase;
     using factory_type = xp::xfactory_base<instance_type>;
     using plugin_registry_type = xp::xplugin_registry<factory_type>;
