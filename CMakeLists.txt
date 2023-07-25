@@ -47,9 +47,6 @@ set(XPLUGIN_SOURCES
 # ========
 add_subdirectory(examples)
 
-
-
-
 # Output
 # ======
 
@@ -57,10 +54,6 @@ add_library(xplugin SHARED ${XPLUGIN_SOURCES} ${XPLUGIN_HEADERS})
 
 set_property(TARGET xplugin PROPERTY CXX_STANDARD 17)
 target_compile_features(xplugin PRIVATE cxx_std_17)
-
-
-
-
 
 
 if (APPLE)
