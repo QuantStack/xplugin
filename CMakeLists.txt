@@ -36,12 +36,14 @@ message(STATUS "Building xplugin v${${PROJECT_NAME}_VERSION}")
 set(XPLUGIN_HEADERS
     ${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_config.hpp
     ${XPLUGIN_INCLUDE_DIR}/xplugin/xshared_library.hpp
+    ${XPLUGIN_INCLUDE_DIR}/xplugin/xfactory.hpp
+    ${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_registry.hpp
     )
 
-set(XPLUGIN_SOURCES
-    ${XPLUGIN_SOURCE_DIR}/xunix_shared_library.cpp
-    ${XPLUGIN_SOURCE_DIR}/xwindows_shared_library.cpp
-    )
+
+# Tests
+# =====
+add_subdirectory(test)
 
 # Examples
 # ========
@@ -50,10 +52,9 @@ add_subdirectory(examples)
 # Output
 # ======
 
-add_library(xplugin SHARED ${XPLUGIN_SOURCES} ${XPLUGIN_HEADERS})
-
+add_library(xplugin INTERFACE)
 set_property(TARGET xplugin PROPERTY CXX_STANDARD 17)
-target_compile_features(xplugin PRIVATE cxx_std_17)
+target_compile_features(xplugin INTERFACE cxx_std_17)
 
 
 if (APPLE)
@@ -70,6 +71,6 @@ else()
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif()
 
-target_include_directories(xplugin PUBLIC $<BUILD_INTERFACE:${XPLUGIN_INCLUDE_DIR}>
-                                       $<INSTALL_INTERFACE:include>)
+target_include_directories(xplugin INTERFACE $<BUILD_INTERFACE:${XPLUGIN_INCLUDE_DIR}>
+                                                         $<INSTALL_INTERFACE:include>)
 

@@ -51,3 +51,10 @@ docs/*.tmp
 
 # Generated files
 *.pc
+
+
+# bld dir
+bld
+
+# vscode
+.vscode
