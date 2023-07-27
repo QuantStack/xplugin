@@ -15,7 +15,6 @@ namespace xp
 {
 
     // get so/dll/dylib 
-
     inline std::string get_library_extension(){
         #if defined(_WIN32)
             return ".dll";
