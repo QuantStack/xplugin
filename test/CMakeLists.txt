@@ -12,6 +12,11 @@ function(add_plugin name source)
     target_link_libraries(${name} xplugin)
     target_include_directories(${name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
     add_dependencies(all_plugins ${name})
+
+    set_target_properties(${name} PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
+    )
+
 endfunction()
 
 # build all the test plugins
@@ -26,3 +31,9 @@ target_include_directories(cpp_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # add dependencies st. test is built after all plugins
 add_dependencies(cpp_tests all_plugins)
+
+
+# compile with fpic
+set_target_properties(cpp_tests PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+)

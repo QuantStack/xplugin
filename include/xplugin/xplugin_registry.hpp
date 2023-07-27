@@ -83,6 +83,15 @@ namespace xp
                 return m_locations.size();
             }
 
+            void close_all(){
+                for(auto & [key, value] : m_open_libraries){
+                    std::cout<<"closing "<<key<<std::endl;
+                    value.close();
+                }
+                std::cout<<"all closed"<<std::endl;
+                m_open_libraries.clear();
+                std::cout<<"all cleared"<<std::endl;
+            }
         private:
             std::unordered_map<std::string, xshared_library> m_open_libraries;
             std::unordered_map<std::string, std::filesystem::path> m_locations;

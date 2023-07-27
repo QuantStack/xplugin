@@ -57,6 +57,11 @@ set_property(TARGET xplugin PROPERTY CXX_STANDARD 17)
 target_compile_features(xplugin INTERFACE cxx_std_17)
 
 
+# compile with fpic
+set_target_properties(xplugin PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+)
+
 if (APPLE)
     set_target_properties(xplugin PROPERTIES
         MACOSX_RPATH ON

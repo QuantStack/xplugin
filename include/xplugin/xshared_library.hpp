@@ -52,10 +52,18 @@ namespace xp
         template <class T>
         T find_symbol(const std::string& name)
         {   
+
+            dlerror();    /* Clear any existing error */
+
+            char *error;
+            
             if(!m_handle){
                 throw std::runtime_error("shared library not open");
             }
             void* sym = dlsym(m_handle, name.c_str());
+            if ((error = dlerror()) != NULL)  {
+                throw std::runtime_error("could not find symbol: " + name + " error: " + error);
+            }
             if(!sym){
                 throw std::runtime_error("could not find symbol: " + name + " error: " + dlerror());
             }
@@ -65,16 +73,21 @@ namespace xp
             if(m_handle){
                 throw std::runtime_error("shared library already open");
             }
-            m_handle = dlopen(m_path.string().c_str(), RTLD_NOW | RTLD_GLOBAL);
+            std::cout<<"opening "<<m_path.string()<<std::endl;
+            m_handle = dlopen(m_path.string().c_str(), RTLD_NOW | RTLD_LOCAL );
             if(!m_handle){
                 throw std::runtime_error("could not open shared library friom path: " + m_path.string() + " error: " + dlerror());
             }
         }
         void close(){
+            dlerror();    /* Clear any existing error */
             if(!m_handle){
                 throw std::runtime_error("shared library not open");
             }
-            dlclose(m_handle);
+            int ret = dlclose(m_handle);
+            if(ret != 0){
+                throw std::runtime_error("could not close shared library friom path: " + m_path.string() + " error: " + dlerror());
+            }
             m_handle = nullptr;
         }
 
