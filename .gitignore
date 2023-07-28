@@ -55,6 +55,9 @@ docs/*.tmp
 
 # bld dir
 bld
+build
+build_emscripten
+bld_emscripten
 
 # vscode
 .vscode

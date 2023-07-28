@@ -40,4 +40,21 @@ if(NOT EMSCRIPTEN)
 
 else()
 
+    add_executable(xplugin_embind main_xplugin_embind.cpp)
+    target_link_libraries(xplugin_embind PRIVATE xplugin_host)
+
+
+    # flag to include embind
+    target_link_options(xplugin_embind
+        PUBLIC "SHELL: -s MAIN_MODULE=1"
+        PUBLIC "SHELL: -l embind"
+        PUBLIC "SHELL: -s ENVIRONMENT=web"
+        PUBLIC "SHELL: -s MODULARIZE=1"
+        PUBLIC "SHELL: -s EXPORT_NAME=\"createModule\""
+    )
+
+    set_target_properties(xplugin_embind PROPERTIES
+        POSITION_INDEPENDENT_CODE ON
+    )
+
 endif()
