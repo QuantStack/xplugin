@@ -30,15 +30,16 @@ message(STATUS "Building xplugin v${${PROJECT_NAME}_VERSION}")
 # Dependencies
 # ============
 
+
 # Source files
 # ============
 
 set(XPLUGIN_HEADERS
-    ${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_config.hpp
-    ${XPLUGIN_INCLUDE_DIR}/xplugin/xshared_library.hpp
-    ${XPLUGIN_INCLUDE_DIR}/xplugin/xfactory.hpp
-    ${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_registry.hpp
-    )
+${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_config.hpp
+${XPLUGIN_INCLUDE_DIR}/xplugin/xshared_library.hpp
+${XPLUGIN_INCLUDE_DIR}/xplugin/xfactory.hpp
+${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_registry.hpp
+)
 
 
 # Tests
