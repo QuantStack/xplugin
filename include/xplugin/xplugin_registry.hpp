@@ -119,9 +119,6 @@ namespace xp
     template<class FACTORY>
     void xplugin_registry<FACTORY>::close_all()
     {
-        for(auto & [key, value] : m_open_libraries){
-            value.close();
-        }
         m_open_libraries.clear();
     }
 }

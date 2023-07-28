@@ -28,32 +28,26 @@
 #include "xplugin/xshared_library.hpp"
 #endif
 
+#include <iostream>
+
 namespace xp
 {
     #if (defined(__linux__) || defined(__unix__) || defined(__APPLE__))
     class xunix_shared_library 
     {
     public:
-        // delete copy constructor
         xunix_shared_library(const xunix_shared_library&) = delete;
-        // delete copy assignment
         xunix_shared_library& operator=(const xunix_shared_library&) = delete;
 
-        // move constructor
-        xunix_shared_library(xunix_shared_library&& other) noexcept = default;
-        // move assignment
-        xunix_shared_library& operator=(xunix_shared_library&& other) noexcept = default;
+        xunix_shared_library(xunix_shared_library&& other) noexcept;
+        xunix_shared_library& operator=(xunix_shared_library&& other) noexcept ;
 
         inline xunix_shared_library(std::filesystem::path path);
+        inline ~xunix_shared_library();
 
         template <class T>
         inline T find_symbol(const std::string& name);
-        
-        inline void open();
-        inline void close();
-
     private:
-        std::filesystem::path m_path;
         void* m_handle;
 
     };
@@ -65,115 +59,109 @@ namespace xp
     {
     public:
 
-        // delete copy constructor
         xwindows_shared_library(const xwindows_shared_library&) = delete;
-        // delete copy assignment
         xwindows_shared_library& operator=(const xwindows_shared_library&) = delete;
+        xwindows_shared_library(xwindows_shared_library&& other) noexcept;
+        xwindows_shared_library& operator=(xwindows_shared_library&& other) noexcept;
 
-        // move constructor
-        xwindows_shared_library(xwindows_shared_library&& other) noexcept = default;
-        // move assignment
-        xwindows_shared_library& operator=(xwindows_shared_library&& other) noexcept = default;
-
-        // constructor
-        xwindows_shared_library(std::filesystem::path path);
+        inline xwindows_shared_library(std::filesystem::path path);
+        inline ~xwindows_shared_library();
 
         template <class T>
         T find_symbol(const std::string& name);
-
-        inline void open();
-        inline void close();
-
     private:
-        std::filesystem::path m_path;
         HINSTANCE m_handle;
-    }
-    using xshared_library = xwindows_shared_library;
+    };
+
+    using xshared_library = xwindows_shared_library;`
     #endif // _WIN32
 
     #if (defined(__linux__) || defined(__unix__) || defined(__APPLE__))
-    xunix_shared_library::xunix_shared_library(std::filesystem::path path)
-    :   m_path(path),
-        m_handle(nullptr)
-    {
-    this->open();
+
+
+
+    xunix_shared_library::xunix_shared_library(xunix_shared_library&& other)noexcept
+     {
+        m_handle = other.m_handle;
+        other.m_handle = nullptr;
+    }
+    xunix_shared_library& xunix_shared_library::operator=(xunix_shared_library&& other)noexcept
+     {
+        m_handle = other.m_handle;
+        other.m_handle = nullptr;
+        return *this;
     }
 
+
+    xunix_shared_library::xunix_shared_library(std::filesystem::path path)
+    :   m_handle(nullptr)
+    {
+        m_handle = dlopen(path.string().c_str(), RTLD_NOW | RTLD_GLOBAL );
+        if(!m_handle){
+            throw std::runtime_error("could not open shared library from path: " + path.string() + " error: " + dlerror());
+        }
+        std::cout<<"loaded shared library from path: " << path.string() << std::endl;
+    }
+    
     template <class T>
     T xunix_shared_library::find_symbol(const std::string& name)
     {   
         dlerror();    /* Clear any existing error */
         char *error;
-        if(!m_handle){
-            throw std::runtime_error("shared library not open");
-        }
         void* sym = dlsym(m_handle, name.c_str());
+        if(sym == nullptr){
+            std::cout<<"could not find symbol: " << name <<"sym" << sym << std::endl;
+        }
         if ((error = dlerror()) != NULL)  {
             throw std::runtime_error("could not find symbol: " + name + " error: " + error);
         }
-        if(!sym){
-            throw std::runtime_error("could not find symbol: " + name + " error: " + dlerror());
-        }
         return reinterpret_cast<T>(sym);
     }
-    void xunix_shared_library::open(){
-        if(m_handle){
-            throw std::runtime_error("shared library already open");
+
+    xunix_shared_library::~xunix_shared_library()
+    {
+        if(m_handle)
+        {
+            dlclose(m_handle);
         }
-        m_handle = dlopen(m_path.string().c_str(), RTLD_NOW | RTLD_LOCAL );
-        if(!m_handle){
-            throw std::runtime_error("could not open shared library friom path: " + m_path.string() + " error: " + dlerror());
-        }
-    }
-    void xunix_shared_library::close(){
-        dlerror();    /* Clear any existing error */
-        if(!m_handle){
-            throw std::runtime_error("shared library not open");
-        }
-        int ret = dlclose(m_handle);
-        if(ret != 0){
-            throw std::runtime_error("could not close shared library friom path: " + m_path.string() + " error: " + dlerror());
-        }
-        m_handle = nullptr;
     }
     #endif
 
     #ifdef _WIN32
+    xwindows_shared_library::xwindows_shared_library(xwindows_shared_library&& other)noexcept
+     {
+        m_handle = other.m_handle;
+        other.m_handle = nullptr;
+    }
+    xwindows_shared_library& xwindows_shared_library::operator=(xwindows_shared_library&& other)noexcept
+     {
+        m_handle = other.m_handle;
+        other.m_handle = nullptr;
+        return *this;
+    }
+
     xwindows_shared_library::xwindows_shared_library(std::filesystem::path path)
-        :   m_path(path),
-            m_handle(nullptr)
-        {
-            this->open();
+        :   m_handle(LoadLibrary(m_path.string().c_str()))
+    {
+        if(!m_handle){
+            throw std::runtime_error("could not open shared library friom path: " + m_path.string() + " error: " + get_error());
         }
+    }
 
     template <class T>
     T xwindows_shared_library::find_symbol(const std::string& name)
     {   
-        if(!m_handle){
-            throw std::runtime_error("shared library not open");
-        }
         void* sym = GetProcAddress(m_handle, name.c_str());
         if(!sym){
             throw std::runtime_error("could not find symbol: " + name + " error: " + get_error());
         }
         return reinterpret_cast<T>(sym);
     }
-
-    void xwindows_shared_library::open(){
-        if(m_handle){
-            throw std::runtime_error("shared library already open");
+    void xwindows_shared_library::~xwindows_shared_library(){
+        if(m_handle)
+        {
+            FreeLibrary(m_handle);
         }
-        m_handle = LoadLibrary(m_path.string().c_str());
-        if(!m_handle){
-            throw std::runtime_error("could not open shared library friom path: " + m_path.string() + " error: " + get_error());
-        }
-    }
-    void xwindows_shared_library::close(){
-        if(!m_handle){
-            throw std::runtime_error("shared library not open");
-        }
-        FreeLibrary(m_handle);
-        m_handle = nullptr;
     }
     #endif // _WIN32
 
