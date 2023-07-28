@@ -18,17 +18,10 @@ class AccumulatorMax : public acc::AccumulatorBase
         }
 };
 
-class AccumulatorMaxFactory : public xp::xfactory_base<acc::AccumulatorBase>
-{ 
-    public:
-        AccumulatorMaxFactory() = default;
-        std::unique_ptr<instance_type>  create() override {
-            return std::unique_ptr<instance_type>(new AccumulatorMax());
-        }
-};
+using factory_type = xp::xfactory<AccumulatorMax, acc::AccumulatorBase>;
+using factory_base_type = typename factory_type::factory_base_type;
 
 // extern c function to factory st. we get a demangled name
-extern "C" xp::xfactory_base<acc::AccumulatorBase> * create_plugin_factory(){
-    return new AccumulatorMaxFactory();
+extern "C" factory_base_type * create_plugin_factory(){
+    return new factory_type();
 }
-

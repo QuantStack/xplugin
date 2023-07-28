@@ -1,5 +1,6 @@
-#include <xplugin/xfactory.hpp>
+#ifndef PLUGIN_BASE_HPP
 
+#include <xplugin/xfactory.hpp>
 
 #include <string>
 namespace plugin
@@ -20,6 +21,6 @@ namespace plugin
     using PluginFactoryBase = xp::xfactory_base<PluginBase, int, std::string>;
 };
 
-
+#endif // PLUGIN_BASE_HPP
 
 

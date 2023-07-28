@@ -1,3 +1,6 @@
+#ifndef ACCUMULATOR_BASE_HPP
+#define ACCUMULATOR_BASE_HPP
+
 #include <vector>
 #include <string>
 
@@ -13,3 +16,5 @@ namespace acc
             virtual std::string name() const = 0;
     };
 }
+
+#endif // ACCUMULATOR_BASE_HPP

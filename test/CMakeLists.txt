@@ -37,3 +37,6 @@ add_dependencies(cpp_tests all_plugins)
 set_target_properties(cpp_tests PROPERTIES
     POSITION_INDEPENDENT_CODE ON
 )
+
+#add_test(NAME tests COMMAND cpp_tests WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+add_test(NAME tests COMMAND cpp_tests )

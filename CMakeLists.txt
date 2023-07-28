@@ -43,6 +43,7 @@ set(XPLUGIN_HEADERS
 
 # Tests
 # =====
+enable_testing()
 add_subdirectory(test)
 
 # Examples

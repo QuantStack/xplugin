@@ -26,7 +26,6 @@ TEST_CASE("test_xplugin")
         auto factory_03 = registry.create_factory("plugin_03");
 
 
-
         CHECK(factory_01);
         CHECK(factory_02);
         CHECK(factory_03);

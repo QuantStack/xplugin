@@ -18,16 +18,10 @@ class AccumulatorMin : public acc::AccumulatorBase
         }
 };
 
-class AccumulatorMinFactory : public xp::xfactory_base<acc::AccumulatorBase>
-{
-    public:
-        AccumulatorMinFactory() = default;
-        std::unique_ptr<instance_type>  create() override {
-            return std::unique_ptr<instance_type>(new AccumulatorMin());
-        }
-};
+using factory_type = xp::xfactory<AccumulatorMin, acc::AccumulatorBase>;
+using factory_base_type = typename factory_type::factory_base_type;
 
 // extern c function to factory st. we get a demangled name
-extern "C" xp::xfactory_base<acc::AccumulatorBase> * create_plugin_factory(){
-    return new AccumulatorMinFactory();
+extern "C" factory_base_type * create_plugin_factory(){
+    return new factory_type();
 }

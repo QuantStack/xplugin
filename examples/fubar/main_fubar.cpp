@@ -2,6 +2,8 @@
 #include <xplugin/xfactory.hpp>
 #include <fubar_base.hpp>
 
+#include <iostream>
+
 
 int main(int argc, char** argv)
 {
