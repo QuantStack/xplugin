@@ -54,10 +54,18 @@ add_subdirectory(examples)
 # Output
 # ======
 
+# interface library plugins link against
 add_library(xplugin INTERFACE)
+
+# interface library plugins hosts link against
+# (same as xplugin, but links against dl on unix)
+add_library(xplugin_host INTERFACE)
+if(APPLE OR UNIX OR LINUX)
+    target_link_libraries(xplugin_host INTERFACE xplugin ${CMAKE_DL_LIBS})
+endif()
+
 set_property(TARGET xplugin PROPERTY CXX_STANDARD 17)
 target_compile_features(xplugin INTERFACE cxx_std_17)
-
 
 # compile with fpic
 set_target_properties(xplugin PROPERTIES
@@ -73,6 +81,7 @@ else()
     set_target_properties(xplugin PROPERTIES
         BUILD_WITH_INSTALL_RPATH 1
     )
+
     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib; ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
     set(CMAKE_SKIP_BUILD_RPATH FALSE)
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
@@ -80,4 +89,3 @@ endif()
 
 target_include_directories(xplugin INTERFACE $<BUILD_INTERFACE:${XPLUGIN_INCLUDE_DIR}>
                                                          $<INSTALL_INTERFACE:include>)
-

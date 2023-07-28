@@ -26,13 +26,8 @@ add_subdirectory(testplugin_a)
 add_executable(cpp_tests main_test.cpp
     test_xplugin.cpp
 )
-target_link_libraries(cpp_tests PRIVATE xplugin )
+target_link_libraries(cpp_tests PRIVATE xplugin_host )
 target_include_directories(cpp_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-
-# apple linux unix 
-if (APPLE OR UNIX OR LINUX)
-    target_link_libraries(cpp_tests PRIVATE ${CMAKE_DL_LIBS})
-endif()
 
 # add dependencies st. test is built after all plugins
 add_dependencies(cpp_tests all_plugins)
