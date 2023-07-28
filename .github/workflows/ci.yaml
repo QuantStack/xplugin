@@ -1,0 +1,57 @@
+name: Build with conda
+on:
+    push:
+    pull_request:
+
+jobs:
+  unix:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+          - os: macos-latest
+
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+
+    steps:
+
+
+      - uses: actions/checkout@v3
+
+      - name: Get number of CPU cores
+        uses: SimenB/github-actions-cpu-cores@v1
+        id: cpu-cores
+
+      - name: Install Conda environment from environment.yml
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: environment.yml
+          init-shell: >-
+            bash
+          cache-environment: true
+          post-cleanup: 'all'
+
+
+      - name: cmake configure
+        shell: bash -l {0}
+        run: |
+          mkdir -p bld
+          cd bld
+          cmake \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DBUILD_TESTS=ON \
+          .. -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
+
+      - name: Build
+        shell: bash -l {0}
+        run: |
+          cd bld
+          make -j ${{ steps.cpu-cores.outputs.count }}
+
+      - name: Run C++ tests
+        shell: bash -l {0}
+        run: |
+            cd bld
+            ctest -V
+
