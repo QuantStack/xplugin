@@ -16,3 +16,9 @@ add_executable(main_fubar ${CMAKE_CURRENT_SOURCE_DIR}/main_fubar.cpp)
 target_include_directories(main_fubar PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(main_fubar PUBLIC xplugin)
 target_compile_features(main_fubar PRIVATE cxx_std_17)
+
+
+# apple linux unix 
+if (APPLE OR UNIX OR LINUX)
+    target_link_libraries(main_fubar PRIVATE ${CMAKE_DL_LIBS})
+endif()

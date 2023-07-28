@@ -19,5 +19,5 @@ target_compile_features(main_accumulator PRIVATE cxx_std_17)
 
 # apple linux unix 
 if (APPLE OR UNIX OR LINUX)
-    target_link_libraries(main_accumulator  ${CMAKE_DL_LIBS})
+    target_link_libraries(main_accumulator PRIVATE ${CMAKE_DL_LIBS})
 endif()

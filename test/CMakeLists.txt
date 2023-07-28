@@ -31,7 +31,7 @@ target_include_directories(cpp_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 # apple linux unix 
 if (APPLE OR UNIX OR LINUX)
-    target_link_libraries(cpp_tests  ${CMAKE_DL_LIBS})
+    target_link_libraries(cpp_tests PRIVATE ${CMAKE_DL_LIBS})
 endif()
 
 # add dependencies st. test is built after all plugins
