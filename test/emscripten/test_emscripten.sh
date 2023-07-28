@@ -16,7 +16,9 @@ cd $BUILD_DIR
 echo $(pwd)
 
 echo "CONFIGURE CMAKE WITH EMSCRIPTEN"
-emcmake cmake  -DCMAKE_BUILD_TYPE=Release $SOURCE_DIR
+emcmake cmake  \
+    -DCMAKE_BUILD_TYPE=Release \
+    $SOURCE_DIR
 
 echo "MAKE WITH EMSCRIPTEN"
 emmake make -j8
