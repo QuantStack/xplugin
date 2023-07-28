@@ -13,6 +13,13 @@ project(xplugin)
 set(XPLUGIN_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(XPLUGIN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
+# Options
+# =======
+
+OPTION(XPLUGIN_BUILD_TESTS "Build the test suite" ON)
+OPTION(XPLUGIN_BUILD_EXAMPLES "Build the examples" ON)
+
+
 # Versionning
 # ===========
 
@@ -41,28 +48,37 @@ ${XPLUGIN_INCLUDE_DIR}/xplugin/xfactory.hpp
 ${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_registry.hpp
 )
 
+if(EMSCRIPTEN)
+    set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
+    set(CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS "-s SIDE_MODULE=1")
+    set(CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "-s SIDE_MODULE=1")
+    set(CMAKE_STRIP FALSE) 
+endif()
 
-# Tests
-# =====
-enable_testing()
-add_subdirectory(test)
-
-# Examples
-# ========
-add_subdirectory(examples)
 
 # Output
 # ======
 
 # interface library plugins link against
 add_library(xplugin INTERFACE)
-
-# interface library plugins hosts link against
-# (same as xplugin, but links against dl on unix)
 add_library(xplugin_host INTERFACE)
-if(APPLE OR UNIX OR LINUX)
-    target_link_libraries(xplugin_host INTERFACE xplugin ${CMAKE_DL_LIBS})
+add_library(xplugin_plugin INTERFACE)
+
+target_link_libraries(xplugin_host INTERFACE xplugin)
+target_link_libraries(xplugin_plugin INTERFACE xplugin)
+
+if((APPLE OR UNIX OR LINUX ) AND NOT EMSCRIPTEN)
+    target_link_libraries(xplugin_host INTERFACE ${CMAKE_DL_LIBS})
 endif()
+
+if(EMSCRIPTEN)
+    # compiler flags
+    set_target_properties(xplugin_host PROPERTIES COMPILE_FLAGS "-s MAIN_MODULE=1")
+    set_target_properties(xplugin_plugin PROPERTIES COMPILE_FLAGS "-s SIDE_MODULE=1")
+    set_target_properties(xplugin_host PROPERTIES LINK_FLAGS "-s MAIN_MODULE=1")
+    set_target_properties(xplugin_plugin PROPERTIES LINK_FLAGS "-s SIDE_MODULE=1")
+endif()
+
 
 set_property(TARGET xplugin PROPERTY CXX_STANDARD 17)
 target_compile_features(xplugin INTERFACE cxx_std_17)
@@ -73,11 +89,13 @@ set_target_properties(xplugin PROPERTIES
 )
 
 if (APPLE)
+    message(STATUS "Building for Apple")
     set_target_properties(xplugin PROPERTIES
         MACOSX_RPATH ON
     )
     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib; ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
-else()
+elseif(NOT EMSCRIPTEN)
+    message(STATUS "Building NOT for emscripten")
     set_target_properties(xplugin PROPERTIES
         BUILD_WITH_INSTALL_RPATH 1
     )
@@ -89,3 +107,19 @@ endif()
 
 target_include_directories(xplugin INTERFACE $<BUILD_INTERFACE:${XPLUGIN_INCLUDE_DIR}>
                                                          $<INSTALL_INTERFACE:include>)
+
+target_include_directories(xplugin_plugin INTERFACE $<BUILD_INTERFACE:${XPLUGIN_INCLUDE_DIR}>
+                                                         $<INSTALL_INTERFACE:include>)
+
+# Tests
+# =====
+if(XPLUGIN_BUILD_TESTS)
+enable_testing()
+add_subdirectory(test)
+endif()
+
+# Examples
+# ========
+if(XPLUGIN_BUILD_EXAMPLES)
+add_subdirectory(examples)
+endif()

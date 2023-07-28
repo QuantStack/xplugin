@@ -1,4 +1,5 @@
 #ifndef PLUGIN_BASE_HPP
+#define PLUGIN_BASE_HPP
 
 #include <xplugin/xfactory.hpp>
 
