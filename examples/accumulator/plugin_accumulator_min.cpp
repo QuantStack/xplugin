@@ -1,6 +1,7 @@
 #include <accumulator_base.hpp>
-
 #include <xplugin/xfactory.hpp>
+
+#include <algorithm>
 
 class AccumulatorMin : public acc::AccumulatorBase
 {
