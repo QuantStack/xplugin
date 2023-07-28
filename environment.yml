@@ -1,0 +1,10 @@
+name: xplugin
+channels:
+  - conda-forge
+
+dependencies:
+  # Build tools
+  - cmake
+  - cxx-compiler
+  # testing
+  - doctest
