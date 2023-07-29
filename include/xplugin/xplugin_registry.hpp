@@ -101,7 +101,7 @@ namespace xp
         }
         else  
         {
-            xunix_shared_library library(find_res->second);
+            xshared_library library(find_res->second);
             auto [iter, inserted] = m_open_libraries.emplace(name, std::move(library));
             library_ptr = &(iter->second);
         }
