@@ -55,7 +55,7 @@ namespace xp
     #endif // (defined(__linux__) || defined(__unix__) || defined(__APPLE__))
 
     #ifdef _WIN32
-    class XPLUGIN_API xwindows_shared_library 
+    class xwindows_shared_library 
     {
     public:
 

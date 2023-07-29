@@ -33,7 +33,7 @@ namespace xp
     }
 
     template<class FACTORY>
-    class XPLUGIN_API xplugin_registry
+    class xplugin_registry
     {
         public:
         using create_plugin_factory_type = FACTORY * (*)();
