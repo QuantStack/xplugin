@@ -94,7 +94,7 @@ jobs:
       - name: run emscripten tests
         shell: bash -l {0}
         run: |
-          source ./enmsk/emsdk_env.sh
+          source ./emsdk/emsdk_env.sh
           chmod +x ./test/emscripten/test_emscripten.sh 
           ./test/emscripten/test_emscripten.sh
         
