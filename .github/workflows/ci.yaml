@@ -55,3 +55,46 @@ jobs:
             cd bld
             ctest -V
 
+
+  emscripten:
+    strategy:
+      matrix:
+        include:
+          - emscripten_version: 3.1.27
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get number of CPU cores
+        uses: SimenB/github-actions-cpu-cores@v1
+        id: cpu-cores
+    
+      - name: Install Conda environment from environment_emscripten.yml
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: environment_emscripten.yml
+          init-shell: >-
+            bash
+          cache-environment: true
+          post-cleanup: 'all'
+      
+      - name: install emscripten
+        shell: bash -l {0}
+        run: |
+          git clone https://github.com/emscripten-core/emsdk.git
+          cd emsdk
+          ./emsdk install ${{ matrix.emscripten_version }}
+          source ./emsdk_env.sh
+      
+      - name: install playwright
+        shell: bash -l {0}
+        run: |
+          playwright install
+      
+      - name: run emscripten tests
+        shell: bash -l {0}
+        run: |
+          chmod +x ./test/emscripten/test_emscripten.sh 
+          ./test/emscripten/test_emscripten.sh
+        
+

@@ -1,0 +1,8 @@
+name: xplugin
+channels:
+  - conda-forge
+  - microsoft
+
+dependencies:
+  - python
+  - microsoft::playwright

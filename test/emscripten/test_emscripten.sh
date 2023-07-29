@@ -27,13 +27,6 @@ emcmake cmake  \
 echo "MAKE WITH EMSCRIPTEN"
 emmake make -j8
 
-
-# we to check that the following files exist:
-# $BUILD_DIR/tests/testplugin_a/libplugin_01.so
-# $BUILD_DIR/tests/testplugin_b/libplugin_02.so
-# $BUILD_DIR/tests/testplugin_c/libplugin_03.so
-
-
 PLUGIN_DIR="$BUILD_DIR/test/testplugin_a"
 
 if [ ! -f "$PLUGIN_DIR/libplugin_01.so" ]; then
@@ -75,3 +68,8 @@ cp $PLUGIN_DIR/libplugin_02.so $SOURCE_DIR/test/emscripten/content/
 cp $PLUGIN_DIR/libplugin_03.so $SOURCE_DIR/test/emscripten/content/
 cp $BUILD_DIR/test/xplugin_embind.js $SOURCE_DIR/test/emscripten/content/
 cp $BUILD_DIR/test/xplugin_embind.wasm $SOURCE_DIR/test/emscripten/content/
+
+
+# run playwrite
+python $SOURCE_DIR/test/emscripten/main_playwright.py
+
