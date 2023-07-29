@@ -128,19 +128,19 @@ namespace xp
     #endif
 
     #ifdef _WIN32
-    xwindows_shared_library::xwindows_shared_library(xwindows_shared_library&& other)noexcept
+    XPLUGIN_API xwindows_shared_library::xwindows_shared_library(xwindows_shared_library&& other)noexcept
      {
         m_handle = other.m_handle;
         other.m_handle = nullptr;
     }
-    xwindows_shared_library& xwindows_shared_library::operator=(xwindows_shared_library&& other)noexcept
+    XPLUGIN_API xwindows_shared_library& xwindows_shared_library::operator=(xwindows_shared_library&& other)noexcept
      {
         m_handle = other.m_handle;
         other.m_handle = nullptr;
         return *this;
     }
 
-    xwindows_shared_library::xwindows_shared_library(std::filesystem::path path)
+    XPLUGIN_API xwindows_shared_library::xwindows_shared_library(std::filesystem::path path)
         :   m_handle(LoadLibrary(path.string().c_str()))
     {
         if(!m_handle){
@@ -151,7 +151,7 @@ namespace xp
     }
 
     template <class T>
-    T xwindows_shared_library::find_symbol(const std::string& name)
+    XPLUGIN_API T xwindows_shared_library::find_symbol(const std::string& name)
     {   
         void* sym = GetProcAddress(m_handle, name.c_str());
         if(!sym){
@@ -161,7 +161,7 @@ namespace xp
         }
         return reinterpret_cast<T>(sym);
     }
-    xwindows_shared_library::~xwindows_shared_library(){
+    XPLUGIN_API xwindows_shared_library::~xwindows_shared_library(){
         if(m_handle)
         {
             FreeLibrary(m_handle);
