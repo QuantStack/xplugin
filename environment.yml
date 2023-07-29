@@ -8,3 +8,4 @@ dependencies:
   - cxx-compiler
   # testing
   - doctest
+  - ninja
