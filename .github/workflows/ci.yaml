@@ -127,7 +127,9 @@ jobs:
       - name: build and test
         shell: pwsh
         run: |
-          cmake . ^
+          mkdir bld
+          cd bld
+          cmake .. ^
             -G Ninja ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DDEPENDENCY_SEARCH_PREFIX="%CONDA_PREFIX%\Library" ^
