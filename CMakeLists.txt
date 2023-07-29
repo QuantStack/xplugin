@@ -67,6 +67,9 @@ add_library(xplugin_plugin INTERFACE)
 target_link_libraries(xplugin_host INTERFACE xplugin)
 target_link_libraries(xplugin_plugin INTERFACE xplugin)
 
+#define XPLUGIN_EXPORTS
+target_compile_definitions(xplugin_plugin INTERFACE XPLUGIN_EXPORTS)
+
 if((APPLE OR UNIX OR LINUX ) AND NOT EMSCRIPTEN)
     target_link_libraries(xplugin_host INTERFACE ${CMAKE_DL_LIBS})
 endif()

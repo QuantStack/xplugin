@@ -9,6 +9,8 @@
 #ifndef XPLUGIN_XFACTORY_HPP
 #define XPLUGIN_XFACTORY_HPP
 
+#include <xplugin/xplugin_config.hpp>
+
 #include <memory>
 
 namespace xp
