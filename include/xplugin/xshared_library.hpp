@@ -157,7 +157,7 @@ namespace xp
         }
         return reinterpret_cast<T>(sym);
     }
-    void xwindows_shared_library::~xwindows_shared_library(){
+    xwindows_shared_library::~xwindows_shared_library(){
         if(m_handle)
         {
             FreeLibrary(m_handle);
