@@ -15,7 +15,7 @@
 #include <filesystem>
 
 #include <xplugin/xshared_library.hpp>
-
+#include <xplugin/xplugin_config.hpp>
 
 namespace xp
 {
@@ -57,7 +57,7 @@ namespace xp
     };
 
     template<class FACTORY>
-    void xplugin_registry<FACTORY>::scan_directory(const std::filesystem::path& path)
+    XPLUGIN_API void xplugin_registry<FACTORY>::scan_directory(const std::filesystem::path& path)
     {
         for (const auto& entry : std::filesystem::directory_iterator(path))
         {
@@ -75,7 +75,7 @@ namespace xp
     }
 
     template<class FACTORY>
-    std::unordered_set<std::string> xplugin_registry<FACTORY>::plugin_names()
+    XPLUGIN_API std::unordered_set<std::string> xplugin_registry<FACTORY>::plugin_names()
     {
         std::unordered_set<std::string> res;
         for (const auto& [key, value] : m_locations)
@@ -86,7 +86,7 @@ namespace xp
     }
 
     template<class FACTORY>
-    std::unique_ptr<FACTORY> xplugin_registry<FACTORY>::create_factory(const std::string & name)
+    XPLUGIN_API std::unique_ptr<FACTORY> xplugin_registry<FACTORY>::create_factory(const std::string & name)
     {
         auto find_res = m_locations.find(name);
         if (find_res == m_locations.end()){
@@ -111,13 +111,13 @@ namespace xp
     }
 
     template<class FACTORY>
-    std::size_t xplugin_registry<FACTORY>::size() const
+    XPLUGIN_API std::size_t xplugin_registry<FACTORY>::size() const
     {
         return m_locations.size();
     }
 
     template<class FACTORY>
-    void xplugin_registry<FACTORY>::close_all()
+    XPLUGIN_API void xplugin_registry<FACTORY>::close_all()
     {
         m_open_libraries.clear();
     }
