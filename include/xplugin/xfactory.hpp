@@ -27,7 +27,7 @@ namespace xp
 
     // default implementation of the factory
     template<class CONCRETE_TYPE, class BASE_TYPE, class... ARGS>
-    class XPLUGIN_API xfactory : public xfactory_base<BASE_TYPE, ARGS...>
+    class xfactory : public xfactory_base<BASE_TYPE, ARGS...>
     {
         public:
         using concrete_type = CONCRETE_TYPE;
