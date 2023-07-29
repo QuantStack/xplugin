@@ -100,7 +100,6 @@ namespace xp
         if(!m_handle){
             throw std::runtime_error("could not open shared library from path: " + path.string() + " error: " + dlerror());
         }
-        std::cout<<"loaded shared library from path: " << path.string() << std::endl;
     }
     
     template <class T>

@@ -75,7 +75,7 @@ namespace xp
     }
 
     template<class FACTORY>
-    XPLUGIN_API std::unordered_set<std::string> xplugin_registry<FACTORY>::plugin_names()
+    std::unordered_set<std::string> xplugin_registry<FACTORY>::plugin_names()
     {
         std::unordered_set<std::string> res;
         for (const auto& [key, value] : m_locations)
@@ -86,7 +86,7 @@ namespace xp
     }
 
     template<class FACTORY>
-    XPLUGIN_API std::unique_ptr<FACTORY> xplugin_registry<FACTORY>::create_factory(const std::string & name)
+    std::unique_ptr<FACTORY> xplugin_registry<FACTORY>::create_factory(const std::string & name)
     {
         auto find_res = m_locations.find(name);
         if (find_res == m_locations.end()){
