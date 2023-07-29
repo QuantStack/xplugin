@@ -24,7 +24,7 @@ if(NOT EMSCRIPTEN)
     add_executable(cpp_tests main_test.cpp
         test_xplugin.cpp
     )
-    target_link_libraries(cpp_tests PRIVATE xplugin_host )
+    target_link_libraries(cpp_tests PRIVATE xplugin_host doctest::doctest)
     target_include_directories(cpp_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
     # add dependencies st. test is built after all plugins
