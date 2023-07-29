@@ -141,10 +141,10 @@ namespace xp
     }
 
     xwindows_shared_library::xwindows_shared_library(std::filesystem::path path)
-        :   m_handle(LoadLibrary(m_path.string().c_str()))
+        :   m_handle(LoadLibrary(path.string().c_str()))
     {
         if(!m_handle){
-            throw std::runtime_error("could not open shared library friom path: " + m_path.string() + " error: " + get_error());
+            throw std::runtime_error("could not open shared library friom path: " + path.string() + " error: " + get_error());
         }
     }
 
