@@ -92,17 +92,14 @@ set_target_properties(xplugin PROPERTIES
 )
 
 if (APPLE)
-    message(STATUS "Building for Apple")
     set_target_properties(xplugin PROPERTIES
         MACOSX_RPATH ON
     )
     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib; ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
 elseif(NOT EMSCRIPTEN)
-    message(STATUS "Building NOT for emscripten")
     set_target_properties(xplugin PROPERTIES
         BUILD_WITH_INSTALL_RPATH 1
     )
-
     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib; ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
     set(CMAKE_SKIP_BUILD_RPATH FALSE)
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)

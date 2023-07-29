@@ -3,11 +3,14 @@
 
  # make a function to simplify adding plugins
  function(add_plugin name source)
-    message(STATUS "Adding plugin ${name}  ${CMAKE_CURRENT_SOURCE_DIR}" )
     add_library(${name} SHARED ${source})
     target_link_libraries(${name} PRIVATE xplugin_plugin)
     target_include_directories(${name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
     add_dependencies(all_plugins ${name})
+    # add compile definitions
+    target_compile_definitions(${name} PRIVATE
+        XPLUGIN_EXPORTS
+    )
 
     set_target_properties(${name} PROPERTIES
         POSITION_INDEPENDENT_CODE ON
