@@ -73,7 +73,7 @@ namespace xp
         HINSTANCE m_handle;
     };
 
-    using xshared_library = xwindows_shared_library;`
+    using xshared_library = xwindows_shared_library;
     #endif // _WIN32
 
     #if (defined(__linux__) || defined(__unix__) || defined(__APPLE__))
@@ -144,7 +144,9 @@ namespace xp
         :   m_handle(LoadLibrary(path.string().c_str()))
     {
         if(!m_handle){
-            throw std::runtime_error("could not open shared library friom path: " + path.string() + " error: " + get_error());
+            char buffer[255];
+            FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,0,GetLastError(),0, buffer,sizeof(buffer),0);
+            throw std::runtime_error("could not open shared library friom path: " + path.string() + " error: " + buffer);
         }
     }
 
@@ -153,7 +155,9 @@ namespace xp
     {   
         void* sym = GetProcAddress(m_handle, name.c_str());
         if(!sym){
-            throw std::runtime_error("could not find symbol: " + name + " error: " + get_error());
+            char buffer[255];
+            FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,0,GetLastError(),0, buffer,sizeof(buffer),0);
+            throw std::runtime_error("could not find symbol: " + name + " error: " + buffer);
         }
         return reinterpret_cast<T>(sym);
     }
