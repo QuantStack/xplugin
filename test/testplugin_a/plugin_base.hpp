@@ -6,7 +6,7 @@
 #include <string>
 namespace plugin
 {   
-    class PluginBase
+    class XPLUGIN_API PluginBase
     {
         public:
             virtual ~PluginBase() = default;

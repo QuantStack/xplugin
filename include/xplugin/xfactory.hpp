@@ -17,7 +17,7 @@ namespace xp
 {
 
     template<class BASE_TYPE, class... ARGS>
-    class xfactory_base
+    class XPLUGIN_API xfactory_base
     {
         public:
         using base_type = BASE_TYPE;
@@ -27,7 +27,7 @@ namespace xp
 
     // default implementation of the factory
     template<class CONCRETE_TYPE, class BASE_TYPE, class... ARGS>
-    class xfactory : public xfactory_base<BASE_TYPE, ARGS...>
+    class  XPLUGIN_API xfactory : public xfactory_base<BASE_TYPE, ARGS...>
     {
         public:
         using concrete_type = CONCRETE_TYPE;
@@ -39,7 +39,7 @@ namespace xp
     };
 
     template<class CONCRETE_TYPE ,class BASE_TYPE, class... ARGS>
-    auto xfactory<CONCRETE_TYPE, BASE_TYPE, ARGS...>::create(ARGS... args) -> std::unique_ptr<base_type>
+    auto XPLUGIN_API xfactory<CONCRETE_TYPE, BASE_TYPE, ARGS...>::create(ARGS... args) -> std::unique_ptr<base_type>
     {
         return std::make_unique<concrete_type>(args...);
     }
