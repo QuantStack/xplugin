@@ -41,6 +41,10 @@ if(NOT EMSCRIPTEN)
     #add_test(NAME tests COMMAND cpp_tests WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
     add_test(NAME tests COMMAND cpp_tests )
 
+    target_compile_definitions(cpp_tests PRIVATE
+        XPLUGIN_EXPORTS
+    )
+
 else()
 
     add_executable(xplugin_embind main_xplugin_embind.cpp)
