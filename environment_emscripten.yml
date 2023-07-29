@@ -1,4 +1,4 @@
-name: xplugin
+name: xplugin_emscripten
 channels:
   - conda-forge
   - microsoft
