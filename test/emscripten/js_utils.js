@@ -5,24 +5,11 @@ async () =>{
         readFileFunc,
         Module
     ) {
-        const dirname = lib.substring(0, lib.lastIndexOf("/"));
-
         let _searchDirs = searchDirs || [];
-
-
-
         const resolvePath = (path) => {
-            //console.log("resolvePath", path);
-            
-            if (Module.PATH.basename(path) !== Module.PATH.basename(lib)) {
-                //console.debug(`Searching a library from ${path}, required by ${lib}`);
-            }
-
             for (const dir of _searchDirs) {
                 const fullPath = Module.PATH.join2(dir, path);
-                //console.log("SERARCHING", fullPath);
                 if (Module.FS.findObject(fullPath) !== null) {
-                    //console.log("FOUND", fullPath);   
                     return fullPath;
                 }
             }
@@ -54,11 +41,9 @@ async () =>{
 
 
     // main function
-    console.log("driver() called", this);
     let Module = await createModule();
     globalThis.Module = Module;
     
-    console.log("Module", Module);
 
     let plugin_names = [
         "plugin_01",
@@ -69,23 +54,17 @@ async () =>{
     // make dir
     Module.FS.mkdir("/plugins");
 
-    
-
-
-
     // fetch all plugins
     for (let i = 0; i < plugin_names.length; i++) {
         let plugin_name = plugin_names[i];
         let response = await fetch(`./lib${plugin_name}.so`);
         // console.log("response", response);
         let buffer = await response.arrayBuffer();
-        console.log("buffer", buffer);
 
         // write to emscripten fs
         let filename = `/plugins/lib${plugin_name}.so`;
         let data = new Uint8Array(buffer);
 
-        console.log("filename", filename);
         Module.FS.writeFile(filename, data);
 
         // instantiate all SO files
@@ -99,8 +78,6 @@ async () =>{
             global: true,
             fs: fs
          })
-
-         
     }
     let ret = Module.run_tests();
     return ret;
