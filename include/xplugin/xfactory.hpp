@@ -39,7 +39,7 @@ namespace xp
     };
 
     template<class CONCRETE_TYPE ,class BASE_TYPE, class... ARGS>
-    auto XPLUGIN_API xfactory<CONCRETE_TYPE, BASE_TYPE, ARGS...>::create(ARGS... args) -> std::unique_ptr<base_type>
+    auto xfactory<CONCRETE_TYPE, BASE_TYPE, ARGS...>::create(ARGS... args) -> std::unique_ptr<base_type>
     {
         return std::make_unique<concrete_type>(args...);
     }

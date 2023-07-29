@@ -111,13 +111,13 @@ namespace xp
     }
 
     template<class FACTORY>
-    XPLUGIN_API std::size_t xplugin_registry<FACTORY>::size() const
+    std::size_t xplugin_registry<FACTORY>::size() const
     {
         return m_locations.size();
     }
 
     template<class FACTORY>
-    XPLUGIN_API void xplugin_registry<FACTORY>::close_all()
+    void xplugin_registry<FACTORY>::close_all()
     {
         m_open_libraries.clear();
     }
