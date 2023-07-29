@@ -33,7 +33,7 @@ namespace xp
     }
 
     template<class FACTORY>
-    class xplugin_registry
+    class XPLUGIN_API xplugin_registry
     {
         public:
         using create_plugin_factory_type = FACTORY * (*)();
@@ -57,7 +57,7 @@ namespace xp
     };
 
     template<class FACTORY>
-    XPLUGIN_API void xplugin_registry<FACTORY>::scan_directory(const std::filesystem::path& path)
+    void xplugin_registry<FACTORY>::scan_directory(const std::filesystem::path& path)
     {
         for (const auto& entry : std::filesystem::directory_iterator(path))
         {
