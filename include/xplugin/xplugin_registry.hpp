@@ -38,18 +38,18 @@ namespace xp
         public:
         using create_plugin_factory_type = FACTORY * (*)();
 
-        xplugin_registry() = default;
+        inline xplugin_registry() = default;
 
-        void scan_directory(const std::filesystem::path& path);
+        inline void scan_directory(const std::filesystem::path& path);
         
 
-        std::unordered_set<std::string> plugin_names();
+        inline std::unordered_set<std::string> plugin_names();
 
-        std::unique_ptr<FACTORY> create_factory(const std::string & name);
+        inline std::unique_ptr<FACTORY> create_factory(const std::string & name);
 
-        std::size_t size() const;
+        inline std::size_t size() const;
 
-        void close_all();
+        inline void close_all();
 
         private:
         std::unordered_map<std::string, xshared_library> m_open_libraries;

@@ -39,8 +39,8 @@ namespace xp
         xunix_shared_library(const xunix_shared_library&) = delete;
         xunix_shared_library& operator=(const xunix_shared_library&) = delete;
 
-        xunix_shared_library(xunix_shared_library&& other) noexcept;
-        xunix_shared_library& operator=(xunix_shared_library&& other) noexcept ;
+        inline xunix_shared_library(xunix_shared_library&& other) noexcept;
+        inline xunix_shared_library& operator=(xunix_shared_library&& other) noexcept ;
 
         inline xunix_shared_library(std::filesystem::path path);
         inline ~xunix_shared_library();
@@ -61,14 +61,14 @@ namespace xp
 
         xwindows_shared_library(const xwindows_shared_library&) = delete;
         xwindows_shared_library& operator=(const xwindows_shared_library&) = delete;
-        xwindows_shared_library(xwindows_shared_library&& other) noexcept;
-        xwindows_shared_library& operator=(xwindows_shared_library&& other) noexcept;
+        inline xwindows_shared_library(xwindows_shared_library&& other) noexcept;
+        inline xwindows_shared_library& operator=(xwindows_shared_library&& other) noexcept;
 
         inline xwindows_shared_library(std::filesystem::path path);
         inline ~xwindows_shared_library();
 
         template <class T>
-        T find_symbol(const std::string& name);
+        inline T find_symbol(const std::string& name);
     private:
         HINSTANCE m_handle;
     };
