@@ -46,10 +46,6 @@ TEST_CASE("test_xplugin")
         CHECK_EQ(plugin_02->greet(), "hello from Plugin02");
         CHECK_EQ(plugin_03->greet(), "hello from Plugin03");
     }
-
-    // close the open libraries
-    registry.close_all();
-
 } 
 
 TEST_CASE("test_xregistry_getter")

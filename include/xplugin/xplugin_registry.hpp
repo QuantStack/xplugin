@@ -49,8 +49,6 @@ namespace xp
 
         inline std::size_t size() const;
 
-        inline void close_all();
-
         private:
         std::unordered_map<std::string, xshared_library> m_open_libraries;
         std::unordered_map<std::string, std::filesystem::path> m_locations;
@@ -114,12 +112,6 @@ namespace xp
     std::size_t xplugin_registry<FACTORY>::size() const
     {
         return m_locations.size();
-    }
-
-    template<class FACTORY>
-    void xplugin_registry<FACTORY>::close_all()
-    {
-        m_open_libraries.clear();
     }
 
 
