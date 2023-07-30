@@ -10,7 +10,6 @@
 cmake_minimum_required(VERSION 3.1)
 project(xplugin)
 
-set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 set(XPLUGIN_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(XPLUGIN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -35,9 +34,6 @@ endforeach()
 set(${PROJECT_NAME}_VERSION
     ${XPLUGIN_VERSION_MAJOR}.${XPLUGIN_VERSION_MINOR}.${XPLUGIN_VERSION_PATCH})
 message(STATUS "Building xplugin v${${PROJECT_NAME}_VERSION}")
-
-# Dependencies
-# ============
 
 
 # Source files

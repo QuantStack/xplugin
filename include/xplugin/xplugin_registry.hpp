@@ -121,6 +121,14 @@ namespace xp
     {
         m_open_libraries.clear();
     }
+
+
+    template<class FACTORY>
+    xp::xplugin_registry<FACTORY> & get_registry()
+    {
+        static xp::xplugin_registry<FACTORY> registry;
+        return registry;
+    }
 }
 
 #endif // XPLUGIN_REGISTRY_HPP

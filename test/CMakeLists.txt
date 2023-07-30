@@ -11,6 +11,7 @@
     target_compile_definitions(${name} PUBLIC
         XPLUGIN_EXPORTS
     )
+    set_property(TARGET ${name} PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS true)
 
     set_target_properties(${name} PROPERTIES
         POSITION_INDEPENDENT_CODE ON
