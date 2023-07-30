@@ -32,20 +32,26 @@ namespace xp
         #endif
     }
 
-    template<class FACTORY>
+    template<class FACTORY_BASE>
     class xplugin_registry
     {
         public:
-        using create_plugin_factory_type = FACTORY * (*)();
+        using factory_base_type = FACTORY_BASE;
+
+        using create_plugin_factory_type = factory_base_type * (*)();
 
         inline xplugin_registry() = default;
 
-        inline void scan_directory(const std::filesystem::path& path);
+        inline void scan_directory(
+            const std::filesystem::path& path,
+            const std::string& prefix = "lib",
+            const std::string& extension = get_library_extension()
+        );
         
 
         inline std::unordered_set<std::string> plugin_names();
 
-        inline std::unique_ptr<FACTORY> create_factory(const std::string & name);
+        inline std::unique_ptr<factory_base_type> create_factory(const std::string & name);
 
         inline std::size_t size() const;
 
@@ -54,26 +60,32 @@ namespace xp
         std::unordered_map<std::string, std::filesystem::path> m_locations;
     };
 
-    template<class FACTORY>
-    void xplugin_registry<FACTORY>::scan_directory(const std::filesystem::path& path)
+    template<class FACTORY_BASE>
+    void xplugin_registry<FACTORY_BASE>::scan_directory(const std::filesystem::path& path,
+        const std::string& prefix,
+        const std::string& extension
+    )
     {
         for (const auto& entry : std::filesystem::directory_iterator(path))
         {
-            if (entry.path().extension() == get_library_extension())
+            if (entry.path().extension() == extension)
             {
                 std::string name = entry.path().stem().string();
 
-                // remove lib prefix
-                if (name.substr(0,3) == "lib"){
-                    name = name.substr(3);
+                // remove prefix
+                if (name.substr(0, prefix.size()) == prefix){
+                    name = name.substr(prefix.size());
+                    m_locations[name] = entry.path();
                 }
-                m_locations[name] = entry.path();
+                else{
+                    continue;
+                }
             }
         }
     }
 
-    template<class FACTORY>
-    std::unordered_set<std::string> xplugin_registry<FACTORY>::plugin_names()
+    template<class FACTORY_BASE>
+    std::unordered_set<std::string> xplugin_registry<FACTORY_BASE>::plugin_names()
     {
         std::unordered_set<std::string> res;
         for (const auto& [key, value] : m_locations)
@@ -83,8 +95,8 @@ namespace xp
         return res;
     }
 
-    template<class FACTORY>
-    std::unique_ptr<FACTORY> xplugin_registry<FACTORY>::create_factory(const std::string & name)
+    template<class FACTORY_BASE>
+    std::unique_ptr<FACTORY_BASE> xplugin_registry<FACTORY_BASE>::create_factory(const std::string & name)
     {
         auto find_res = m_locations.find(name);
         if (find_res == m_locations.end()){
@@ -105,20 +117,21 @@ namespace xp
         }
 
         auto factory = library_ptr->find_symbol<create_plugin_factory_type>("create_plugin_factory")();
-        return std::unique_ptr<FACTORY>(factory);
+        return std::unique_ptr<factory_base_type>(factory);
     }
 
-    template<class FACTORY>
-    std::size_t xplugin_registry<FACTORY>::size() const
+    template<class FACTORY_BASE>
+    std::size_t xplugin_registry<FACTORY_BASE>::size() const
     {
         return m_locations.size();
     }
 
 
-    template<class FACTORY>
-    xp::xplugin_registry<FACTORY> & get_registry()
+    template<class FACTORY_BASE>
+    xp::xplugin_registry<FACTORY_BASE> & get_registry()
     {
-        static xp::xplugin_registry<FACTORY> registry;
+        using factory_base_type = FACTORY_BASE;
+        static xp::xplugin_registry<factory_base_type> registry;
         return registry;
     }
 }

@@ -1,6 +1,6 @@
 /***************************************************************************
-* Copyright (c) 2018, Johan Mabille, Sylvain Corlay, Wolf Vollprecht and   *
-* Martin Renou                                                             *
+* Copyright (c) 2018, Johan Mabille, Sylvain Corlay, Wolf Vollprecht,      *
+* Martin Renou and Dr. Thorsten Beier                                      *
 *                                                                          *
 * Distributed under the terms of the BSD 3-Clause License.                 *
 *                                                                          *

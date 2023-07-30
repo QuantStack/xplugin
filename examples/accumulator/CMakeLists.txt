@@ -4,12 +4,15 @@ add_library(plugin_accumulator_min SHARED ${CMAKE_CURRENT_SOURCE_DIR}/plugin_acc
 target_include_directories(plugin_accumulator_min PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(plugin_accumulator_min PUBLIC xplugin_plugin)
 target_compile_features(plugin_accumulator_min PRIVATE cxx_std_17)
+set_property(TARGET plugin_accumulator_min PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS true)
 
 # add a max accumulator plugin
 add_library(plugin_accumulator_max SHARED ${CMAKE_CURRENT_SOURCE_DIR}/plugin_accumulator_max.cpp)
 target_include_directories(plugin_accumulator_max PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(plugin_accumulator_max PUBLIC xplugin_plugin)
 target_compile_features(plugin_accumulator_max PRIVATE cxx_std_17)
+set_property(TARGET plugin_accumulator_max PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS true)
+
 
 # add  main executable using the plugins
 add_executable(main_accumulator ${CMAKE_CURRENT_SOURCE_DIR}/main_accumulator.cpp)

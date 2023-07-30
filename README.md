@@ -9,7 +9,7 @@ generic plugin framework in C++
 ## Example 1 
 
 All plugins are derived from a a base class, in the first example `MyPluginBase`.
-All concrete plugins are derived from `MyPluginBase` and implement the pure virtual function `do_something()`.
+All concrete plugins are derived from `MyPluginBase` and implement the pure virtual function (in this example it is only the `do_something()` function).
 Furthermore, for this example, we assume that all concrete plugins have an empty constructor.
 (see example 2 for a more complex example)
 
