@@ -17,7 +17,7 @@ namespace xp
 {
 
     template<class BASE_TYPE, class... ARGS>
-    class XPLUGIN_API xfactory_base
+    class  xfactory_base
     {
         public:
         using base_type = BASE_TYPE;

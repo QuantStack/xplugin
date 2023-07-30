@@ -22,16 +22,34 @@ add_subdirectory(testplugin_a)
 
 if(NOT EMSCRIPTEN)
 
+    # add testlib (this creates shared libraries for testing xshared_library)
+    add_subdirectory(testlib)
+
+    message(status $<TARGET_FILE_NAME:testlib_01>)
+    get_target_property(_baseName testlib_01 OUTPUT_NAME)
+    message(status ${_baseName})
+   
+
     find_package(doctest REQUIRED)
     # Make test executable
     add_executable(cpp_tests main_test.cpp
         test_xplugin.cpp
+        test_xshared_library.cpp
     )
+
+
+
+
+
     target_link_libraries(cpp_tests PRIVATE xplugin_host doctest::doctest)
     target_include_directories(cpp_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+    
 
     # add dependencies st. test is built after all plugins
     add_dependencies(cpp_tests all_plugins)
+
+    # C++ 17
+    target_compile_features(cpp_tests PRIVATE cxx_std_17)
 
     # compile with fpic
     set_target_properties(cpp_tests PROPERTIES

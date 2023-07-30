@@ -15,8 +15,10 @@
     #else
         #define XPLUGIN_API __declspec(dllimport)
     #endif
+    #define XPLUGIN_EXPORT __declspec(dllexport)
 #else
     #define XPLUGIN_API
+    #define XPLUGIN_EXPORT
 #endif
 
 #define XPLUGIN_VERSION_MAJOR 0

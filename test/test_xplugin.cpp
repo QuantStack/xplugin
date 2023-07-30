@@ -11,7 +11,7 @@ TEST_CASE("test_xplugin")
     using plugin_registry_type = xp::xplugin_registry<factory_base_type>;
 
     plugin_registry_type registry;
-    registry.scan_directory("./testplugin_a");
+    registry.scan_directory("testplugin_a");
     {
         CHECK_EQ(registry.size(), 3);
 

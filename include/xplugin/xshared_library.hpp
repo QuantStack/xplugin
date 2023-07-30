@@ -13,6 +13,9 @@
 // std includes
 #include <string>
 
+// path
+#include <filesystem>
+
 // includes from xplugin
 #include "xplugin_config.hpp"
 
