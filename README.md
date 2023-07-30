@@ -6,9 +6,14 @@ generic plugin framework in C++
 
 ## Usage
 
-## Example 1
+## Example 1 
 
-#### 1. Define a plugin interface
+All plugins are derived from a a base class, in the first example `MyPluginBase`.
+All concrete plugins are derived from `MyPluginBase` and implement the pure virtual function `do_something()`.
+Furthermore, for this example, we assume that all concrete plugins have an empty constructor.
+(see example 2 for a more complex example)
+
+#### Define a plugin interface
 
 `my_plugin_base.hpp`:
 ```cpp
@@ -20,7 +25,7 @@ public:
 };
 ```
 
-#### 2. Define a plugin implementation / define multiple plugin implementations
+#### Define a plugin implementation / define multiple plugin implementations
 
 `my_plugin_a.cpp`:
 ```cpp  
@@ -100,11 +105,140 @@ int main(int argc, char** argv)
     plugin_registry_type registry;
     registry.scan_directory(plugin_directory);
 
-    std::cout << "available plugins:" << std::endl;
     for (auto& name : registry.plugin_names()){
         std::cout << name << std::endl;
-        auto factory  registry.create_factory(name);
-        auto plugin = factory_min->do_something();
+        auto factory = registry.create_factory(name);
+        auto plugin = factory->create();
+        plugin->do_something();
+    }
+}
+```
+
+
+## Example 2
+
+
+We again define a plugin interface `MyOtherPluginBase` and a concrete plugin  implementations `MyOtherPluginA` and `MyOtherPluginB`.
+The difference to the first example is that the concrete plugins have a constructor with arguments.
+But both plugins have the same constructor signature. (see example 3 for a more complex example)
+
+`my_other_plugin_base.hpp`:
+```cpp
+class MyOtherPluginBase
+{
+public:
+    virtual ~MyOtherPluginBase() = default;
+    virtual void do_something() = 0;
+};
+```
+
+
+`my_other_plugin_a.cpp`:
+```cpp  
+#include <my_plugin_base.hpp>
+#include <xplugin/xfactory.hpp>
+
+class MyOtherPluginA : public MyPluginBase
+{
+    public:
+    MyOtherPluginA(int some_data, const std::string  & some_other_data)
+    : m_some_data(some_data)
+    , m_some_other_data(some_other_data)
+    {}
+
+    virtual ~MyOtherPluginA() = default;
+    override void do_something() override
+    {
+        std::cout << "MyOtherPluginA::do_something()" << std::endl;
+        std::cout << "some_data: " << m_some_data << std::endl;
+        std::cout << "some_other_data: " << m_some_other_data << std::endl;
+
+    }
+    private:
+    int m_some_data;
+    std::string m_some_other_data;
+}
+
+using factory_type = xp::xfactory<MyOtherPluginA, MyPluginBase, int, const std::string &>;
+using factory_base_type = typename factory_type::factory_base_type;
+
+// extern c function to factory st. we get a demangled name
+extern "C" factory_base_type * create_plugin_factory(){
+    return new factory_type();
+}
+```
+
+
+`my_other_plugin_b.cpp`:
+```cpp  
+#include <my_plugin_base.hpp>
+#include <xplugin/xfactory.hpp>
+
+class MyOtherPluginB : public MyPluginBase
+{
+    public:
+    MyOtherPluginB(int some_data, const std::string  & some_other_data)
+    : m_some_data(some_data)
+    , m_some_other_data(some_other_data)
+    {}
+
+    virtual ~MyOtherPluginB() = default;
+    override void do_something() override
+    {
+        std::cout << "MyOtherPluginB::do_something()" << std::endl;
+        std::cout << "some_data: " << m_some_data << std::endl;
+        std::cout << "some_other_data: " << m_some_other_data << std::endl;
+
+    }
+    private:
+    int m_some_data;
+    std::string m_some_other_data;
+}
+
+using factory_type = xp::xfactory<MyOtherPluginB, MyPluginBase, int, const std::string &>;
+using factory_base_type = typename factory_type::factory_base_type;
+
+// extern c function to factory st. we get a demangled name
+extern "C" factory_base_type * create_plugin_factory(){
+    return new factory_type();
+}
+```
+
+
+`main.cpp`:
+```cpp
+
+#include <my_plugin_base.hpp>
+#include <xplugin/xplugin_registry.hpp>
+#include <xplugin/xfactory.hpp>
+
+
+#include <iostream> // just for the example
+
+using factory_base_type = xp::xfactory_base<MyOtherPluginBase, int, const std::string &>;
+using plugin_registry_type = xp::xplugin_registry<factory_base_type>;
+
+int main(int argc, char** argv)
+{
+
+    if(argc != 2){
+        std::cout << "usage: " << argv[0] << " <plugin_directory>" << std::endl;
+        return 1;
+    }
+    std::string plugin_directory = argv[1];
+
+
+    plugin_registry_type registry;
+    registry.scan_directory(plugin_directory);
+
+    int some_data = 42;
+    std::string some_other_data = "Hello World";
+
+    for (auto& name : registry.plugin_names()){
+        std::cout << name << std::endl;
+        auto factory = registry.create_factory(name);
+        auto plugin = factory->create(some_data, some_other_data);
+        plugin->do_something();
     }
 }
 ```
