@@ -1,4 +1,7 @@
 #include <test.hpp>
+
+#include <vector>
+
 #include <xplugin/xfactory.hpp>
 #include <xplugin/xplugin_registry.hpp>
 
