@@ -180,8 +180,8 @@ jobs:
           mkdir bld
           cd bld
           cmake .. ^
-          -G Ninja ^
-          -DCMAKE_BUILD_TYPE=Release ^
-          -DCMAKE_PREFIX_PATH="%CONDA_PREFIX%\Library" ^
+            -G Ninja ^
+            -DCMAKE_BUILD_TYPE=Release ^
+            -DCMAKE_PREFIX_PATH="%CONDA_PREFIX%\Library" ^
           cmake --build . --config Release
           Release\main_serialize.exe .
