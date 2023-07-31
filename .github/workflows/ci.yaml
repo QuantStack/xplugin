@@ -159,3 +159,19 @@ jobs:
            -DCMAKE_INSTALL_PREFIX="%CONDA_PREFIX%
           cmake --build . --config Release
           ctest -C Release -V
+
+      - name: Install
+        shell: cmd /C CALL {0}
+        run: |
+          cd bld
+          cmake --install . --config Release
+
+      - name: Test installation
+        shell: cmd /C CALL {0}
+        run: |
+          dir %CONDA_PREFIX%\Library\include\xplugin\xfactory.hpp
+          dir %CONDA_PREFIX%\Library\include\xplugin\xplugin_config.hpp
+          dir %CONDA_PREFIX%\Library\include\xplugin\xplugin_registry.hpp
+          dir %CONDA_PREFIX%\Library\include\xplugin\xshared_library.hpp
+          dir %CONDA_PREFIX%\Library\cmake\xplugin\xpluginConfig.cmake
+          dir %CONDA_PREFIX%\Library\cmake\xplugin\xpluginTargets.cmake
