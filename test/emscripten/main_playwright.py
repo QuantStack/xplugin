@@ -48,10 +48,7 @@ def server_context(work_dir, port):
         thread.join()
 
 
-
 headless = True
-
-
 async def playwright_run(page_url):
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=headless)
@@ -76,8 +73,6 @@ async def playwright_run(page_url):
 
         status = await page.evaluate(js)
         return status
-
-
 
 
 if __name__ == '__main__':

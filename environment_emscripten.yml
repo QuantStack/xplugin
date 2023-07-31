@@ -4,5 +4,6 @@ channels:
   - microsoft
 
 dependencies:
+  - cmake
   - python
   - microsoft::playwright

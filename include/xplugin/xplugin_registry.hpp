@@ -110,7 +110,7 @@ template <class FACTORY_BASE> std::size_t xplugin_registry<FACTORY_BASE>::size()
     return m_locations.size();
 }
 
-template <class FACTORY_BASE> static std::string xplugin_registry<FACTORY_BASE>::get_default_library_extension()
+template <class FACTORY_BASE> std::string xplugin_registry<FACTORY_BASE>::get_default_library_extension()
 {
 #ifdef _WIN32
     return ".dll";
@@ -121,7 +121,7 @@ template <class FACTORY_BASE> static std::string xplugin_registry<FACTORY_BASE>:
 #endif
 }
 
-template <class FACTORY_BASE> static std::string xplugin_registry<FACTORY_BASE>::get_default_library_prefix()
+template <class FACTORY_BASE> std::string xplugin_registry<FACTORY_BASE>::get_default_library_prefix()
 {
 #ifdef _WIN32
     return "";
