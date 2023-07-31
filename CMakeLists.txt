@@ -18,15 +18,16 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # function to add plugins
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/xplugin_add_xplugin.cmake)
 
+################################################################
 # Options
-# =======
+################################################################
 
 OPTION(XPLUGIN_BUILD_TESTS "Build the test suite" ON)
 OPTION(XPLUGIN_BUILD_EXAMPLES "Build the examples" ON)
 
-
+################################################################
 # Versionning
-# ===========
+################################################################
 
 file(STRINGS "${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_config.hpp" xplugin_version_defines
     REGEX "#define XPLUGIN_VERSION_(MAJOR|MINOR|PATCH)")
@@ -39,10 +40,9 @@ set(${PROJECT_NAME}_VERSION
     ${XPLUGIN_VERSION_MAJOR}.${XPLUGIN_VERSION_MINOR}.${XPLUGIN_VERSION_PATCH})
 message(STATUS "Building xplugin v${${PROJECT_NAME}_VERSION}")
 
-
-# Source files
-# ============
-
+################################################################
+# Headers
+################################################################
 set(XPLUGIN_HEADERS
 ${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_config.hpp
 ${XPLUGIN_INCLUDE_DIR}/xplugin/xshared_library.hpp
@@ -50,6 +50,9 @@ ${XPLUGIN_INCLUDE_DIR}/xplugin/xfactory.hpp
 ${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_registry.hpp
 )
 
+################################################################
+#  Emscripten related
+################################################################
 if(EMSCRIPTEN)
     set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
     set(CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS "-s SIDE_MODULE=1")
@@ -57,25 +60,25 @@ if(EMSCRIPTEN)
     set(CMAKE_STRIP FALSE)
 endif()
 
-
-# Output
-# ======
-
-# interface library plugins link against
+################################################################
+# Interface libraries
+################################################################
 add_library(xplugin INTERFACE)
 add_library(xplugin_host INTERFACE)
 add_library(xplugin_plugin INTERFACE)
-
 target_link_libraries(xplugin_host INTERFACE xplugin)
 target_link_libraries(xplugin_plugin INTERFACE xplugin)
 
-#define XPLUGIN_EXPORTS
-target_compile_definitions(xplugin_plugin INTERFACE XPLUGIN_EXPORTS)
-
+################################################################
+#  Dependencies
+################################################################
 if((APPLE OR UNIX OR LINUX ) AND NOT EMSCRIPTEN)
     target_link_libraries(xplugin_host INTERFACE ${CMAKE_DL_LIBS})
 endif()
 
+################################################################
+# Flags
+################################################################
 if(EMSCRIPTEN)
     # compiler flags
     set_target_properties(xplugin_host PROPERTIES COMPILE_FLAGS "-s MAIN_MODULE=1")
@@ -83,7 +86,6 @@ if(EMSCRIPTEN)
     set_target_properties(xplugin_host PROPERTIES LINK_FLAGS "-s MAIN_MODULE=1")
     set_target_properties(xplugin_plugin PROPERTIES LINK_FLAGS "-s SIDE_MODULE=1")
 endif()
-
 
 set_property(TARGET xplugin PROPERTY CXX_STANDARD 17)
 target_compile_features(xplugin INTERFACE cxx_std_17)
@@ -93,6 +95,33 @@ set_target_properties(xplugin PROPERTIES
     POSITION_INDEPENDENT_CODE ON
 )
 
+
+target_include_directories(xplugin INTERFACE $<BUILD_INTERFACE:${XPLUGIN_INCLUDE_DIR}>
+                                                         $<INSTALL_INTERFACE:include>)
+
+target_include_directories(xplugin_plugin INTERFACE $<BUILD_INTERFACE:${XPLUGIN_INCLUDE_DIR}>
+                                                         $<INSTALL_INTERFACE:include>)
+
+
+################################################################
+# Tests
+################################################################
+if(XPLUGIN_BUILD_TESTS)
+enable_testing()
+    add_subdirectory(test)
+endif()
+
+################################################################
+# Examples
+################################################################
+if(XPLUGIN_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
+
+
+################################################################
+# Installation
+################################################################
 if (APPLE)
     set_target_properties(xplugin PROPERTIES
         MACOSX_RPATH ON
@@ -107,21 +136,46 @@ elseif(NOT EMSCRIPTEN)
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif()
 
-target_include_directories(xplugin INTERFACE $<BUILD_INTERFACE:${XPLUGIN_INCLUDE_DIR}>
-                                                         $<INSTALL_INTERFACE:include>)
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
 
-target_include_directories(xplugin_plugin INTERFACE $<BUILD_INTERFACE:${XPLUGIN_INCLUDE_DIR}>
-                                                         $<INSTALL_INTERFACE:include>)
+set(XPLUGIN_CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}" CACHE STRING "install path for xpluginConfig.cmake")
 
-# Tests
-# =====
-if(XPLUGIN_BUILD_TESTS)
-enable_testing()
-add_subdirectory(test)
-endif()
+# install the targets
+install(
+    TARGETS xplugin xplugin_host xplugin_plugin
+    EXPORT xpluginTargets
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
 
-# Examples
-# ========
-if(XPLUGIN_BUILD_EXAMPLES)
-add_subdirectory(examples)
-endif()
+# install the targets file
+INSTALL(
+    EXPORT xpluginTargets
+    FILE xpluginTargets.cmake
+    DESTINATION "${XPLUGIN_CMAKECONFIG_INSTALL_DIR}"
+    NAMESPACE xplugin::
+)
+
+# configure the config file
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/xpluginConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/xpluginConfig.cmake
+    INSTALL_DESTINATION ${XPLUGIN_CMAKECONFIG_INSTALL_DIR}
+)
+
+# the config
+install(
+    FILES "${CMAKE_CURRENT_BINARY_DIR}/xpluginConfig.cmake"
+    DESTINATION "${XPLUGIN_CMAKECONFIG_INSTALL_DIR}"
+)
+
+# the headers
+install(DIRECTORY ${XPLUGIN_INCLUDE_DIR}/xplugin
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        FILES_MATCHING PATTERN "*.hpp")
+
+# install cmake file
+install(FILES cmake/xplugin_add_xplugin.cmake
+        DESTINATION ${XPLUGIN_CMAKECONFIG_INSTALL_DIR})
