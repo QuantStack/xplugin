@@ -12,7 +12,7 @@
 
 int run_tests() {
     xp::xplugin_registry<xp::xfactory_base<plugin::PluginBase, int, std::string>> registry;
-    registry.scan_directory("/plugins/");
+    registry.add_from_directory("/plugins/");
     if(registry.size() != 3){
         std::cout<<"Test failed: registry.size() != 3"<<std::endl;
         return 1;

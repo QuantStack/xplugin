@@ -14,7 +14,7 @@ TEST_CASE("test_xplugin")
     using plugin_registry_type = xp::xplugin_registry<factory_base_type>;
 
     plugin_registry_type registry;
-    registry.scan_directory("testplugin_a");
+    registry.add_from_directory("testplugin_a");
     {
         CHECK_EQ(registry.size(), 3);
 
@@ -57,7 +57,7 @@ TEST_CASE("test_xregistry_getter")
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
 
     auto & registry = xp::get_registry<factory_base_type>();
-    registry.scan_directory("testplugin_a");
+    registry.add_from_directory("testplugin_a");
 
     CHECK_EQ(registry.size(), 3);
 
@@ -104,7 +104,7 @@ TEST_CASE("test_xregistry_open_same_lib_multiple_times")
     for(auto & registry : registries)
     {
         registry = new plugin_registry_type();
-        registry->scan_directory("testplugin_a");
+        registry->add_from_directory("testplugin_a");
     }
 
     for(auto & registry : registries)

@@ -103,7 +103,7 @@ int main(int argc, char** argv)
 
 
     plugin_registry_type registry;
-    registry.scan_directory(plugin_directory);
+    registry.add_from_directory(plugin_directory);
 
     for (auto& name : registry.plugin_names()){
         std::cout << name << std::endl;
@@ -229,7 +229,7 @@ int main(int argc, char** argv)
 
 
     plugin_registry_type registry;
-    registry.scan_directory(plugin_directory);
+    registry.add_from_directory(plugin_directory);
 
     int some_data = 42;
     std::string some_other_data = "Hello World";

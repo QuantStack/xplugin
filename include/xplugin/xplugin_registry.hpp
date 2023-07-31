@@ -20,17 +20,7 @@
 namespace xp
 {
 
-    // get so/dll/dylib 
-    inline std::string get_library_extension()
-    {
-        #if defined(_WIN32)
-            return ".dll";
-        #elif defined(__APPLE__)
-            return ".dylib";
-        #else
-            return ".so";
-        #endif
-    }
+
 
     template<class FACTORY_BASE>
     class xplugin_registry
@@ -42,30 +32,36 @@ namespace xp
 
         inline xplugin_registry() = default;
 
-        inline void scan_directory(
+        inline std::size_t add_from_directory(
             const std::filesystem::path& path,
-            const std::string& prefix = "lib",
-            const std::string& extension = get_library_extension()
+            const std::string& prefix = get_default_library_prefix(),
+            const std::string& extension = get_default_library_extension()
         );
         
-
-        inline std::unordered_set<std::string> plugin_names();
 
         inline std::unique_ptr<factory_base_type> create_factory(const std::string & name);
 
         inline std::size_t size() const;
+        inline std::unordered_set<std::string> plugin_names();
 
         private:
+
+        static inline std::string get_default_library_extension();
+        static inline std::string get_default_library_prefix();
+
+        
         std::unordered_map<std::string, xshared_library> m_open_libraries;
         std::unordered_map<std::string, std::filesystem::path> m_locations;
     };
 
+
     template<class FACTORY_BASE>
-    void xplugin_registry<FACTORY_BASE>::scan_directory(const std::filesystem::path& path,
+    std::size_t xplugin_registry<FACTORY_BASE>::add_from_directory(const std::filesystem::path& path,
         const std::string& prefix,
         const std::string& extension
     )
     {
+        std::size_t n_added = 0;
         for (const auto& entry : std::filesystem::directory_iterator(path))
         {
             if (entry.path().extension() == extension)
@@ -76,12 +72,11 @@ namespace xp
                 if (name.substr(0, prefix.size()) == prefix){
                     name = name.substr(prefix.size());
                     m_locations[name] = entry.path();
-                }
-                else{
-                    continue;
+                    ++n_added;
                 }
             }
         }
+        return n_added;
     }
 
     template<class FACTORY_BASE>
@@ -124,6 +119,29 @@ namespace xp
     std::size_t xplugin_registry<FACTORY_BASE>::size() const
     {
         return m_locations.size();
+    }
+
+
+    template<class FACTORY_BASE>
+    static std::string xplugin_registry<FACTORY_BASE>::get_default_library_extension()
+    {
+        #ifdef _WIN32
+            return ".dll";
+        #elif __APPLE__
+            return ".dylib";
+        #else
+            return ".so";
+        #endif
+    }
+
+    template<class FACTORY_BASE>
+    static std::string xplugin_registry<FACTORY_BASE>::get_default_library_prefix()
+    {
+        #ifdef _WIN32
+            return "";
+        #else
+            return "lib";
+        #endif
     }
 
 

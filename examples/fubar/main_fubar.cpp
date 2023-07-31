@@ -17,7 +17,7 @@ int main(int argc, char** argv)
     using plugin_registry_type = xp::xplugin_registry<factory_type>;
 
     plugin_registry_type registry;
-    registry.scan_directory(plugin_directory);
+    registry.add_from_directory(plugin_directory);
 
     std::cout << "available plugins:" << std::endl;
     for (auto& p : registry.plugin_names()){
