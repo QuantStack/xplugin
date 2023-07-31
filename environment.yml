@@ -6,6 +6,8 @@ dependencies:
   # Build tools
   - cmake
   - cxx-compiler
+  - ninja
   # testing
   - doctest
-  - ninja
+  # examples
+  - nlohmann_json

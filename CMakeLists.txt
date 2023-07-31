@@ -16,6 +16,7 @@ set(XPLUGIN_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 # cmake modules
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # function to add plugins
+set(XPLUGIN_XPLUGIN_LIBRARY xplugin_plugin)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/xplugin_add_xplugin.cmake)
 
 ################################################################

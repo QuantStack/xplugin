@@ -13,8 +13,23 @@
 
 #include <memory>
 
+#define XPLUGIN_CREATE_XPLUGIN_FACTORY(FACTORY_TYPE)                                                                   \
+    extern "C" XPLUGIN_EXPORT typename xp::argument_type<void(FACTORY_TYPE)>::type::factory_base_type *                \
+    create_plugin_factory()                                                                                            \
+    {                                                                                                                  \
+        return new FACTORY_TYPE();                                                                                     \
+    }
+
 namespace xp
 {
+
+template <typename T>
+struct argument_type;
+template <typename T, typename U>
+struct argument_type<T(U)>
+{
+    typedef U type;
+};
 
 template <class BASE_TYPE, class... ARGS>
 class xfactory_base

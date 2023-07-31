@@ -43,12 +43,7 @@ class MyPluginA : public MyPluginBase
 }
 
 using factory_type = xp::xfactory<MyPluginA, MyPluginBase>;
-using factory_base_type = typename factory_type::factory_base_type;
-
-// extern c function to factory st. we get a demangled name
-extern "C" factory_base_type * create_plugin_factory(){
-    return new factory_type();
-}
+XPLUGIN_CREATE_XPLUGIN_FACTORY(factory_type);
 ```
 
 
@@ -68,12 +63,7 @@ class MyPluginB : public MyPluginBase
 }
 
 using factory_type = xp::xfactory<MyPluginB, MyPluginBase>;
-using factory_base_type = typename factory_type::factory_base_type;
-
-// extern c function to factory st. we get a demangled name
-extern "C" factory_base_type * create_plugin_factory(){
-    return new factory_type();
-}
+XPLUGIN_CREATE_XPLUGIN_FACTORY(factory_type);
 ```
 
 #### 3. Use the plugin
@@ -160,12 +150,7 @@ class MyOtherPluginA : public MyPluginBase
 }
 
 using factory_type = xp::xfactory<MyOtherPluginA, MyPluginBase, int, const std::string &>;
-using factory_base_type = typename factory_type::factory_base_type;
-
-// extern c function to factory st. we get a demangled name
-extern "C" factory_base_type * create_plugin_factory(){
-    return new factory_type();
-}
+XPLUGIN_CREATE_XPLUGIN_FACTORY(factory_type);
 ```
 
 
@@ -196,12 +181,7 @@ class MyOtherPluginB : public MyPluginBase
 }
 
 using factory_type = xp::xfactory<MyOtherPluginB, MyPluginBase, int, const std::string &>;
-using factory_base_type = typename factory_type::factory_base_type;
-
-// extern c function to factory st. we get a demangled name
-extern "C" factory_base_type * create_plugin_factory(){
-    return new factory_type();
-}
+XPLUGIN_CREATE_XPLUGIN_FACTORY(factory_type);
 ```
 
 

@@ -1,7 +1,7 @@
 function(add_xplugin target_name)
 
     add_library(${target_name} SHARED ${ARGN})
-    target_link_libraries(${target_name} xplugin_plugin)
+    target_link_libraries(${target_name} ${XPLUGIN_XPLUGIN_LIBRARY})
 
     if (WIN32)
         # add compile definitions

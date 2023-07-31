@@ -19,11 +19,4 @@ class AccumulatorMax : public acc::AccumulatorBase
     }
 };
 
-using factory_type = xp::xfactory<AccumulatorMax, acc::AccumulatorBase>;
-using factory_base_type = typename factory_type::factory_base_type;
-
-// extern c function to factory st. we get a demangled name
-extern "C" factory_base_type *create_plugin_factory()
-{
-    return new factory_type();
-}
+XPLUGIN_CREATE_XPLUGIN_FACTORY((xp::xfactory<AccumulatorMax, acc::AccumulatorBase>));

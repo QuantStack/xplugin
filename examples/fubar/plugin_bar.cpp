@@ -18,11 +18,4 @@ class Bar : public fubar::FubarBase
     std::string name_;
 };
 
-using factory_type = xp::xfactory<Bar, fubar::FubarBase, const std::string &>;
-using factory_base_type = typename factory_type::factory_base_type;
-
-// extern c function to factory st. we get a demangled name
-extern "C" factory_base_type *create_plugin_factory()
-{
-    return new factory_type();
-}
+XPLUGIN_CREATE_XPLUGIN_FACTORY((xp::xfactory<Bar, fubar::FubarBase, const std::string &>));

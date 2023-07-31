@@ -13,10 +13,7 @@ jobs:
 
       fail-fast: false
     runs-on: ${{ matrix.os }}
-
     steps:
-
-
       - uses: actions/checkout@v3
 
       - name: Get number of CPU cores
@@ -75,6 +72,18 @@ jobs:
             ls $CONDA_PREFIX/lib/cmake/xplugin/xpluginConfig.cmake
             ls $CONDA_PREFIX/lib/cmake/xplugin/xpluginTargets.cmake
 
+      - name: Test installation with example
+        shell: bash -l {0}
+        run: |
+            cd examples/serialize
+            mkdir -p bld
+            cd bld
+            cmake \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_PREFIX_PATH=$CONDA_PREFIX \
+                ..
+            make -j ${{ steps.cpu-cores.outputs.count }}
+            ./main_serialize .
 
   emscripten:
     strategy:
@@ -121,8 +130,6 @@ jobs:
           chmod +x ./test/emscripten/test_emscripten.sh
           ./test/emscripten/test_emscripten.sh
 
-
-
   windows:
     strategy:
       matrix:
@@ -134,7 +141,6 @@ jobs:
     steps:
 
       - uses: actions/checkout@v3
-
 
       - name: Install Conda environment from environment.yml
         uses: mamba-org/setup-micromamba@v1
@@ -169,9 +175,13 @@ jobs:
       - name: Test installation
         shell: cmd /C CALL {0}
         run: |
-          dir %CONDA_PREFIX%\Library\include\xplugin\xfactory.hpp
-          dir %CONDA_PREFIX%\Library\include\xplugin\xplugin_config.hpp
-          dir %CONDA_PREFIX%\Library\include\xplugin\xplugin_registry.hpp
-          dir %CONDA_PREFIX%\Library\include\xplugin\xshared_library.hpp
-          dir %CONDA_PREFIX%\Library\cmake\xplugin\xpluginConfig.cmake
-          dir %CONDA_PREFIX%\Library\cmake\xplugin\xpluginTargets.cmake
+          cd examples
+          cd serialize
+          mkdir bld
+          cd bld
+          cmake .. ^
+          -G Ninja ^
+          -DCMAKE_BUILD_TYPE=Release ^
+          -DCMAKE_PREFIX_PATH="%CONDA_PREFIX%\Library" ^
+          cmake --build . --config Release
+          Release\main_serialize.exe .

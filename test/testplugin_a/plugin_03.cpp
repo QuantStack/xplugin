@@ -20,8 +20,4 @@ class Plugin03 : public plugin::PluginBase
     std::string m_b;
 };
 
-// extern c function to factory st. we get a demangled name
-extern "C" xp::xfactory_base<plugin::PluginBase, int, std::string> *create_plugin_factory()
-{
-    return new xp::xfactory<Plugin03, plugin::PluginBase, int, std::string>();
-}
+XPLUGIN_CREATE_XPLUGIN_FACTORY((xp::xfactory<Plugin03, plugin::PluginBase, int, std::string>));
