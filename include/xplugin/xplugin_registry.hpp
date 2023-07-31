@@ -20,7 +20,8 @@
 namespace xp
 {
 
-template <class FACTORY_BASE> class xplugin_registry
+template <class FACTORY_BASE>
+class xplugin_registry
 {
   public:
     using factory_base_type = FACTORY_BASE;
@@ -69,7 +70,8 @@ std::size_t xplugin_registry<FACTORY_BASE>::add_from_directory(const std::filesy
     return n_added;
 }
 
-template <class FACTORY_BASE> std::unordered_set<std::string> xplugin_registry<FACTORY_BASE>::plugin_names()
+template <class FACTORY_BASE>
+std::unordered_set<std::string> xplugin_registry<FACTORY_BASE>::plugin_names()
 {
     std::unordered_set<std::string> res;
     for (const auto &[key, value] : m_locations)
@@ -105,12 +107,14 @@ std::unique_ptr<FACTORY_BASE> xplugin_registry<FACTORY_BASE>::create_factory(con
     return std::unique_ptr<factory_base_type>(factory);
 }
 
-template <class FACTORY_BASE> std::size_t xplugin_registry<FACTORY_BASE>::size() const
+template <class FACTORY_BASE>
+std::size_t xplugin_registry<FACTORY_BASE>::size() const
 {
     return m_locations.size();
 }
 
-template <class FACTORY_BASE> std::string xplugin_registry<FACTORY_BASE>::get_default_library_extension()
+template <class FACTORY_BASE>
+std::string xplugin_registry<FACTORY_BASE>::get_default_library_extension()
 {
 #ifdef _WIN32
     return ".dll";
@@ -121,7 +125,8 @@ template <class FACTORY_BASE> std::string xplugin_registry<FACTORY_BASE>::get_de
 #endif
 }
 
-template <class FACTORY_BASE> std::string xplugin_registry<FACTORY_BASE>::get_default_library_prefix()
+template <class FACTORY_BASE>
+std::string xplugin_registry<FACTORY_BASE>::get_default_library_prefix()
 {
 #ifdef _WIN32
     return "";
@@ -130,7 +135,8 @@ template <class FACTORY_BASE> std::string xplugin_registry<FACTORY_BASE>::get_de
 #endif
 }
 
-template <class FACTORY_BASE> xp::xplugin_registry<FACTORY_BASE> &get_registry()
+template <class FACTORY_BASE>
+xp::xplugin_registry<FACTORY_BASE> &get_registry()
 {
     using factory_base_type = FACTORY_BASE;
     static xp::xplugin_registry<factory_base_type> registry;

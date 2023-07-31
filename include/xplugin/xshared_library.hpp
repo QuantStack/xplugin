@@ -48,7 +48,8 @@ class xunix_shared_library
     inline xunix_shared_library(std::filesystem::path path);
     inline ~xunix_shared_library();
 
-    template <class T> inline T find_symbol(const std::string &name);
+    template <class T>
+    inline T find_symbol(const std::string &name);
 
   private:
     void *m_handle;
@@ -68,7 +69,8 @@ class xwindows_shared_library
     inline xwindows_shared_library(std::filesystem::path path);
     inline ~xwindows_shared_library();
 
-    template <class T> inline T find_symbol(const std::string &name);
+    template <class T>
+    inline T find_symbol(const std::string &name);
 
   private:
     HINSTANCE m_handle;
@@ -100,7 +102,8 @@ xunix_shared_library::xunix_shared_library(std::filesystem::path path) : m_handl
     }
 }
 
-template <class T> T xunix_shared_library::find_symbol(const std::string &name)
+template <class T>
+T xunix_shared_library::find_symbol(const std::string &name)
 {
     dlerror(); /* Clear any existing error */
     char *error;
@@ -149,7 +152,8 @@ xwindows_shared_library::xwindows_shared_library(std::filesystem::path path)
     }
 }
 
-template <class T> T xwindows_shared_library::find_symbol(const std::string &name)
+template <class T>
+T xwindows_shared_library::find_symbol(const std::string &name)
 {
     void *sym = GetProcAddress(m_handle, name.c_str());
     if (!sym)

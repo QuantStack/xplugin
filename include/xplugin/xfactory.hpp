@@ -16,7 +16,8 @@
 namespace xp
 {
 
-template <class BASE_TYPE, class... ARGS> class xfactory_base
+template <class BASE_TYPE, class... ARGS>
+class xfactory_base
 {
   public:
     using base_type = BASE_TYPE;
@@ -27,7 +28,8 @@ template <class BASE_TYPE, class... ARGS> class xfactory_base
 };
 
 // default implementation of the factory
-template <class CONCRETE_TYPE, class BASE_TYPE, class... ARGS> class xfactory : public xfactory_base<BASE_TYPE, ARGS...>
+template <class CONCRETE_TYPE, class BASE_TYPE, class... ARGS>
+class xfactory : public xfactory_base<BASE_TYPE, ARGS...>
 {
   public:
     using concrete_type = CONCRETE_TYPE;
