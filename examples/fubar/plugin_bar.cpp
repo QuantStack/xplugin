@@ -18,4 +18,5 @@ class Bar : public fubar::FubarBase
     std::string name_;
 };
 
-XPLUGIN_CREATE_XPLUGIN_FACTORY((xp::xfactory<Bar, fubar::FubarBase, const std::string &>));
+using factory_type = xp::xfactory<Bar, fubar::FubarBase, const std::string &>;
+XPLUGIN_CREATE_XPLUGIN_FACTORY(factory_type);

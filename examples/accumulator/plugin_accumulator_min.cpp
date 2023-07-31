@@ -19,4 +19,5 @@ class AccumulatorMin : public acc::AccumulatorBase
     }
 };
 
-XPLUGIN_CREATE_XPLUGIN_FACTORY((xp::xfactory<AccumulatorMin, acc::AccumulatorBase>));
+using factory_type = xp::xfactory<AccumulatorMin, acc::AccumulatorBase>;
+XPLUGIN_CREATE_XPLUGIN_FACTORY(factory_type);

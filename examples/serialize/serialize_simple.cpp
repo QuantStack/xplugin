@@ -1,9 +1,5 @@
-#ifndef SERIALIZE_CSV_HPP
-#define SERIALIZE_CSV_HPP
-
 #include <serialize_base.hpp>
 #include <sstream>
-
 #include <xplugin/xfactory.hpp>
 
 class SerializeSimple : public SerializeBase
@@ -40,6 +36,5 @@ class SerializeSimple : public SerializeBase
     }
 };
 
-XPLUGIN_CREATE_XPLUGIN_FACTORY((xp::xfactory<SerializeSimple, SerializeBase>));
-
-#endif // SERIALIZE_CSV_HPP
+using factory_type = xp::xfactory<SerializeSimple, SerializeBase>;
+XPLUGIN_CREATE_XPLUGIN_FACTORY(factory_type);

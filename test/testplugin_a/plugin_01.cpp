@@ -21,4 +21,4 @@ class Plugin01 : public plugin::PluginBase
 };
 
 using factory_type = xp::xfactory<Plugin01, plugin::PluginBase, int, std::string>;
-XPLUGIN_CREATE_XPLUGIN_FACTORY((xp::xfactory<Plugin01, plugin::PluginBase, int, std::string>));
+XPLUGIN_CREATE_XPLUGIN_FACTORY(factory_type);

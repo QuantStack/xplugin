@@ -1,9 +1,5 @@
-#ifndef SERIALIZE_JSON_HPP
-#define SERIALIZE_JSON_HPP
-
 #include <nlohmann/json.hpp>
 #include <serialize_base.hpp>
-
 #include <xplugin/xfactory.hpp>
 
 class SerializeJson : public SerializeBase
@@ -40,6 +36,5 @@ class SerializeJson : public SerializeBase
     }
 };
 
-XPLUGIN_CREATE_XPLUGIN_FACTORY((xp::xfactory<SerializeJson, SerializeBase>));
-
-#endif // SERIALIZE_JSON_HPP
+using factory_type = xp::xfactory<SerializeJson, SerializeBase>;
+XPLUGIN_CREATE_XPLUGIN_FACTORY(factory_type);
