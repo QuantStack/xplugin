@@ -68,7 +68,7 @@ jobs:
       - name: Get number of CPU cores
         uses: SimenB/github-actions-cpu-cores@v1
         id: cpu-cores
-    
+
       - name: Install Conda environment from environment_emscripten.yml
         uses: mamba-org/setup-micromamba@v1
         with:
@@ -77,7 +77,7 @@ jobs:
             bash
           cache-environment: true
           post-cleanup: 'all'
-      
+
       - name: install emscripten
         shell: bash -l {0}
         run: |
@@ -85,22 +85,22 @@ jobs:
           cd emsdk
           ./emsdk install ${{ matrix.emscripten_version }}
           source ./emsdk_env.sh
-      
+
       - name: install playwright
         shell: bash -l {0}
         run: |
           playwright install
-      
+
       - name: run emscripten tests
         shell: bash -l {0}
         run: |
-          cd  emsdk 
+          cd  emsdk
           ./emsdk activate ${{ matrix.emscripten_version }}
           source ./emsdk_env.sh
           cd ..
-          chmod +x ./test/emscripten/test_emscripten.sh 
+          chmod +x ./test/emscripten/test_emscripten.sh
           ./test/emscripten/test_emscripten.sh
-        
+
 
 
   windows:

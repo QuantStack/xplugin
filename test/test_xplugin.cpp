@@ -28,7 +28,6 @@ TEST_CASE("test_xplugin")
         auto factory_02 = registry.create_factory("plugin_02");
         auto factory_03 = registry.create_factory("plugin_03");
 
-
         CHECK(factory_01);
         CHECK(factory_02);
         CHECK(factory_03);
@@ -49,14 +48,14 @@ TEST_CASE("test_xplugin")
         CHECK_EQ(plugin_02->greet(), "hello from Plugin02");
         CHECK_EQ(plugin_03->greet(), "hello from Plugin03");
     }
-} 
+}
 
 TEST_CASE("test_xregistry_getter")
 {
     using base_type = plugin::PluginBase;
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
 
-    auto & registry = xp::get_registry<factory_base_type>();
+    auto &registry = xp::get_registry<factory_base_type>();
     registry.add_from_directory("testplugin_a");
 
     CHECK_EQ(registry.size(), 3);
@@ -70,7 +69,6 @@ TEST_CASE("test_xregistry_getter")
     auto factory_01 = registry.create_factory("plugin_01");
     auto factory_02 = registry.create_factory("plugin_02");
     auto factory_03 = registry.create_factory("plugin_03");
-
 
     CHECK(factory_01);
     CHECK(factory_02);
@@ -91,7 +89,6 @@ TEST_CASE("test_xregistry_getter")
     CHECK_EQ(plugin_01->greet(), "hello from Plugin01");
     CHECK_EQ(plugin_02->greet(), "hello from Plugin02");
     CHECK_EQ(plugin_03->greet(), "hello from Plugin03");
-
 }
 
 TEST_CASE("test_xregistry_open_same_lib_multiple_times")
@@ -99,15 +96,15 @@ TEST_CASE("test_xregistry_open_same_lib_multiple_times")
     using base_type = plugin::PluginBase;
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
     using plugin_registry_type = xp::xplugin_registry<factory_base_type>;
-    
-    std::vector<plugin_registry_type*> registries(1000);
-    for(auto & registry : registries)
+
+    std::vector<plugin_registry_type *> registries(1000);
+    for (auto &registry : registries)
     {
         registry = new plugin_registry_type();
         registry->add_from_directory("testplugin_a");
     }
 
-    for(auto & registry : registries)
+    for (auto &registry : registries)
     {
         CHECK_EQ(registry->size(), 3);
 
@@ -120,7 +117,6 @@ TEST_CASE("test_xregistry_open_same_lib_multiple_times")
         auto factory_01 = registry->create_factory("plugin_01");
         auto factory_02 = registry->create_factory("plugin_02");
         auto factory_03 = registry->create_factory("plugin_03");
-
 
         CHECK(factory_01);
         CHECK(factory_02);
@@ -136,12 +132,11 @@ TEST_CASE("test_xregistry_open_same_lib_multiple_times")
 
         CHECK_EQ(plugin_01->name(), "Plugin01");
         CHECK_EQ(plugin_02->name(), "Plugin02");
-        CHECK_EQ(plugin_03->name(), "Plugin03");    
+        CHECK_EQ(plugin_03->name(), "Plugin03");
     }
 
-
     // delete all registries
-    for(auto & registry : registries)
+    for (auto &registry : registries)
     {
         delete registry;
     }

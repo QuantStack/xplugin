@@ -85,7 +85,7 @@ if __name__ == '__main__':
     port = find_free_port()
     with server_context(work_dir=content_dir, port=port) as (server, url):
         print(f"Server started at {url}")
-        
+
         page_url = f"{url}/testpage.html"
         return_code = asyncio.run(playwright_run(page_url=page_url))
         sys.exit(return_code)

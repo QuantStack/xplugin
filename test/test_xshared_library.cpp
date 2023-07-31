@@ -10,9 +10,9 @@ TEST_CASE("test_xshared_library")
     fs::path libpath = libdir / "testlib_01.xplugin";
     xp::xshared_library lib(libpath);
 
-    using f42_type = int(*)();
+    using f42_type = int (*)();
 
-    auto  f42 = lib.find_symbol<f42_type>("f42");
+    auto f42 = lib.find_symbol<f42_type>("f42");
     CHECK(f42);
     CHECK_EQ(f42(), 42);
-} 
+}

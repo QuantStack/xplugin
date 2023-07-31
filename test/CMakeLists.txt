@@ -29,7 +29,7 @@ if(NOT EMSCRIPTEN)
     message(status $<TARGET_FILE_NAME:testlib_01>)
     get_target_property(_baseName testlib_01 OUTPUT_NAME)
     message(status ${_baseName})
-   
+
 
     find_package(doctest REQUIRED)
     # Make test executable
@@ -44,7 +44,7 @@ if(NOT EMSCRIPTEN)
 
     target_link_libraries(cpp_tests PRIVATE xplugin_host doctest::doctest)
     target_include_directories(cpp_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-    
+
 
     # add dependencies st. test is built after all plugins
     add_dependencies(cpp_tests all_plugins)

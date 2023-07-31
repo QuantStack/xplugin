@@ -72,4 +72,3 @@ cp $BUILD_DIR/test/xplugin_embind.wasm $SOURCE_DIR/test/emscripten/content/
 
 # run playwrite
 python $SOURCE_DIR/test/emscripten/main_playwright.py
-

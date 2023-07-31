@@ -1,20 +1,21 @@
 #ifndef ACCUMULATOR_BASE_HPP
 #define ACCUMULATOR_BASE_HPP
 
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace acc
 {
-    class AccumulatorBase
+class AccumulatorBase
+{
+  public:
+    virtual ~AccumulatorBase()
     {
-        public:
+    }
 
-            virtual ~AccumulatorBase() {}
-
-            virtual double accumulate(const std::vector<double>& data) = 0;
-            virtual std::string name() const = 0;
-    };
-}
+    virtual double accumulate(const std::vector<double> &data) = 0;
+    virtual std::string name() const = 0;
+};
+} // namespace acc
 
 #endif // ACCUMULATOR_BASE_HPP

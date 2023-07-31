@@ -1,17 +1,19 @@
 #ifndef FUBAR_BASE_HPP
 #define FUBAR_BASE_HPP
 
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace fubar
 {
-    class FubarBase
+class FubarBase
+{
+  public:
+    virtual ~FubarBase()
     {
-        public:
-            virtual ~FubarBase() {}
-            virtual std::string fubar() const = 0;
-    };
-}
+    }
+    virtual std::string fubar() const = 0;
+};
+} // namespace fubar
 
 #endif // FUBAR_BASE_HPP

@@ -6,7 +6,7 @@ generic plugin framework in C++
 
 ## Usage
 
-## Example 1 
+## Example 1
 
 All plugins are derived from a a base class, in the first example `MyPluginBase`.
 All concrete plugins are derived from `MyPluginBase` and implement the pure virtual function (in this example it is only the `do_something()` function).
@@ -28,7 +28,7 @@ public:
 #### Define a plugin implementation / define multiple plugin implementations
 
 `my_plugin_a.cpp`:
-```cpp  
+```cpp
 #include <my_plugin_base.hpp>
 #include <xplugin/xfactory.hpp>
 
@@ -53,7 +53,7 @@ extern "C" factory_base_type * create_plugin_factory(){
 
 
 `my_plugin_b.cpp`:
-```cpp  
+```cpp
 #include <my_plugin_base.hpp>
 #include <xplugin/xfactory.hpp>
 
@@ -134,7 +134,7 @@ public:
 
 
 `my_other_plugin_a.cpp`:
-```cpp  
+```cpp
 #include <my_plugin_base.hpp>
 #include <xplugin/xfactory.hpp>
 
@@ -170,7 +170,7 @@ extern "C" factory_base_type * create_plugin_factory(){
 
 
 `my_other_plugin_b.cpp`:
-```cpp  
+```cpp
 #include <my_plugin_base.hpp>
 #include <xplugin/xfactory.hpp>
 
