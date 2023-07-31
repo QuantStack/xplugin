@@ -61,3 +61,6 @@ bld_emscripten
 
 # vscode
 .vscode
+
+# Mac
+.DS_Store
