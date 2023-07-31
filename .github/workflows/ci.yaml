@@ -186,4 +186,4 @@ jobs:
             -DCMAKE_PREFIX_PATH="%CONDA_PREFIX%\Library"
 
           cmake --build . --config Release
-          Release\main_serialize.exe .
+          Release\main_serialize.exe Release
