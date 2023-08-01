@@ -1,0 +1,13 @@
+add_xplugin(custom_factory_with_metadata_plugin_a ${CMAKE_CURRENT_SOURCE_DIR}/custom_factory_with_metadata_plugin_a.cpp)
+target_include_directories(custom_factory_with_metadata_plugin_a PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+add_xplugin(custom_factory_with_metadata_plugin_b ${CMAKE_CURRENT_SOURCE_DIR}/custom_factory_with_metadata_plugin_b.cpp)
+target_include_directories(custom_factory_with_metadata_plugin_b PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+# add  main executable using the plugins
+add_executable(main_custom_factory_with_metadata ${CMAKE_CURRENT_SOURCE_DIR}/main_custom_factory_with_metadata.cpp)
+target_include_directories(main_custom_factory_with_metadata PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(main_custom_factory_with_metadata PUBLIC xplugin_host)
+set_target_properties(main_custom_factory_with_metadata PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+xplugin_add_emscripten_main_module_flags(main_custom_factory_with_metadata)

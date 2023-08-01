@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+set(XPLUGIN_XPLUGIN_LIBRARY xplugin::xplugin_plugin)
+include(CMakeFindDependencyMacro)
+include("${CMAKE_CURRENT_LIST_DIR}/xpluginTargets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/xplugin_add_xplugin.cmake")
+
+check_required_components(xplugin)

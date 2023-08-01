@@ -1,0 +1,241 @@
+name: Build with conda
+on:
+    push:
+    pull_request:
+
+jobs:
+  unix:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+          - os: macos-latest
+
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get number of CPU cores
+        uses: SimenB/github-actions-cpu-cores@v1
+        id: cpu-cores
+
+      - name: Install Conda environment from environment.yml
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: environment.yml
+          init-shell: >-
+            bash
+          cache-environment: true
+          post-cleanup: 'all'
+
+
+      - name: cmake configure
+        shell: bash -l {0}
+        run: |
+          mkdir -p bld
+          cd bld
+          cmake \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DXPLUGIN_BUILD_TESTS=ON \
+              -DXPLUGIN_BUILD_EXAMPLES=ON \
+              -DXPLUGIN_BUILD_DOCS=ON \
+              -DCMAKE_PREFIX_PATH=$CONDA_PREFIX \
+          .. -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
+
+      - name: Build
+        shell: bash -l {0}
+        run: |
+          cd bld
+          make -j ${{ steps.cpu-cores.outputs.count }}
+
+      - name: Run C++ tests
+        shell: bash -l {0}
+        run: |
+            cd bld
+            ctest -V
+
+      - name: Run examples
+        shell: bash -l {0}
+        run: |
+            cd bld/examples/
+
+            pushd accumulator
+            ./main_accumulator .
+            popd
+
+            pushd serialize
+            ./main_serialize .
+            popd
+
+            pushd custom_factory_with_metadata
+            ./main_custom_factory_with_metadata .
+            popd
+
+
+
+      - name: Install
+        shell: bash -l {0}
+        run: |
+            cd bld
+            make install
+
+      - name: Test installation
+        shell: bash -l {0}
+        run: |
+            cd examples/serialize
+            mkdir -p bld
+            cd bld
+            cmake \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_PREFIX_PATH=$CONDA_PREFIX \
+                ..
+            make -j ${{ steps.cpu-cores.outputs.count }}
+            ./main_serialize .
+
+  windows:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Install Conda environment from environment.yml
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: environment.yml
+          init-shell: >-
+            cmd.exe
+          cache-environment: true
+          post-cleanup: 'all'
+
+      - name: build and test
+        shell: cmd /C CALL {0}
+        run: |
+          mkdir bld
+          cd bld
+          cmake .. ^
+           -G Ninja ^
+           -DCMAKE_BUILD_TYPE=Release ^
+           -DXPLUGIN_BUILD_TESTS=ON ^
+           -DXPLUGIN_BUILD_EXAMPLES=OFF ^
+           -DCMAKE_PREFIX_PATH="%CONDA_PREFIX%\Library" ^
+           -DCMAKE_INSTALL_PREFIX="%CONDA_PREFIX%
+
+          cmake --build . --config Release
+          ctest -C Release -V
+
+      - name: Install
+        shell: cmd /C CALL {0}
+        run: |
+          cd bld
+          cmake --install . --config Release
+
+      - name: Test installation
+        shell: cmd /C CALL {0}
+        run: |
+          cd examples
+          cd serialize
+          mkdir bld
+          cd bld
+          cmake .. ^
+            -G Ninja ^
+            -DCMAKE_BUILD_TYPE=Release ^
+            -DCMAKE_PREFIX_PATH="%CONDA_PREFIX%\Library"
+
+          SET thisdir=%cd%
+          cmake --build . --config Release
+          main_serialize.exe %thisdir%
+
+  emscripten:
+    strategy:
+      matrix:
+        include:
+          - emscripten_version: 3.1.27
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get number of CPU cores
+        uses: SimenB/github-actions-cpu-cores@v1
+        id: cpu-cores
+
+      - name: Install Conda environment from environment_emscripten.yml
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: environment_emscripten.yml
+          init-shell: >-
+            bash
+          cache-environment: true
+          post-cleanup: 'all'
+
+      - name: install emscripten
+        shell: bash -l {0}
+        run: |
+          git clone https://github.com/emscripten-core/emsdk.git
+          cd emsdk
+          ./emsdk install ${{ matrix.emscripten_version }}
+          source ./emsdk_env.sh
+
+      - name: install playwright
+        shell: bash -l {0}
+        run: |
+          playwright install
+
+      - name: run emscripten tests
+        shell: bash -l {0}
+        run: |
+          cd  emsdk
+          ./emsdk activate ${{ matrix.emscripten_version }}
+          source ./emsdk_env.sh
+          cd ..
+          chmod +x ./test/emscripten/test_emscripten.sh
+          ./test/emscripten/test_emscripten.sh
+
+  docs:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Conda environment from environment.yml
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: environment.yml
+          init-shell: >-
+            bash
+          cache-environment: true
+          post-cleanup: 'all'
+
+      - name: cmake configure
+        shell: bash -l {0}
+        run: |
+          mkdir -p bld
+          cd bld
+          cmake \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DXPLUGIN_BUILD_TESTS=OFF \
+              -DXPLUGIN_BUILD_EXAMPLES= \
+              -DXPLUGIN_BUILD_DOCS=ON \
+              -DCMAKE_PREFIX_PATH=$CONDA_PREFIX \
+              -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
+          ..
+
+      - name: Build docs
+        shell: bash -l {0}
+        run: |
+            cd bld
+            make docs_sphinx
+
+            # add .nojekyll file to docs folder
+            touch docs/html/.nojekyll

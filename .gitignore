@@ -51,3 +51,16 @@ docs/*.tmp
 
 # Generated files
 *.pc
+
+
+# bld dir
+bld
+build
+build_emscripten
+bld_emscripten
+
+# vscode
+.vscode
+
+# Mac
+.DS_Store
