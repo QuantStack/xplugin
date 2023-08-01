@@ -32,7 +32,6 @@ else()
     add_executable(xplugin_embind main_xplugin_embind.cpp)
     target_link_libraries(xplugin_embind PRIVATE xplugin_host)
 
-
     # flag to include embind
     target_link_options(xplugin_embind
         PUBLIC "SHELL: -s MAIN_MODULE=1"
@@ -42,8 +41,6 @@ else()
         PUBLIC "SHELL: -s EXPORT_NAME=\"createModule\""
     )
 
-    set_target_properties(xplugin_embind PROPERTIES
-        POSITION_INDEPENDENT_CODE ON
-    )
+    set_target_properties(xplugin_embind PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 endif()
