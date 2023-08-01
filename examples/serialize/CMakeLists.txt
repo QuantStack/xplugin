@@ -9,6 +9,7 @@ find_package(xplugin REQUIRED)
 add_executable(main_serialize main_serialize.cpp)
 target_link_libraries(main_serialize xplugin::xplugin_host)
 target_include_directories(main_serialize PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+xplugin_add_emscripten_main_module_flags(main_serialize)
 
 ######################################################################
 # the plugins:

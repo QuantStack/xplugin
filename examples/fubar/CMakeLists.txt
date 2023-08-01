@@ -15,3 +15,5 @@ if(EMSCRIPTEN)
         PUBLIC "SHELL: -sMODULARIZE=1"
     )
 endif()
+
+xplugin_add_emscripten_main_module_flags(main_fubar)
