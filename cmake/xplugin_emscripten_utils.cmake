@@ -11,7 +11,7 @@ endfunction()
 
 function(xplugin_add_emscripten_main_module_flags target_name)
     if(EMSCRIPTEN)
-        target_link_options({target_name}
+        target_link_options(${target_name}
             PUBLIC "SHELL: -sMAIN_MODULE=1"
             PUBLIC "SHELL: -sMODULARIZE=1"
         )

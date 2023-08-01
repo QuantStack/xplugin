@@ -54,6 +54,23 @@ jobs:
             cd bld
             ctest -V
 
+      - name: Run examples
+        shell: bash -l {0}
+        run: |
+            cd bld/examples/
+
+            pushd accumulator
+            ./main_accumulator .
+            popd
+
+            pushd serialize
+            ./main_serialize .
+            popd
+
+            pushd custom_factory_with_metadata
+            ./main_custom_factory_with_metadata .
+            popd
+
       - name: Install
         shell: bash -l {0}
         run: |
@@ -109,6 +126,25 @@ jobs:
 
           cmake --build . --config Release
           ctest -C Release -V
+
+      - name: Run examples
+        shell: bash -l {0}
+        run: |
+            cd bld
+            cd examples
+
+            pushd accumulator
+            main_accumulator.exe .
+            popd
+
+            pushd serialize
+            main_serialize.exe .
+            popd
+
+            pushd custom_factory_with_metadata
+            main_custom_factory_with_metadata.exe .
+            popd
+
 
       - name: Install
         shell: cmd /C CALL {0}
