@@ -1,8 +1,12 @@
 # xplugin
-generic plugin framework in C++
+Generic plugin framework in C++.
 
+## Features
 
-
+- [x] Generic plugin framework
+- [x] Abitrary abstract base classes can be used as plugin interface
+- [x] Customizable with custom plugin factories (see examples)
+- [x] Works on Linux, Mac and Windows and emscripten
 
 ## Usage
 
