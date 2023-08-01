@@ -114,7 +114,7 @@ int main(int argc, char** argv)
 
 We again define a plugin interface `MyOtherPluginBase` and a concrete plugin  implementations `MyOtherPluginA` and `MyOtherPluginB`.
 The difference to the first example is that the concrete plugins have a constructor with arguments.
-But both plugins have the same constructor signature. (see example 3 for a more complex example)
+But both plugins have the same constructor signature.
 
 `my_other_plugin_base.hpp`:
 ```cpp
