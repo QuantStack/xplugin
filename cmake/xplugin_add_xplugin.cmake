@@ -14,4 +14,11 @@ function(add_xplugin target_name)
         POSITION_INDEPENDENT_CODE ON
     )
 
+    if(EMSCRIPTEN)
+        message(STATUS "Emscripten detected, adding -sSIDE_MODULE=1 to target ${target_name}")
+        target_link_options(${target_name}
+            PUBLIC "SHELL: -sSIDE_MODULE=1"
+        )
+    endif()
+
 endfunction()

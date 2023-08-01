@@ -89,12 +89,6 @@ endif()
 set_property(TARGET xplugin PROPERTY CXX_STANDARD 17)
 target_compile_features(xplugin INTERFACE cxx_std_17)
 
-# compile with fpic
-set_target_properties(xplugin PROPERTIES
-    POSITION_INDEPENDENT_CODE ON
-)
-
-
 target_include_directories(xplugin INTERFACE $<BUILD_INTERFACE:${XPLUGIN_INCLUDE_DIR}>
                                                          $<INSTALL_INTERFACE:include>)
 
