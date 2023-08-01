@@ -7,9 +7,9 @@ Generic plugin framework in C++.
 ## Features
 
 - [x] Generic plugin framework
-- [x] Abitrary abstract base classes can be used as plugin interface
+- [x] Arbitrary abstract base classes can be used as plugin interface
 - [x] Customizable with custom plugin factories (see examples)
-- [x] Works on Linux, Mac and Windows and emscripten
+- [x] Works on linux, mac, windows and emscripten
 
 ## Usage
 
