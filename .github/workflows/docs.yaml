@@ -1,8 +1,9 @@
 name: Build and deploy docs
 on:
+  # only run when tags are pushed
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - '*'
 jobs:
   docs:
     strategy:
