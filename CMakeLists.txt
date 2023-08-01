@@ -75,16 +75,16 @@ if((APPLE OR UNIX OR LINUX ) AND NOT EMSCRIPTEN)
     target_link_libraries(xplugin_host INTERFACE ${CMAKE_DL_LIBS})
 endif()
 
-# ################################################################
-# # Flags
-# ################################################################
-# if(EMSCRIPTEN)
-#     # compiler flags
-#     set_target_properties(xplugin_host PROPERTIES COMPILE_FLAGS "-s MAIN_MODULE=1")
-#     set_target_properties(xplugin_plugin PROPERTIES COMPILE_FLAGS "-s SIDE_MODULE=1")
-#     set_target_properties(xplugin_host PROPERTIES LINK_FLAGS "-s MAIN_MODULE=1")
-#     set_target_properties(xplugin_plugin PROPERTIES LINK_FLAGS "-s SIDE_MODULE=1")
-# endif()
+################################################################
+# Flags
+################################################################
+if(EMSCRIPTEN)
+    # compiler flags
+    set_target_properties(xplugin_host PROPERTIES COMPILE_FLAGS "-s MAIN_MODULE=1")
+    set_target_properties(xplugin_plugin PROPERTIES COMPILE_FLAGS "-s SIDE_MODULE=1")
+    set_target_properties(xplugin_host PROPERTIES LINK_FLAGS "-s MAIN_MODULE=1")
+    set_target_properties(xplugin_plugin PROPERTIES LINK_FLAGS "-s SIDE_MODULE=1")
+endif()
 
 set_property(TARGET xplugin PROPERTY CXX_STANDARD 17)
 target_compile_features(xplugin INTERFACE cxx_std_17)
