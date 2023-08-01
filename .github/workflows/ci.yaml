@@ -237,6 +237,9 @@ jobs:
             cd bld
             make docs_sphinx
 
+            # add .nojekyll file to docs folder
+            touch docs/html/.nojekyll
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.7
         with:
