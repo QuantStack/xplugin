@@ -39,6 +39,7 @@ jobs:
               -DCMAKE_BUILD_TYPE=Release \
               -DXPLUGIN_BUILD_TESTS=ON \
               -DXPLUGIN_BUILD_EXAMPLES=ON \
+              -DXPLUGIN_BUILD_DOCS=ON \
               -DCMAKE_PREFIX_PATH=$CONDA_PREFIX \
           .. -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX
 
@@ -70,6 +71,12 @@ jobs:
             pushd custom_factory_with_metadata
             ./main_custom_factory_with_metadata .
             popd
+
+      - name: Build docs
+        shell: bash -l {0}
+        run: |
+            cd bld
+            make docs
 
       - name: Install
         shell: bash -l {0}

@@ -28,6 +28,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/xplugin_emscripten_utils.cmake)
 
 OPTION(XPLUGIN_BUILD_TESTS "Build the test suite" ON)
 OPTION(XPLUGIN_BUILD_EXAMPLES "Build the examples" ON)
+OPTION(XPLUGIN_BUILD_DOCS "Build the documentation" OFF)
 
 ################################################################
 # Versionning
@@ -109,6 +110,14 @@ endif()
 ################################################################
 if(XPLUGIN_BUILD_EXAMPLES)
     add_subdirectory(examples)
+endif()
+
+
+################################################################
+# Documentation
+################################################################
+if(XPLUGIN_BUILD_DOCS)
+    add_subdirectory(docs)
 endif()
 
 

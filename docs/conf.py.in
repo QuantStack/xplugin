@@ -1,0 +1,79 @@
+# Configuration file for the Sphinx documentation builder.
+#
+# For the full list of built-in configuration values, see the documentation:
+# https://www.sphinx-doc.org/en/master/usage/configuration.html
+
+# -- Project information -----------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+
+project = 'xplugin'
+copyright = '2023, Dr. Thorsten Beier and Johan Mabille'
+author = 'Dr. Thorsten Beier and Johan Mabille'
+
+
+
+# -- General configuration ---------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.autosectionlabel',
+    'sphinx.ext.todo',
+    'sphinx.ext.coverage',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.ifconfig',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.inheritance_diagram',
+    'breathe'
+]
+
+
+
+templates_path = ['_templates']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'breathe/*']
+
+
+
+# -- Options for HTML output -------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+
+# The theme to use for HTML and HTML Help pages.  See the documentation for
+# a list of builtin themes.
+#
+html_theme = 'sphinx_rtd_theme'
+html_theme_options = {
+    'canonical_url': '',
+    'analytics_id': '',
+    'display_version': True,
+    'prev_next_buttons_location': 'bottom',
+    'style_external_links': False,
+
+    'logo_only': False,
+
+    # Toc options
+    'collapse_navigation': True,
+    'sticky_navigation': True,
+    'navigation_depth': 4,
+    'includehidden': True,
+    'titles_only': False
+}
+# html_logo = ''
+# github_url = ''
+#html_baseurl = 'baZINGA'
+
+
+html_static_path = []
+
+
+# -- Breathe configuration -------------------------------------------------
+from pathlib import Path
+CMAKE_CURRENT_BINARY_DIR = Path("@CMAKE_CURRENT_BINARY_DIR@")
+XML_OUTPUT_DIR = CMAKE_CURRENT_BINARY_DIR /"docs_doxygen"/"xml/"
+
+
+breathe_projects = {
+	"xplugin": str(XML_OUTPUT_DIR),
+}
+breathe_default_project = "xplugin"
+breathe_default_members = ('members', 'undoc-members')

@@ -36,17 +36,17 @@
 namespace xp
 {
 #if (defined(__linux__) || defined(__unix__) || defined(__APPLE__))
-class xunix_shared_library
+class xshared_library
 {
   public:
-    xunix_shared_library(const xunix_shared_library &) = delete;
-    xunix_shared_library &operator=(const xunix_shared_library &) = delete;
+    xshared_library(const xshared_library &) = delete;
+    xshared_library &operator=(const xshared_library &) = delete;
 
-    inline xunix_shared_library(xunix_shared_library &&other) noexcept;
-    inline xunix_shared_library &operator=(xunix_shared_library &&other) noexcept;
+    inline xshared_library(xshared_library &&other) noexcept;
+    inline xshared_library &operator=(xshared_library &&other) noexcept;
 
-    inline xunix_shared_library(std::filesystem::path path);
-    inline ~xunix_shared_library();
+    inline xshared_library(std::filesystem::path path);
+    inline ~xshared_library();
 
     template <class T>
     inline T find_symbol(const std::string &name);
@@ -54,20 +54,19 @@ class xunix_shared_library
   private:
     void *m_handle;
 };
-using xshared_library = xunix_shared_library;
 #endif // (defined(__linux__) || defined(__unix__) || defined(__APPLE__))
 
 #ifdef _WIN32
-class xwindows_shared_library
+class xshared_library
 {
   public:
-    xwindows_shared_library(const xwindows_shared_library &) = delete;
-    xwindows_shared_library &operator=(const xwindows_shared_library &) = delete;
-    inline xwindows_shared_library(xwindows_shared_library &&other) noexcept;
-    inline xwindows_shared_library &operator=(xwindows_shared_library &&other) noexcept;
+    xshared_library(const xshared_library &) = delete;
+    xshared_library &operator=(const xshared_library &) = delete;
+    inline xshared_library(xshared_library &&other) noexcept;
+    inline xshared_library &operator=(xshared_library &&other) noexcept;
 
-    inline xwindows_shared_library(std::filesystem::path path);
-    inline ~xwindows_shared_library();
+    inline xshared_library(std::filesystem::path path);
+    inline ~xshared_library();
 
     template <class T>
     inline T find_symbol(const std::string &name);
@@ -76,24 +75,23 @@ class xwindows_shared_library
     HINSTANCE m_handle;
 };
 
-using xshared_library = xwindows_shared_library;
 #endif // _WIN32
 
 #if (defined(__linux__) || defined(__unix__) || defined(__APPLE__))
 
-xunix_shared_library::xunix_shared_library(xunix_shared_library &&other) noexcept
+xshared_library::xshared_library(xshared_library &&other) noexcept
 {
     m_handle = other.m_handle;
     other.m_handle = nullptr;
 }
-xunix_shared_library &xunix_shared_library::operator=(xunix_shared_library &&other) noexcept
+xshared_library &xshared_library::operator=(xshared_library &&other) noexcept
 {
     m_handle = other.m_handle;
     other.m_handle = nullptr;
     return *this;
 }
 
-xunix_shared_library::xunix_shared_library(std::filesystem::path path) : m_handle(nullptr)
+xshared_library::xshared_library(std::filesystem::path path) : m_handle(nullptr)
 {
     m_handle = dlopen(path.string().c_str(), RTLD_NOW | RTLD_GLOBAL);
     if (!m_handle)
@@ -103,7 +101,7 @@ xunix_shared_library::xunix_shared_library(std::filesystem::path path) : m_handl
 }
 
 template <class T>
-T xunix_shared_library::find_symbol(const std::string &name)
+T xshared_library::find_symbol(const std::string &name)
 {
     dlerror(); /* Clear any existing error */
     char *error;
@@ -119,7 +117,7 @@ T xunix_shared_library::find_symbol(const std::string &name)
     return reinterpret_cast<T>(sym);
 }
 
-xunix_shared_library::~xunix_shared_library()
+xshared_library::~xshared_library()
 {
     if (m_handle)
     {
@@ -129,20 +127,19 @@ xunix_shared_library::~xunix_shared_library()
 #endif
 
 #ifdef _WIN32
-xwindows_shared_library::xwindows_shared_library(xwindows_shared_library &&other) noexcept
+xshared_library::xshared_library(xshared_library &&other) noexcept
 {
     m_handle = other.m_handle;
     other.m_handle = nullptr;
 }
-xwindows_shared_library &xwindows_shared_library::operator=(xwindows_shared_library &&other) noexcept
+xshared_library &xshared_library::operator=(xshared_library &&other) noexcept
 {
     m_handle = other.m_handle;
     other.m_handle = nullptr;
     return *this;
 }
 
-xwindows_shared_library::xwindows_shared_library(std::filesystem::path path)
-    : m_handle(LoadLibrary(path.string().c_str()))
+xshared_library::xshared_library(std::filesystem::path path) : m_handle(LoadLibrary(path.string().c_str()))
 {
     if (!m_handle)
     {
@@ -153,7 +150,7 @@ xwindows_shared_library::xwindows_shared_library(std::filesystem::path path)
 }
 
 template <class T>
-T xwindows_shared_library::find_symbol(const std::string &name)
+T xshared_library::find_symbol(const std::string &name)
 {
     void *sym = GetProcAddress(m_handle, name.c_str());
     if (!sym)
@@ -164,7 +161,7 @@ T xwindows_shared_library::find_symbol(const std::string &name)
     }
     return reinterpret_cast<T>(sym);
 }
-xwindows_shared_library::~xwindows_shared_library()
+xshared_library::~xshared_library()
 {
     if (m_handle)
     {
