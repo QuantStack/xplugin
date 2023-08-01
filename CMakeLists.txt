@@ -15,9 +15,12 @@ set(XPLUGIN_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # cmake modules
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-# function to add plugins
+
+# helper function to add plugins
 set(XPLUGIN_XPLUGIN_LIBRARY xplugin_plugin)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/xplugin_add_xplugin.cmake)
+# helper functions(s) for emscripten
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/xplugin_emscripten_utils.cmake)
 
 ################################################################
 # Options
@@ -54,12 +57,7 @@ ${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_registry.hpp
 ################################################################
 #  Emscripten related
 ################################################################
-if(EMSCRIPTEN)
-    set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
-    set(CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS "-s SIDE_MODULE=1")
-    set(CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "-s SIDE_MODULE=1")
-    set(CMAKE_STRIP FALSE)
-endif()
+xplugin_add_emscripten_flags()
 
 ################################################################
 # Interface libraries
@@ -77,16 +75,16 @@ if((APPLE OR UNIX OR LINUX ) AND NOT EMSCRIPTEN)
     target_link_libraries(xplugin_host INTERFACE ${CMAKE_DL_LIBS})
 endif()
 
-################################################################
-# Flags
-################################################################
-if(EMSCRIPTEN)
-    # compiler flags
-    set_target_properties(xplugin_host PROPERTIES COMPILE_FLAGS "-s MAIN_MODULE=1")
-    set_target_properties(xplugin_plugin PROPERTIES COMPILE_FLAGS "-s SIDE_MODULE=1")
-    set_target_properties(xplugin_host PROPERTIES LINK_FLAGS "-s MAIN_MODULE=1")
-    set_target_properties(xplugin_plugin PROPERTIES LINK_FLAGS "-s SIDE_MODULE=1")
-endif()
+# ################################################################
+# # Flags
+# ################################################################
+# if(EMSCRIPTEN)
+#     # compiler flags
+#     set_target_properties(xplugin_host PROPERTIES COMPILE_FLAGS "-s MAIN_MODULE=1")
+#     set_target_properties(xplugin_plugin PROPERTIES COMPILE_FLAGS "-s SIDE_MODULE=1")
+#     set_target_properties(xplugin_host PROPERTIES LINK_FLAGS "-s MAIN_MODULE=1")
+#     set_target_properties(xplugin_plugin PROPERTIES LINK_FLAGS "-s SIDE_MODULE=1")
+# endif()
 
 set_property(TARGET xplugin PROPERTY CXX_STANDARD 17)
 target_compile_features(xplugin INTERFACE cxx_std_17)
