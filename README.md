@@ -1,4 +1,7 @@
 # xplugin
+
+[![ci](https://github.com/QuantStack/xplugin/actions/workflows/ci.yaml/badge.svg)](https://github.com/QuantStack/xplugin/actions/workflows/ci.yaml)
+
 Generic plugin framework in C++.
 
 ## Features
