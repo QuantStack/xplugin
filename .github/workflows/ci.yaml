@@ -76,7 +76,7 @@ jobs:
         shell: bash -l {0}
         run: |
             cd bld
-            make docs
+            make docs_sphinx
 
       - name: Install
         shell: bash -l {0}
