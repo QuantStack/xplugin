@@ -1,0 +1,54 @@
+name: Build and deploy docs
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+jobs:
+  docs:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Conda environment from environment.yml
+        uses: mamba-org/setup-micromamba@v1
+        with:
+          environment-file: environment.yml
+          init-shell: >-
+            bash
+          cache-environment: true
+          post-cleanup: 'all'
+
+      - name: cmake configure
+        shell: bash -l {0}
+        run: |
+          mkdir -p bld
+          cd bld
+          cmake \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DXPLUGIN_BUILD_TESTS=OFF \
+              -DXPLUGIN_BUILD_EXAMPLES= \
+              -DXPLUGIN_BUILD_DOCS=ON \
+              -DCMAKE_PREFIX_PATH=$CONDA_PREFIX \
+              -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX \
+          ..
+
+      - name: Build docs
+        shell: bash -l {0}
+        run: |
+            cd bld
+            make docs_sphinx
+
+            # add .nojekyll file to docs folder
+            touch docs/html/.nojekyll
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.7
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: bld/docs/html # The folder the action should deploy.
