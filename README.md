@@ -1,18 +1,21 @@
 # xplugin
+
+[![ci](https://github.com/QuantStack/xplugin/actions/workflows/ci.yaml/badge.svg)](https://github.com/QuantStack/xplugin/actions/workflows/ci.yaml)
+
 Generic plugin framework in C++.
 
 ## Features
 
 - [x] Generic plugin framework
-- [x] Abitrary abstract base classes can be used as plugin interface
+- [x] Arbitrary abstract base classes can be used as plugin interface
 - [x] Customizable with custom plugin factories (see examples)
-- [x] Works on Linux, Mac and Windows and emscripten
+- [x] Works on linux, mac, windows and emscripten
 
 ## Usage
 
 ## Example 1
 
-All plugins are derived from a a base class, in the first example `MyPluginBase`.
+All plugins are derived from a base class, in the first example `MyPluginBase`.
 All concrete plugins are derived from `MyPluginBase` and implement the pure virtual function (in this example it is only the `do_something()` function).
 Furthermore, for this example, we assume that all concrete plugins have an empty constructor.
 (see example 2 for a more complex example)
@@ -114,7 +117,7 @@ int main(int argc, char** argv)
 
 We again define a plugin interface `MyOtherPluginBase` and a concrete plugin  implementations `MyOtherPluginA` and `MyOtherPluginB`.
 The difference to the first example is that the concrete plugins have a constructor with arguments.
-But both plugins have the same constructor signature. (see example 3 for a more complex example)
+But both plugins have the same constructor signature.
 
 `my_other_plugin_base.hpp`:
 ```cpp

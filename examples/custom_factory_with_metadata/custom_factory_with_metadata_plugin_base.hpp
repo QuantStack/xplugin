@@ -1,4 +1,6 @@
-#pragma once
+#ifndef CUSTOM_FACTORY_WITH_METADATA_PLUGIN_BASE_HPP
+#define CUSTOM_FACTORY_WITH_METADATA_PLUGIN_BASE_HPP
+
 #include <string>
 
 class PluginBase
@@ -24,3 +26,5 @@ class PluginFactoryBase
     virtual std::string description() const = 0;
     virtual std::string version() const = 0;
 };
+
+#endif // CUSTOM_FACTORY_WITH_METADATA_PLUGIN_BASE_HPP
