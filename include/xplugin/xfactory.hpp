@@ -27,9 +27,7 @@ class xfactory_base
 {
   public:
     using base_type = BASE_TYPE;
-    virtual ~xfactory_base()
-    {
-    }
+    virtual ~xfactory_base() = default;
     virtual std::unique_ptr<base_type> create(ARGS...) = 0;
 };
 
@@ -41,9 +39,7 @@ class xfactory : public xfactory_base<BASE_TYPE, ARGS...>
     using concrete_type = CONCRETE_TYPE;
     using base_type = BASE_TYPE;
     using factory_base_type = xfactory_base<BASE_TYPE, ARGS...>;
-    virtual ~xfactory()
-    {
-    }
+    virtual ~xfactory() = default;
     std::unique_ptr<base_type> create(ARGS... args) override;
 };
 
