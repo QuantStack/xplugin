@@ -25,13 +25,30 @@ template <class FACTORY_BASE>
 class xplugin_registry
 {
   public:
+    enum class add_plugin_result
+    {
+        not_found,
+        already_exists,
+        added
+    };
+
     using factory_base_type = FACTORY_BASE;
 
     inline xplugin_registry() = default;
 
+    // add all plugins from a directory
     inline std::size_t add_from_directory(const std::filesystem::path &path,
                                           const std::string &prefix = get_default_library_prefix(),
                                           const std::string &extension = get_default_library_extension());
+
+    inline add_plugin_result add_plugin(const std::filesystem::path &path, const std::string &name,
+                                        const std::string &prefix = get_default_library_prefix(),
+                                        const std::string &extension = get_default_library_extension());
+
+    template <class PATH_ITERATOR>
+    inline add_plugin_result add_plugin(PATH_ITERATOR begin, PATH_ITERATOR end, const std::string name,
+                                        const std::string &prefix = get_default_library_prefix(),
+                                        const std::string &extension = get_default_library_extension());
 
     inline std::unique_ptr<factory_base_type> create_factory(const std::string &name);
 
@@ -65,12 +82,61 @@ std::size_t xplugin_registry<FACTORY_BASE>::add_from_directory(const std::filesy
             if (name.substr(0, prefix.size()) == prefix)
             {
                 name = name.substr(prefix.size());
-                m_libraries.emplace(name, entry.path());
-                ++n_added;
+
+                // check if name is already in registry
+                if (m_libraries.find(name) != m_libraries.end())
+                {
+                    continue;
+                }
+                else
+                {
+                    m_libraries.emplace(name, entry.path());
+                    ++n_added;
+                }
             }
         }
     }
     return n_added;
+}
+
+template <class FACTORY_BASE>
+typename xplugin_registry<FACTORY_BASE>::add_plugin_result xplugin_registry<FACTORY_BASE>::add_plugin(
+    const std::filesystem::path &path, const std::string &name, const std::string &prefix, const std::string &extension)
+{
+    xscoped_lock<xmutex> lock(m_mutex);
+
+    if (m_libraries.find(name) != m_libraries.end())
+    {
+        return add_plugin_result::already_exists;
+    }
+    else
+    {
+        const auto filename = path / (prefix + name + extension);
+        if (!std::filesystem::exists(filename))
+        {
+            return add_plugin_result::not_found;
+        }
+        m_libraries.emplace(name, path / (prefix + name + extension));
+        return add_plugin_result::added;
+    }
+}
+
+template <class FACTORY_BASE>
+template <class PATH_ITERATOR>
+typename xplugin_registry<FACTORY_BASE>::add_plugin_result xplugin_registry<FACTORY_BASE>::add_plugin(
+    PATH_ITERATOR begin, PATH_ITERATOR end, const std::string name, const std::string &prefix,
+    const std::string &extension)
+{
+    while (begin != end)
+    {
+        auto res = add_plugin(*begin, name, prefix, extension);
+        if (res == add_plugin_result::added || res == add_plugin_result::already_exists)
+        {
+            return res;
+        }
+        ++begin;
+    }
+    return add_plugin_result::not_found;
 }
 
 template <class FACTORY_BASE>

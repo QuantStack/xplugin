@@ -11,11 +11,10 @@
 #include <filesystem>
 #include <memory>
 #include <xplugin/xshared_library.hpp>
+#include <xplugin/xthreads.hpp>
 
 namespace xp
 {
-// note that this class is not thread safe but the
-// xplugin_registry containing the xlazy_shared_library objects is
 
 class xlazy_shared_library
 {
@@ -23,8 +22,8 @@ class xlazy_shared_library
     xlazy_shared_library(const xlazy_shared_library &) = delete;
     xlazy_shared_library &operator=(const xlazy_shared_library &) = delete;
 
-    xlazy_shared_library(xlazy_shared_library &&other) = default;
-    xlazy_shared_library &operator=(xlazy_shared_library &&other) = default;
+    xlazy_shared_library(xlazy_shared_library &&other) = delete;
+    xlazy_shared_library &operator=(xlazy_shared_library &&other) = delete;
 
     ~xlazy_shared_library() = default;
 
@@ -36,6 +35,7 @@ class xlazy_shared_library
     const std::filesystem::path &path() const noexcept;
 
   private:
+    xp::xmutex m_mutex;
     std::filesystem::path m_path;
     std::unique_ptr<xshared_library> m_library;
 };
@@ -49,11 +49,17 @@ inline xlazy_shared_library::xlazy_shared_library(const std::filesystem::path &p
 template <class T>
 inline T xlazy_shared_library::find_symbol(const std::string &name)
 {
+    xscoped_lock<xp::xmutex> lock(m_mutex);
     if (!m_library)
     {
         m_library.reset(new xshared_library(m_path));
     }
     return m_library->find_symbol<T>(name);
+}
+
+const std::filesystem::path &xlazy_shared_library::path() const noexcept
+{
+    return m_path;
 }
 
 } // namespace xp
