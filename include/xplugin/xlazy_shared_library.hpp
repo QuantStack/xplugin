@@ -32,7 +32,7 @@ class xlazy_shared_library
     template <class T>
     inline T find_symbol(const std::string &name);
 
-    const std::filesystem::path &path() const noexcept;
+    inline const std::filesystem::path &path() const noexcept;
 
   private:
     xp::xmutex m_mutex;

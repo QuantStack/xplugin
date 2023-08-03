@@ -7,6 +7,15 @@
 
 #include <testplugin_a/plugin_base.hpp>
 
+// to get a unique type for each test
+// since xp::get_registry<tfactory_type>()
+// returns a reference to a static variable
+template <class FACTORY, int TAG>
+class tagged_factory : public FACTORY
+{
+    using FACTORY::FACTORY;
+};
+
 TEST_CASE("test_xplugin")
 {
     using base_type = plugin::PluginBase;
@@ -54,8 +63,10 @@ TEST_CASE("test_xregistry_getter")
 {
     using base_type = plugin::PluginBase;
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
+    // to get a different singleton for each test
+    using test_factory_type = tagged_factory<factory_base_type, __LINE__>;
 
-    auto &registry = xp::get_registry<factory_base_type>();
+    auto &registry = xp::get_registry<test_factory_type>();
     registry.add_from_directory("testplugin_a");
 
     CHECK_EQ(registry.size(), 3);
@@ -140,4 +151,58 @@ TEST_CASE("test_xregistry_open_same_lib_multiple_times")
     {
         delete registry;
     }
+}
+
+TEST_CASE("test_xregistry_single_plugin")
+{
+    using base_type = plugin::PluginBase;
+    using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
+
+    // to get a different singleton for each test
+    using test_factory_type = tagged_factory<factory_base_type, __LINE__>;
+
+    auto &registry = xp::get_registry<test_factory_type>();
+    using registry_type = std::decay_t<decltype(registry)>;
+    {
+        auto ret = registry.add_plugin("testplugin_a", "plugin_01");
+        CHECK(ret == registry_type::add_plugin_result::added);
+    }
+
+    CHECK_EQ(registry.size(), 1);
+
+    {
+        auto names = registry.plugin_names();
+        CHECK_EQ(names.size(), 1);
+        CHECK(names.count("plugin_01"));
+    }
+
+    // check idempotency
+    {
+        auto ret = registry.add_plugin("testplugin_a", "plugin_01");
+        CHECK(ret == registry_type::add_plugin_result::already_exists);
+    }
+
+    CHECK_EQ(registry.size(), 1);
+
+    {
+        auto names = registry.plugin_names();
+        CHECK_EQ(names.size(), 1);
+        CHECK(names.count("plugin_01"));
+    }
+}
+
+TEST_CASE("test_xregistry_non_exisiting_single_plugin")
+{
+    using base_type = plugin::PluginBase;
+    using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
+
+    // to get a different singleton for each test
+    using test_factory_type = tagged_factory<factory_base_type, __LINE__>;
+
+    auto &registry = xp::get_registry<test_factory_type>();
+
+    using registry_type = std::decay_t<decltype(registry)>;
+
+    auto ret = registry.add_plugin("testplugin_a", "plugin_NOT_EXISTING");
+    CHECK(ret == registry_type::add_plugin_result::not_found);
 }
