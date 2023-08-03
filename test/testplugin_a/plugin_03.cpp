@@ -7,7 +7,9 @@
 class Plugin03 : public plugin::PluginBase
 {
   public:
-    Plugin03(int a, std::string b) : m_a(a), m_b(b)
+    Plugin03(int a, std::string b)
+        : m_a(a),
+          m_b(b)
     {
     }
     std::string name() override

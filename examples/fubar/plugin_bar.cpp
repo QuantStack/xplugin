@@ -4,7 +4,8 @@
 class Bar : public fubar::FubarBase
 {
   public:
-    Bar(const std::string name) : name_(name)
+    Bar(const std::string name)
+        : name_(name)
     {
     }
     virtual ~Bar() = default;

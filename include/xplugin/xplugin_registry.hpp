@@ -14,8 +14,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include <xplugin/xlazy_shared_library.hpp>
 #include <xplugin/xplugin_config.hpp>
-#include <xplugin/xshared_library.hpp>
+#include <xplugin/xthreads.hpp>
 
 namespace xp
 {
@@ -25,8 +26,6 @@ class xplugin_registry
 {
   public:
     using factory_base_type = FACTORY_BASE;
-
-    using create_plugin_factory_type = factory_base_type *(*)();
 
     inline xplugin_registry() = default;
 
@@ -40,17 +39,21 @@ class xplugin_registry
     inline std::unordered_set<std::string> plugin_names();
 
   private:
+    using create_plugin_factory_type = factory_base_type *(*)();
+
     static inline std::string get_default_library_extension();
     static inline std::string get_default_library_prefix();
 
-    std::unordered_map<std::string, xshared_library> m_open_libraries;
-    std::unordered_map<std::string, std::filesystem::path> m_locations;
+    std::unordered_map<std::string, xlazy_shared_library> m_libraries;
+    mutable xmutex m_mutex;
 };
 
 template <class FACTORY_BASE>
 std::size_t xplugin_registry<FACTORY_BASE>::add_from_directory(const std::filesystem::path &path,
                                                                const std::string &prefix, const std::string &extension)
 {
+    xscoped_lock<xmutex> lock(m_mutex);
+
     std::size_t n_added = 0;
     for (const auto &entry : std::filesystem::directory_iterator(path))
     {
@@ -62,7 +65,7 @@ std::size_t xplugin_registry<FACTORY_BASE>::add_from_directory(const std::filesy
             if (name.substr(0, prefix.size()) == prefix)
             {
                 name = name.substr(prefix.size());
-                m_locations[name] = entry.path();
+                m_libraries.emplace(name, entry.path());
                 ++n_added;
             }
         }
@@ -73,8 +76,10 @@ std::size_t xplugin_registry<FACTORY_BASE>::add_from_directory(const std::filesy
 template <class FACTORY_BASE>
 std::unordered_set<std::string> xplugin_registry<FACTORY_BASE>::plugin_names()
 {
+    xscoped_lock<xmutex> lock(m_mutex);
+
     std::unordered_set<std::string> res;
-    for (const auto &[key, value] : m_locations)
+    for (const auto &[key, value] : m_libraries)
     {
         res.insert(key);
     }
@@ -84,33 +89,22 @@ std::unordered_set<std::string> xplugin_registry<FACTORY_BASE>::plugin_names()
 template <class FACTORY_BASE>
 std::unique_ptr<FACTORY_BASE> xplugin_registry<FACTORY_BASE>::create_factory(const std::string &name)
 {
-    auto find_res = m_locations.find(name);
-    if (find_res == m_locations.end())
+    xscoped_lock<xmutex> lock(m_mutex);
+    auto find_res = m_libraries.find(name);
+    if (find_res == m_libraries.end())
     {
         throw std::runtime_error("Could not find plugin factory for " + name);
     }
-
-    xshared_library *library_ptr = nullptr;
-    auto open_find_res = m_open_libraries.find(name);
-    if (open_find_res != m_open_libraries.end())
-    {
-        library_ptr = &open_find_res->second;
-    }
-    else
-    {
-        xshared_library library(find_res->second);
-        auto [iter, inserted] = m_open_libraries.emplace(name, std::move(library));
-        library_ptr = &(iter->second);
-    }
-
-    auto factory = library_ptr->find_symbol<create_plugin_factory_type>("create_plugin_factory")();
+    auto &library = find_res->second;
+    auto factory = library.template find_symbol<create_plugin_factory_type>("create_plugin_factory")();
     return std::unique_ptr<factory_base_type>(factory);
 }
 
 template <class FACTORY_BASE>
 std::size_t xplugin_registry<FACTORY_BASE>::size() const
 {
-    return m_locations.size();
+    xscoped_lock<xmutex> lock(m_mutex);
+    return m_libraries.size();
 }
 
 template <class FACTORY_BASE>

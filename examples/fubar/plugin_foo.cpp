@@ -4,7 +4,8 @@
 class Foo : public fubar::FubarBase
 {
   public:
-    Foo(const std::string name) : name_(name)
+    Foo(const std::string name)
+        : name_(name)
     {
     }
 
