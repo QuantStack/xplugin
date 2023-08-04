@@ -20,7 +20,11 @@ if(NOT EMSCRIPTEN)
     add_executable(cpp_tests_no_threads ${TEST_SOURCES})
 
     # compile definition to disable threading
-    target_compile_definitions(cpp_tests_no_threads PRIVATE XPLUGIN_NO_THREADS)
+    target_compile_definitions(cpp_tests_no_threads PUBLIC XPLUGIN_NO_THREADS)
+
+    # link threading library to cpp_tests
+    find_package(Threads REQUIRED)
+    target_link_libraries(cpp_tests PRIVATE Threads::Threads)
 
     #  function to set properties for both test executables
     function(set_tests_properties  test_target)
