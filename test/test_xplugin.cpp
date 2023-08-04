@@ -197,6 +197,45 @@ TEST_CASE("test_xregistry_single_plugin")
     }
 }
 
+TEST_CASE("test_xregistry_single_plugin_with_multiple_search_dirs")
+{
+    using base_type = plugin::PluginBase;
+    using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
+
+    // to get a different singleton for each test
+    using test_factory_type = tagged_factory<factory_base_type, __LINE__>;
+
+    auto &registry = xp::get_registry<test_factory_type>();
+    using registry_type = std::decay_t<decltype(registry)>;
+    {
+        std::vector<std::filesystem::path> search_dirs = {"testplugin_b", "testplugin_a"};
+        auto ret = registry.add_plugin("testplugin_a", "plugin_01");
+        CHECK(ret == registry_type::add_plugin_result::added);
+    }
+
+    CHECK_EQ(registry.size(), 1);
+
+    {
+        auto names = registry.plugin_names();
+        CHECK_EQ(names.size(), 1);
+        CHECK(names.count("plugin_01"));
+    }
+
+    // check idempotency
+    {
+        auto ret = registry.add_plugin("testplugin_a", "plugin_01");
+        CHECK(ret == registry_type::add_plugin_result::already_exists);
+    }
+
+    CHECK_EQ(registry.size(), 1);
+
+    {
+        auto names = registry.plugin_names();
+        CHECK_EQ(names.size(), 1);
+        CHECK(names.count("plugin_01"));
+    }
+}
+
 TEST_CASE("test_xregistry_non_exisiting_single_plugin")
 {
     using base_type = plugin::PluginBase;

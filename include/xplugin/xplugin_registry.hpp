@@ -54,6 +54,7 @@ class xplugin_registry
 
     inline std::size_t size() const;
     inline std::unordered_set<std::string> plugin_names();
+    inline bool contains(const std::string &name) const;
 
   private:
     using create_plugin_factory_type = factory_base_type *(*)();
@@ -150,6 +151,13 @@ std::unordered_set<std::string> xplugin_registry<FACTORY_BASE>::plugin_names()
         res.insert(key);
     }
     return res;
+}
+
+template <class FACTORY_BASE>
+bool xplugin_registry<FACTORY_BASE>::contains(const std::string &name) const
+{
+    xscoped_lock<xmutex> lock(m_mutex);
+    return m_libraries.find(name) != m_libraries.end();
 }
 
 template <class FACTORY_BASE>
