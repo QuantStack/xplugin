@@ -19,14 +19,14 @@ int main(int argc, char **argv)
 
     for (auto &p : registry.plugin_names())
     {
-        auto factory = registry.create_factory(p);
+        auto &factory = registry[p];
 
         std::cout << "plugin " << p << " factory metadata: " << std::endl;
-        std::cout << "  name: " << factory->name() << std::endl;
-        std::cout << "  description: " << factory->description() << std::endl;
-        std::cout << "  version: " << factory->version() << std::endl;
+        std::cout << "  name: " << factory.name() << std::endl;
+        std::cout << "  description: " << factory.description() << std::endl;
+        std::cout << "  version: " << factory.version() << std::endl;
 
-        auto instance = factory->create();
+        auto instance = factory.create();
         std::cout << "plugin " << p << " says: " << instance->some_function() << std::endl;
     }
 }

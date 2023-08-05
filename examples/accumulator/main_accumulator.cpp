@@ -31,14 +31,12 @@ int main(int argc, char **argv)
     std::vector<double> data = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
     // create and use plugin_accumulator_max
-    auto factory_max = registry.create_factory("plugin_accumulator_max");
-    auto acc_max = factory_max->create();
+    auto acc_max = registry["plugin_accumulator_max"].create();
     auto result_max = acc_max->accumulate(data);
     std::cout << "accumulator " << acc_max->name() << " result: " << result_max << std::endl;
 
     // create and use plugin_accumulator_min
-    auto factory_min = registry.create_factory("plugin_accumulator_min");
-    auto acc_min = factory_min->create();
+    auto acc_min = registry["plugin_accumulator_min"].create();
     auto result_min = acc_min->accumulate(data);
     std::cout << "accumulator " << acc_min->name() << " result: " << result_min << std::endl;
 }

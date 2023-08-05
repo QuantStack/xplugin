@@ -39,17 +39,15 @@ TEST_CASE("test_xplugin")
         CHECK(names.count("plugin_02"));
         CHECK(names.count("plugin_03"));
 
-        auto factory_01 = registry.create_factory("plugin_01");
-        auto factory_02 = registry.create_factory("plugin_02");
-        auto factory_03 = registry.create_factory("plugin_03");
+        // factories are references
+        auto &factory_01 = registry["plugin_01"];
+        auto &factory_02 = registry["plugin_02"];
+        auto &factory_03 = registry["plugin_03"];
 
-        CHECK(factory_01);
-        CHECK(factory_02);
-        CHECK(factory_03);
-
-        auto plugin_01 = factory_01->create(1, "a");
-        auto plugin_02 = factory_02->create(2, "b");
-        auto plugin_03 = factory_03->create(3, "c");
+        // plugin instances are in unique_ptrs
+        auto plugin_01 = factory_01.create(1, "a");
+        auto plugin_02 = factory_02.create(2, "b");
+        auto plugin_03 = factory_03.create(3, "c");
 
         CHECK(plugin_01);
         CHECK(plugin_02);
@@ -83,17 +81,14 @@ TEST_CASE("test_xregistry_getter")
     CHECK(names.count("plugin_02"));
     CHECK(names.count("plugin_03"));
 
-    auto factory_01 = registry.create_factory("plugin_01");
-    auto factory_02 = registry.create_factory("plugin_02");
-    auto factory_03 = registry.create_factory("plugin_03");
+    // factories are references
+    auto &factory_01 = registry["plugin_01"];
+    auto &factory_02 = registry["plugin_02"];
+    auto &factory_03 = registry["plugin_03"];
 
-    CHECK(factory_01);
-    CHECK(factory_02);
-    CHECK(factory_03);
-
-    auto plugin_01 = factory_01->create(1, "a");
-    auto plugin_02 = factory_02->create(2, "b");
-    auto plugin_03 = factory_03->create(3, "c");
+    auto plugin_01 = factory_01.create(1, "a");
+    auto plugin_02 = factory_02.create(2, "b");
+    auto plugin_03 = factory_03.create(3, "c");
 
     CHECK(plugin_01);
     CHECK(plugin_02);
@@ -131,17 +126,14 @@ TEST_CASE("test_xregistry_open_same_lib_multiple_times")
         CHECK(names.count("plugin_02"));
         CHECK(names.count("plugin_03"));
 
-        auto factory_01 = registry->create_factory("plugin_01");
-        auto factory_02 = registry->create_factory("plugin_02");
-        auto factory_03 = registry->create_factory("plugin_03");
+        // factories are references
+        auto &factory_01 = registry->operator[]("plugin_01");
+        auto &factory_02 = registry->operator[]("plugin_02");
+        auto &factory_03 = registry->operator[]("plugin_03");
 
-        CHECK(factory_01);
-        CHECK(factory_02);
-        CHECK(factory_03);
-
-        auto plugin_01 = factory_01->create(1, "a");
-        auto plugin_02 = factory_02->create(2, "b");
-        auto plugin_03 = factory_03->create(3, "c");
+        auto plugin_01 = factory_01.create(1, "a");
+        auto plugin_02 = factory_02.create(2, "b");
+        auto plugin_03 = factory_03.create(3, "c");
 
         CHECK(plugin_01);
         CHECK(plugin_02);
@@ -255,7 +247,7 @@ TEST_CASE("parallel_access")
     using base_type = plugin::PluginBase;
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
     using test_factory_type = tagged_factory<factory_base_type, __LINE__>;
-    using plugin_registry_type = xp::xplugin_registry<test_factory_type>;
+    using plugin_registry_type = xp::xthread_save_plugin_registry<test_factory_type>;
 
     for (std::size_t i = 0; i < 1000; ++i)
     {
@@ -268,17 +260,14 @@ TEST_CASE("parallel_access")
             CHECK(names.count("plugin_02"));
             CHECK(names.count("plugin_03"));
 
-            auto factory_01 = registry.create_factory("plugin_01");
-            auto factory_02 = registry.create_factory("plugin_02");
-            auto factory_03 = registry.create_factory("plugin_03");
+            // factories are references
+            auto &factory_01 = registry["plugin_01"];
+            auto &factory_02 = registry["plugin_02"];
+            auto &factory_03 = registry["plugin_03"];
 
-            CHECK(factory_01);
-            CHECK(factory_02);
-            CHECK(factory_03);
-
-            auto plugin_01 = factory_01->create(1, "a");
-            auto plugin_02 = factory_02->create(2, "b");
-            auto plugin_03 = factory_03->create(3, "c");
+            auto plugin_01 = factory_01.create(1, "a");
+            auto plugin_02 = factory_02.create(2, "b");
+            auto plugin_03 = factory_03.create(3, "c");
 
             CHECK(plugin_01);
             CHECK(plugin_02);

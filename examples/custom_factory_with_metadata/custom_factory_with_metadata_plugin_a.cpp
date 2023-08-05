@@ -24,9 +24,9 @@ class PluginAFactory : public PluginFactoryBase
   public:
     using factory_base_type = PluginFactoryBase;
 
-    PluginBase *create() override
+    std::unique_ptr<PluginBase> create() override
     {
-        return new PluginA();
+        return std::make_unique<PluginA>();
     }
 
     std::string name() const override

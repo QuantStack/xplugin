@@ -104,8 +104,8 @@ int main(int argc, char** argv)
 
     for (auto& name : registry.plugin_names()){
         std::cout << name << std::endl;
-        auto factory = registry.create_factory(name);
-        auto plugin = factory->create();
+        auto & factory = registry[name];
+        auto plugin = factory.create();
         plugin->do_something();
     }
 }
@@ -223,8 +223,7 @@ int main(int argc, char** argv)
 
     for (auto& name : registry.plugin_names()){
         std::cout << name << std::endl;
-        auto factory = registry.create_factory(name);
-        auto plugin = factory->create(some_data, some_other_data);
+        auto plugin = registry[name].create(some_data, some_other_data);
         plugin->do_something();
     }
 }

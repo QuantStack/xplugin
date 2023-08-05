@@ -51,7 +51,7 @@ int main(int argc, char **argv)
     for (const auto &plugin_name : registry.plugin_names())
     {
         // create and use plugin_serialize_json
-        auto plugin = registry.create_factory(plugin_name)->create();
+        auto plugin = registry[plugin_name].create();
         auto serialized = plugin->serialize(data);
         std::cout << "serialized with" << plugin->name() << ":" << std::endl << serialized << std::endl;
 

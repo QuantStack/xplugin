@@ -12,7 +12,6 @@ if(NOT EMSCRIPTEN)
     SET(TEST_SOURCES main_test.cpp
         test_xplugin.cpp
         test_xshared_library.cpp
-        test_xlazy_shared_library.cpp
     )
 
     # Make test executable (one with threading support, one without)
