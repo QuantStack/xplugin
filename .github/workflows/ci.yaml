@@ -128,19 +128,11 @@ jobs:
            -DCMAKE_INSTALL_PREFIX="%CONDA_PREFIX%
           cmake --build . --config Release
 
-      - name: Run C++ tests without threads
+      - name: Run C++ tests
         shell: cmd /C CALL {0}
         run: |
           cd bld
-          cd test
-          cpp_tests_no_threads.exe
-
-      - name: Run C++ tests with threads
-        shell: cmd /C CALL {0}
-        run: |
-          cd bld
-          cd test
-          cpp_test.exe
+          ctest -V --config Release
 
       - name: Install
         shell: cmd /C CALL {0}

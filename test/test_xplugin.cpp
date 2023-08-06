@@ -16,19 +16,15 @@
 
 TEST_CASE("test_xplugin")
 {
-    std::cout << "test_xplugin" << std::endl;
-
     using base_type = plugin::PluginBase;
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
     using plugin_registry_type = xp::xplugin_registry<factory_base_type>;
 
-    std::cout << "test_xplugin: create registry" << std::endl;
     plugin_registry_type registry("testplugin_a");
 
     {
         CHECK_EQ(registry.size(), 3);
 
-        std::cout << "test_xplugin: plugin_names" << std::endl;
         auto names = registry.plugin_names();
         CHECK_EQ(names.size(), 3);
         CHECK(names.count("plugin_01"));
@@ -36,13 +32,11 @@ TEST_CASE("test_xplugin")
         CHECK(names.count("plugin_03"));
 
         // factories are references
-        std::cout << "create factories" << std::endl;
         auto factory_01 = registry["plugin_01"];
         auto factory_02 = registry["plugin_02"];
         auto factory_03 = registry["plugin_03"];
 
         // plugin instances are in unique_ptrs
-        std::cout << "create plugins" << std::endl;
         auto plugin_01 = factory_01->create(1, "a");
         auto plugin_02 = factory_02->create(2, "b");
         auto plugin_03 = factory_03->create(3, "c");
@@ -51,56 +45,37 @@ TEST_CASE("test_xplugin")
         CHECK(plugin_02);
         CHECK(plugin_03);
 
-        std::cout << "check plugin names" << std::endl;
         CHECK_EQ(plugin_01->name(), "Plugin01");
         CHECK_EQ(plugin_02->name(), "Plugin02");
         CHECK_EQ(plugin_03->name(), "Plugin03");
 
-        std::cout << "check plugin greets" << std::endl;
         CHECK_EQ(plugin_01->greet(), "hello from Plugin01");
         CHECK_EQ(plugin_02->greet(), "hello from Plugin02");
         CHECK_EQ(plugin_03->greet(), "hello from Plugin03");
 
-        std::cout << "iterate" << std::endl;
         // // iterate over plugins
         SUBCASE("begin_end")
         {
             std::cout << "begin" << std::endl;
             auto begin = registry.begin();
-
             auto begin2 = registry.begin();
-
             CHECK(begin == begin2);
 
-            std::cout << "end" << std::endl;
             auto end = registry.end();
-
-            std::cout << "!=" << std::endl;
             CHECK(begin != end);
-
-            std::cout << "=!" << std::endl;
             CHECK(end != begin);
-
-            std::cout << "begin == begin" << std::endl;
             CHECK(begin == begin);
-
-            std::cout << "end == end" << std::endl;
             CHECK(end == end);
 
-            std::cout << "begin == registry.begin()" << std::endl;
             CHECK(begin == registry.begin());
-
-            std::cout << "begin == registry.end()" << std::endl;
             CHECK(end == registry.end());
 
-            std::cout << "distance" << std::endl;
             auto d = std::distance(begin, end);
             CHECK_EQ(d, 3);
         }
 
         SUBCASE("increment")
         {
-            std::cout << "increment" << std::endl;
             auto begin = registry.begin();
             auto end = registry.end();
             CHECK(begin != end);
@@ -126,16 +101,13 @@ TEST_CASE("test_xplugin")
 
         SUBCASE("dereference")
         {
-            std::cout << "dereference" << std::endl;
             auto begin = registry.begin();
             auto pair = *begin;
-            std::cout << "The value is" << pair.first << std::endl;
             CHECK_EQ(pair.first[0], 'p');
         }
 
         SUBCASE("iterator-values-copy")
         {
-            std::cout << "iterator-values-copy" << std::endl;
             std::set<std::string> plugin_names;
             for (auto p : registry)
             {
@@ -150,7 +122,6 @@ TEST_CASE("test_xplugin")
         }
         SUBCASE("iterator-values-ref")
         {
-            std::cout << "iterator-values-ref" << std::endl;
             std::set<std::string> plugin_names;
             for (auto &p : registry)
             {
@@ -165,7 +136,6 @@ TEST_CASE("test_xplugin")
         }
         SUBCASE("iterator-unpack")
         {
-            std::cout << "iterator-unpack" << std::endl;
             std::set<std::string> plugin_names;
             for (auto [name, factory] : registry)
             {
@@ -182,7 +152,6 @@ TEST_CASE("test_xplugin")
 
 TEST_CASE("test_xregistry_getter")
 {
-    std::cout << "test_xregistry_getter" << std::endl;
 
     using base_type = plugin::PluginBase;
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
@@ -269,7 +238,6 @@ TEST_CASE("test_xregistry_open_same_lib_multiple_times")
 #ifndef XPLUGIN_NO_THREADS
 TEST_CASE("parallel_access")
 {
-    std::cout << "parallel_access" << std::endl;
     using base_type = plugin::PluginBase;
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
     using plugin_registry_type = xp::xthread_save_plugin_registry<factory_base_type>;
@@ -312,7 +280,6 @@ TEST_CASE("parallel_access")
 #ifndef XPLUGIN_NO_THREADS
 TEST_CASE("parallel_iterator_access")
 {
-    std::cout << "parallel_iterator_access" << std::endl;
     using base_type = plugin::PluginBase;
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
     using plugin_registry_type = xp::xthread_save_plugin_registry<factory_base_type>;
