@@ -84,111 +84,111 @@ TEST_CASE("test_xplugin")
 
             CHECK(begin == begin2);
 
-            // std::cout << "end" << std::endl;
-            // auto end = registry.end();
+            std::cout << "end" << std::endl;
+            auto end = registry.end();
 
-            // std::cout << "!=" << std::endl;
-            // CHECK(begin != end);
+            std::cout << "!=" << std::endl;
+            CHECK(begin != end);
 
-            // std::cout << "=!" << std::endl;
-            // CHECK(end != begin);
+            std::cout << "=!" << std::endl;
+            CHECK(end != begin);
 
-            // std::cout << "begin == begin" << std::endl;
-            // CHECK(begin == begin);
+            std::cout << "begin == begin" << std::endl;
+            CHECK(begin == begin);
 
-            // std::cout << "end == end" << std::endl;
-            // CHECK(end == end);
+            std::cout << "end == end" << std::endl;
+            CHECK(end == end);
 
-            // std::cout << "begin == registry.begin()" << std::endl;
-            // CHECK(begin == registry.begin());
+            std::cout << "begin == registry.begin()" << std::endl;
+            CHECK(begin == registry.begin());
 
-            // std::cout << "begin == registry.end()" << std::endl;
-            // CHECK(end == registry.end());
+            std::cout << "begin == registry.end()" << std::endl;
+            CHECK(end == registry.end());
 
-            // std::cout << "distance" << std::endl;
-            // auto d = std::distance(begin, end);
-            // CHECK_EQ(d, 3);
+            std::cout << "distance" << std::endl;
+            auto d = std::distance(begin, end);
+            CHECK_EQ(d, 3);
         }
 
-        // SUBCASE("increment")
-        // {
-        //     std::cout << "increment" << std::endl;
-        //     auto begin = registry.begin();
-        //     auto end = registry.end();
-        //     CHECK(begin != end);
+        SUBCASE("increment")
+        {
+            std::cout << "increment" << std::endl;
+            auto begin = registry.begin();
+            auto end = registry.end();
+            CHECK(begin != end);
 
-        //     auto d = std::distance(begin, end);
-        //     CHECK_EQ(d, 3);
+            auto d = std::distance(begin, end);
+            CHECK_EQ(d, 3);
 
-        //     ++begin;
-        //     CHECK(begin != end);
-        //     d = std::distance(begin, end);
-        //     CHECK_EQ(d, 2);
+            ++begin;
+            CHECK(begin != end);
+            d = std::distance(begin, end);
+            CHECK_EQ(d, 2);
 
-        //     ++begin;
-        //     CHECK(begin != end);
-        //     d = std::distance(begin, end);
-        //     CHECK_EQ(d, 1);
+            ++begin;
+            CHECK(begin != end);
+            d = std::distance(begin, end);
+            CHECK_EQ(d, 1);
 
-        //     ++begin;
-        //     CHECK(begin == end);
-        //     d = std::distance(begin, end);
-        //     CHECK_EQ(d, 0);
-        // }
+            ++begin;
+            CHECK(begin == end);
+            d = std::distance(begin, end);
+            CHECK_EQ(d, 0);
+        }
 
-        // SUBCASE("dereference")
-        // {
-        //     std::cout << "dereference" << std::endl;
-        //     auto begin = registry.begin();
-        //     auto pair = *begin;
-        //     std::cout << "The value is" << pair.first << std::endl;
-        //     CHECK_EQ(pair.first[0], 'p');
-        // }
+        SUBCASE("dereference")
+        {
+            std::cout << "dereference" << std::endl;
+            auto begin = registry.begin();
+            auto pair = *begin;
+            std::cout << "The value is" << pair.first << std::endl;
+            CHECK_EQ(pair.first[0], 'p');
+        }
 
-        // SUBCASE("iterator-values-copy")
-        // {
-        //     std::cout << "iterator-values-copy" << std::endl;
-        //     std::set<std::string> plugin_names;
-        //     for (auto p : registry)
-        //     {
-        //         p.second->create(1, "a")->greet();
-        //         plugin_names.insert(p.first);
-        //     }
+        SUBCASE("iterator-values-copy")
+        {
+            std::cout << "iterator-values-copy" << std::endl;
+            std::set<std::string> plugin_names;
+            for (auto p : registry)
+            {
+                p.second->create(1, "a")->greet();
+                plugin_names.insert(p.first);
+            }
 
-        //     CHECK_EQ(plugin_names.size(), 3);
-        //     CHECK(plugin_names.count("plugin_01"));
-        //     CHECK(plugin_names.count("plugin_02"));
-        //     CHECK(plugin_names.count("plugin_03"));
-        // }
-        // SUBCASE("iterator-values-ref")
-        // {
-        //     std::cout << "iterator-values-ref" << std::endl;
-        //     std::set<std::string> plugin_names;
-        //     for (auto &p : registry)
-        //     {
-        //         p.second->create(1, "a")->greet();
-        //         plugin_names.insert(p.first);
-        //     }
+            CHECK_EQ(plugin_names.size(), 3);
+            CHECK(plugin_names.count("plugin_01"));
+            CHECK(plugin_names.count("plugin_02"));
+            CHECK(plugin_names.count("plugin_03"));
+        }
+        SUBCASE("iterator-values-ref")
+        {
+            std::cout << "iterator-values-ref" << std::endl;
+            std::set<std::string> plugin_names;
+            for (auto &p : registry)
+            {
+                p.second->create(1, "a")->greet();
+                plugin_names.insert(p.first);
+            }
 
-        //     CHECK_EQ(plugin_names.size(), 3);
-        //     CHECK(plugin_names.count("plugin_01"));
-        //     CHECK(plugin_names.count("plugin_02"));
-        //     CHECK(plugin_names.count("plugin_03"));
-        // }
-        // SUBCASE("iterator-unpack")
-        // {
-        //     std::cout << "iterator-unpack" << std::endl;
-        //     std::set<std::string> plugin_names;
-        //     for (auto [name, factory] : registry)
-        //     {
-        //         factory->create(1, "a")->greet();
-        //         plugin_names.insert(name);
-        //     }
-        //     CHECK_EQ(plugin_names.size(), 3);
-        //     CHECK(plugin_names.count("plugin_01"));
-        //     CHECK(plugin_names.count("plugin_02"));
-        //     CHECK(plugin_names.count("plugin_03"));
-        // }
+            CHECK_EQ(plugin_names.size(), 3);
+            CHECK(plugin_names.count("plugin_01"));
+            CHECK(plugin_names.count("plugin_02"));
+            CHECK(plugin_names.count("plugin_03"));
+        }
+        SUBCASE("iterator-unpack")
+        {
+            std::cout << "iterator-unpack" << std::endl;
+            std::set<std::string> plugin_names;
+            for (auto [name, factory] : registry)
+            {
+                factory->create(1, "a")->greet();
+                plugin_names.insert(name);
+            }
+            CHECK_EQ(plugin_names.size(), 3);
+            CHECK(plugin_names.count("plugin_01"));
+            CHECK(plugin_names.count("plugin_02"));
+            CHECK(plugin_names.count("plugin_03"));
+        }
     }
 }
 
