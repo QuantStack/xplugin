@@ -120,7 +120,6 @@ class xplugin_registry_impl
     static inline std::string get_default_library_prefix();
 
     std::unordered_map<std::string, lazy_shared_library_plugin_factory_type> m_lazy_shared_lib_factories;
-    // mutable mutex_type m_mutex;
 };
 
 } // namespace detail
@@ -172,11 +171,8 @@ inline bool xplugin_registry_iterator<REGISTRY, BASE_ITERATOR>::operator!=(const
 template <class REGISTRY, class BASE_ITERATOR>
 inline void xplugin_registry_iterator<REGISTRY, BASE_ITERATOR>::set_current_value() const
 {
-    // if (m_registry && !m_end)
-    {
-        m_current_value.first = m_base_iterator->first;
-        m_current_value.second = m_base_iterator->second.factory();
-    }
+    m_current_value.first = m_base_iterator->first;
+    m_current_value.second = m_base_iterator->second.factory();
 }
 
 template <class REGISTRY, class BASE_ITERATOR>
