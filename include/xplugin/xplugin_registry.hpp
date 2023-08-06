@@ -66,10 +66,10 @@ class xplugin_registry_iterator
   private:
     void set_current_value() const;
 
-    registry_type *m_registry;
+    registry_type *m_registry = nullptr;
     std::unordered_set<std::string> m_names;
     std::unordered_set<std::string>::const_iterator m_name_iterator;
-    mutable value_type m_current_value;
+    mutable value_type m_current_value = {"", nullptr};
 };
 
 template <class FACTORY_BASE, bool THREAD_SAFE>

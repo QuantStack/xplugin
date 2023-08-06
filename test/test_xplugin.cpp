@@ -77,11 +77,16 @@ TEST_CASE("test_xplugin")
         // // iterate over plugins
         SUBCASE("begin_end")
         {
-            std::cout << "begin_end" << std::endl;
+            std::cout << "begin" << std::endl;
             auto begin = registry.begin();
+
+            std::cout << "end" << std::endl;
             auto end = registry.end();
+
+            std::cout << "!=" << std::endl;
             CHECK(begin != end);
 
+            std::cout << "distance" << std::endl;
             auto d = std::distance(begin, end);
             CHECK_EQ(d, 3);
         }
