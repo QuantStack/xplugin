@@ -31,11 +31,16 @@ TEST_CASE("test_xplugin")
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
     using plugin_registry_type = xp::xplugin_registry<factory_base_type>;
 
+    std::cout << "test_xplugin: create registry" << std::endl;
     plugin_registry_type registry;
+
+    std::cout << "test_xplugin: add add_from_directory" << std::endl;
     registry.add_from_directory("testplugin_a");
+
     {
         CHECK_EQ(registry.size(), 3);
 
+        std::cout << "test_xplugin: plugin_names" << std::endl;
         auto names = registry.plugin_names();
         CHECK_EQ(names.size(), 3);
         CHECK(names.count("plugin_01"));
@@ -43,11 +48,13 @@ TEST_CASE("test_xplugin")
         CHECK(names.count("plugin_03"));
 
         // factories are references
+        std::cout << "create factories" << std::endl;
         auto factory_01 = registry["plugin_01"];
         auto factory_02 = registry["plugin_02"];
         auto factory_03 = registry["plugin_03"];
 
         // plugin instances are in unique_ptrs
+        std::cout << "create plugins" << std::endl;
         auto plugin_01 = factory_01->create(1, "a");
         auto plugin_02 = factory_02->create(2, "b");
         auto plugin_03 = factory_03->create(3, "c");
@@ -56,17 +63,21 @@ TEST_CASE("test_xplugin")
         CHECK(plugin_02);
         CHECK(plugin_03);
 
+        std::cout << "check plugin names" << std::endl;
         CHECK_EQ(plugin_01->name(), "Plugin01");
         CHECK_EQ(plugin_02->name(), "Plugin02");
         CHECK_EQ(plugin_03->name(), "Plugin03");
 
+        std::cout << "check plugin greets" << std::endl;
         CHECK_EQ(plugin_01->greet(), "hello from Plugin01");
         CHECK_EQ(plugin_02->greet(), "hello from Plugin02");
         CHECK_EQ(plugin_03->greet(), "hello from Plugin03");
 
+        std::cout << "iterate" << std::endl;
         // // iterate over plugins
         SUBCASE("begin_end")
         {
+            std::cout << "begin_end" << std::endl;
             auto begin = registry.begin();
             auto end = registry.end();
             CHECK(begin != end);
