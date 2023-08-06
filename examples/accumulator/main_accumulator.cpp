@@ -21,9 +21,9 @@ int main(int argc, char **argv)
     plugin_registry_type registry(plugin_directory);
 
     std::cout << "available plugins:" << std::endl;
-    for (auto &p : registry)
+    for (auto p : registry)
     {
-        std::cout << p->first << std::endl;
+        std::cout << p.first << std::endl;
     }
 
     // create data to accumulate
