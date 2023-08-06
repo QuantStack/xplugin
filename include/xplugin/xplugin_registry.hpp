@@ -70,6 +70,7 @@ class xplugin_registry_iterator
     std::unordered_set<std::string> m_names;
     std::unordered_set<std::string>::const_iterator m_name_iterator;
     mutable value_type m_current_value = {"", nullptr};
+    bool m_end = false;
 };
 
 template <class FACTORY_BASE, bool THREAD_SAFE>
@@ -171,10 +172,12 @@ inline xplugin_registry_iterator<REGISTRY>::xplugin_registry_iterator(registry_t
         if (end)
         {
             m_name_iterator = m_names.cend();
+            m_end = true;
         }
         else
         {
             m_name_iterator = m_names.cbegin();
+            m_end = m_name_iterator == m_names.cend();
         }
     }
     else
@@ -187,6 +190,7 @@ template <class REGISTRY>
 inline xplugin_registry_iterator<REGISTRY> &xplugin_registry_iterator<REGISTRY>::operator++()
 {
     ++m_name_iterator;
+    m_end = m_name_iterator == m_names.cend();
     return *this;
 }
 
@@ -201,23 +205,38 @@ inline xplugin_registry_iterator<REGISTRY> xplugin_registry_iterator<REGISTRY>::
 template <class REGISTRY>
 inline bool xplugin_registry_iterator<REGISTRY>::operator==(const xplugin_registry_iterator &rhs) const
 {
-    return m_registry == rhs.m_registry && *m_name_iterator == *(rhs.m_name_iterator);
+
+    if (m_registry == rhs.m_registry)
+    {
+        if (m_end && rhs.m_end)
+        {
+            return true;
+        }
+        else if (m_end || rhs.m_end)
+        {
+            return false;
+        }
+        else
+        {
+            return (*m_name_iterator == *rhs.m_name_iterator);
+        }
+    }
+    return false;
+}
+template <class REGISTRY>
+inline bool xplugin_registry_iterator<REGISTRY>::operator!=(const xplugin_registry_iterator &rhs) const
+{
+    return !(*this == rhs);
 }
 
 template <class REGISTRY>
 inline void xplugin_registry_iterator<REGISTRY>::set_current_value() const
 {
-    if (m_registry && m_name_iterator != m_names.end())
+    if (m_registry && !m_end)
     {
         m_current_value.first = *m_name_iterator;
         m_current_value.second = (*m_registry)[m_current_value.first];
     }
-}
-
-template <class REGISTRY>
-inline bool xplugin_registry_iterator<REGISTRY>::operator!=(const xplugin_registry_iterator &rhs) const
-{
-    return (m_registry != rhs.m_registry) || (*m_name_iterator != (*rhs.m_name_iterator));
 }
 
 template <class REGISTRY>
