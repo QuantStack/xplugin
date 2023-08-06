@@ -86,6 +86,12 @@ TEST_CASE("test_xplugin")
             std::cout << "!=" << std::endl;
             CHECK(begin != end);
 
+            std::cout << "begin == registry.begin()" << std::endl;
+            CHECK(begin == registry.begin());
+
+            std::cout << "begin == registry.end()" << std::endl;
+            CHECK(end == registry.end());
+
             std::cout << "distance" << std::endl;
             auto d = std::distance(begin, end);
             CHECK_EQ(d, 3);
