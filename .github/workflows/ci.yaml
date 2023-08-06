@@ -133,7 +133,7 @@ jobs:
         run: |
           cd bld
           cd test
-          cpp_test_no_threads.exe
+          cpp_tests_no_threads.exe
 
       - name: Run C++ tests with threads
         shell: cmd /C CALL {0}
