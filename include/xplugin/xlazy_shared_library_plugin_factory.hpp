@@ -36,7 +36,7 @@ class xlazy_shared_library_plugin_factory
 
     inline const std::filesystem::path &path() const noexcept;
 
-    factory_base_type &factory() const;
+    factory_base_type *factory() const;
 
   private:
     using create_plugin_factory_type = factory_base_type *(*)();
@@ -58,7 +58,7 @@ inline xlazy_shared_library_plugin_factory<FACTORY_BASE, THREAD_SAFE>::xlazy_sha
 }
 
 template <class FACTORY_BASE, bool THREAD_SAFE>
-inline typename xlazy_shared_library_plugin_factory<FACTORY_BASE, THREAD_SAFE>::factory_base_type &
+inline typename xlazy_shared_library_plugin_factory<FACTORY_BASE, THREAD_SAFE>::factory_base_type *
 xlazy_shared_library_plugin_factory<FACTORY_BASE, THREAD_SAFE>::factory() const
 {
     scoped_lock_type lock(m_mutex);
@@ -68,7 +68,7 @@ xlazy_shared_library_plugin_factory<FACTORY_BASE, THREAD_SAFE>::factory() const
         m_library.reset(new xshared_library(m_path));
         m_factory.reset(m_library->find_symbol<create_plugin_factory_type>("create_plugin_factory")());
     }
-    return *m_factory;
+    return m_factory.get();
 }
 
 template <class FACTORY_BASE, bool THREAD_SAFE>

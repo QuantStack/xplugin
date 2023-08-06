@@ -36,12 +36,10 @@ int main(int argc, char **argv)
 
     // the type base type of the factory
     using factory_base_type = xp::xfactory_base<SerializeBase>;
+    using plugin_registry_type = xp::xplugin_registry<factory_base_type>;
 
-    // get the plugin registry for that base type
-    auto &registry = xp::get_registry<factory_base_type>();
-
-    // add plugins from the plugin directory
-    registry.add_from_directory(plugin_directory);
+    // create the registry
+    plugin_registry_type registry(plugin_directory);
 
     // some data to serialize / deserialize
     std::unordered_map<std::string, double> data = {{"a", 1}, {"b", 2}, {"c", 3}};
