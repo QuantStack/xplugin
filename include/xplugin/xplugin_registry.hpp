@@ -177,6 +177,10 @@ inline xplugin_registry_iterator<REGISTRY>::xplugin_registry_iterator(registry_t
             m_name_iterator = m_names.cbegin();
         }
     }
+    else
+    {
+        throw std::runtime_error("Cannot create iterator for null registry.");
+    }
 }
 
 template <class REGISTRY>
@@ -197,7 +201,7 @@ inline xplugin_registry_iterator<REGISTRY> xplugin_registry_iterator<REGISTRY>::
 template <class REGISTRY>
 inline bool xplugin_registry_iterator<REGISTRY>::operator==(const xplugin_registry_iterator &rhs) const
 {
-    return m_registry == rhs.m_registry && m_name_iterator == rhs.m_name_iterator;
+    return m_registry == rhs.m_registry && *m_name_iterator == *(rhs.m_name_iterator);
 }
 
 template <class REGISTRY>
@@ -213,7 +217,7 @@ inline void xplugin_registry_iterator<REGISTRY>::set_current_value() const
 template <class REGISTRY>
 inline bool xplugin_registry_iterator<REGISTRY>::operator!=(const xplugin_registry_iterator &rhs) const
 {
-    return (m_registry != rhs.m_registry) || (m_name_iterator != rhs.m_name_iterator);
+    return (m_registry != rhs.m_registry) || (*m_name_iterator != (*rhs.m_name_iterator));
 }
 
 template <class REGISTRY>
