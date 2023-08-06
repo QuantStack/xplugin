@@ -9,6 +9,7 @@
 #define XPLUGIN_REGISTRY_impl_HPP
 
 #include <filesystem>
+#include <iterator>
 #include <memory>
 #include <string>
 #include <type_traits>
@@ -25,8 +26,56 @@ namespace detail
 {
 
 template <class FACTORY_BASE, bool THREAD_SAFE>
+class xplugin_registry_impl;
+
+template <class REGISTRY>
+class xplugin_registry_iterator
+{
+  private:
+    using registry_type = REGISTRY;
+    using factory_base_type = typename registry_type::factory_base_type;
+
+  public:
+    using value_type = std::pair<std::string, factory_base_type *>;
+    using reference = value_type &;
+    using pointer = value_type *;
+    using difference_type = std::ptrdiff_t;
+    using iterator_category = std::forward_iterator_tag;
+
+    inline xplugin_registry_iterator() = default;
+    inline xplugin_registry_iterator(const xplugin_registry_iterator &) = default;
+    inline xplugin_registry_iterator &operator=(const xplugin_registry_iterator &) = default;
+    inline xplugin_registry_iterator(xplugin_registry_iterator &&) = default;
+    inline xplugin_registry_iterator &operator=(xplugin_registry_iterator &&) = default;
+    inline ~xplugin_registry_iterator() = default;
+
+    inline xplugin_registry_iterator(registry_type *registry, bool end = false);
+
+    // increment
+    inline xplugin_registry_iterator &operator++();
+    inline xplugin_registry_iterator operator++(int);
+
+    // compare
+    inline bool operator==(const xplugin_registry_iterator &rhs) const;
+    inline bool operator!=(const xplugin_registry_iterator &rhs) const;
+
+    // dereference
+    inline reference operator*() const;
+    inline pointer operator->() const;
+
+  private:
+    void set_current_value() const;
+
+    registry_type *m_registry;
+    std::unordered_set<std::string> m_names;
+    std::unordered_set<std::string>::const_iterator m_name_iterator;
+    mutable value_type m_current_value;
+};
+
+template <class FACTORY_BASE, bool THREAD_SAFE>
 class xplugin_registry_impl
 {
+
   public:
     enum class add_plugin_result
     {
@@ -36,6 +85,8 @@ class xplugin_registry_impl
     };
 
     using factory_base_type = FACTORY_BASE;
+    using const_iterator = xplugin_registry_iterator<xplugin_registry_impl<factory_base_type, THREAD_SAFE>>;
+    using iterator = const_iterator;
 
     inline xplugin_registry_impl() = default;
 
@@ -53,11 +104,20 @@ class xplugin_registry_impl
                                         const std::string &prefix = get_default_library_prefix(),
                                         const std::string &extension = get_default_library_extension());
 
-    inline factory_base_type &operator[](const std::string &name);
+    inline factory_base_type *operator[](const std::string &name);
 
     inline std::size_t size() const;
     inline std::unordered_set<std::string> plugin_names();
     inline bool contains(const std::string &name) const;
+
+    inline iterator begin();
+    inline iterator end();
+
+    inline const_iterator begin() const;
+    inline const_iterator end() const;
+
+    inline const_iterator cbegin() const;
+    inline const_iterator cend() const;
 
   private:
     using mutex_type = xmutex_t<THREAD_SAFE>;
@@ -98,6 +158,122 @@ xp::xthread_save_plugin_registry<FACTORY_BASE> &get_thead_save_registry()
 
 namespace detail
 {
+
+// iterator implementation
+template <class REGISTRY>
+inline xplugin_registry_iterator<REGISTRY>::xplugin_registry_iterator(registry_type *registry, bool end)
+    : m_registry(registry)
+{
+    if (m_registry)
+    {
+        m_names = m_registry->plugin_names();
+        if (end)
+        {
+            m_name_iterator = m_names.end();
+        }
+        else
+        {
+            m_name_iterator = m_names.begin();
+        }
+    }
+}
+
+template <class REGISTRY>
+inline xplugin_registry_iterator<REGISTRY> &xplugin_registry_iterator<REGISTRY>::operator++()
+{
+    ++m_name_iterator;
+    return *this;
+}
+
+template <class REGISTRY>
+inline xplugin_registry_iterator<REGISTRY> xplugin_registry_iterator<REGISTRY>::operator++(int)
+{
+    xplugin_registry_iterator tmp(*this);
+    ++(*this);
+    return tmp;
+}
+
+template <class REGISTRY>
+inline bool xplugin_registry_iterator<REGISTRY>::operator==(const xplugin_registry_iterator &rhs) const
+{
+    return m_registry == rhs.m_registry && m_name_iterator == rhs.m_name_iterator;
+}
+
+template <class REGISTRY>
+inline void xplugin_registry_iterator<REGISTRY>::set_current_value() const
+{
+    if (m_registry && m_name_iterator != m_names.end())
+    {
+        m_current_value.first = *m_name_iterator;
+        m_current_value.second = (*m_registry)[m_current_value.first];
+    }
+}
+
+template <class REGISTRY>
+inline bool xplugin_registry_iterator<REGISTRY>::operator!=(const xplugin_registry_iterator &rhs) const
+{
+    return m_registry != rhs.m_registry || m_name_iterator != rhs.m_name_iterator;
+}
+
+template <class REGISTRY>
+inline typename xplugin_registry_iterator<REGISTRY>::reference xplugin_registry_iterator<REGISTRY>::operator*() const
+{
+    this->set_current_value();
+    return m_current_value;
+}
+
+template <class REGISTRY>
+inline typename xplugin_registry_iterator<REGISTRY>::pointer xplugin_registry_iterator<REGISTRY>::operator->() const
+{
+    this->set_current_value();
+    return &m_current_value;
+}
+
+// xplugin_registry_impl implementation
+
+// iterator
+template <class FACTORY_BASE, bool THREAD_SAVE>
+typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::iterator xplugin_registry_impl<FACTORY_BASE,
+                                                                                          THREAD_SAVE>::begin()
+{
+    return iterator(this, false);
+}
+
+template <class FACTORY_BASE, bool THREAD_SAVE>
+typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::iterator xplugin_registry_impl<FACTORY_BASE,
+                                                                                          THREAD_SAVE>::end()
+{
+    return iterator(this, true);
+}
+
+// const iterator
+template <class FACTORY_BASE, bool THREAD_SAVE>
+typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::const_iterator xplugin_registry_impl<
+    FACTORY_BASE, THREAD_SAVE>::begin() const
+{
+    return const_iterator(this, false);
+}
+
+template <class FACTORY_BASE, bool THREAD_SAVE>
+typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::const_iterator xplugin_registry_impl<
+    FACTORY_BASE, THREAD_SAVE>::end() const
+{
+    return const_iterator(this, true);
+}
+
+template <class FACTORY_BASE, bool THREAD_SAVE>
+typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::const_iterator xplugin_registry_impl<
+    FACTORY_BASE, THREAD_SAVE>::cbegin() const
+{
+    return const_iterator(this, false);
+}
+
+template <class FACTORY_BASE, bool THREAD_SAVE>
+typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::const_iterator xplugin_registry_impl<
+    FACTORY_BASE, THREAD_SAVE>::cend() const
+{
+    return const_iterator(this, true);
+}
 
 template <class FACTORY_BASE, bool THREAD_SAVE>
 std::size_t xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::add_from_directory(const std::filesystem::path &path,
@@ -196,7 +372,7 @@ bool xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::contains(const std::strin
 }
 
 template <class FACTORY_BASE, bool THREAD_SAVE>
-typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::factory_base_type &xplugin_registry_impl<
+typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::factory_base_type *xplugin_registry_impl<
     FACTORY_BASE, THREAD_SAVE>::operator[](const std::string &name)
 {
     scoped_lock_type lock(m_mutex);
@@ -205,7 +381,7 @@ typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::factory_base_type &xp
     {
         throw std::runtime_error("Could not find plugin factory for " + name);
     }
-    return find_res->second.factory();
+    return &find_res->second.factory();
 }
 
 template <class FACTORY_BASE, bool THREAD_SAVE>

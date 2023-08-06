@@ -48,12 +48,12 @@ int main(int argc, char **argv)
 
     // use all plugins
     ///////////////////////////////////////////
-    for (const auto &plugin_name : registry.plugin_names())
+    for (auto [plugin_name, factory] : registry)
     {
         // create and use plugin_serialize_json
-        auto plugin = registry[plugin_name].create();
+        auto plugin = factory->create();
         auto serialized = plugin->serialize(data);
-        std::cout << "serialized with" << plugin->name() << ":" << std::endl << serialized << std::endl;
+        std::cout << plugin_name << " serialized with" << plugin->name() << ":" << std::endl << serialized << std::endl;
 
         // deserialize with plugin_serialize_json
         auto deserialized = plugin->deserialize(serialized);

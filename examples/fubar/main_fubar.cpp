@@ -25,9 +25,9 @@ int main(int argc, char **argv)
         std::cout << p << std::endl;
     }
 
-    for (auto &p : registry.plugin_names())
+    for (auto [name, factory] : registry)
     {
-        auto instance = registry[p].create("main_fubar");
-        std::cout << "plugin " << p << " says: " << instance->fubar() << std::endl;
+        auto instance = factory->create("main_fubar");
+        std::cout << "plugin " << name << " says: " << instance->fubar() << std::endl;
     }
 }
