@@ -26,6 +26,6 @@ int main(int argc, char **argv)
         std::cout << "  version: " << factory->version() << std::endl;
 
         auto instance = factory->create();
-        std::cout << "plugin " << p << " says: " << instance->some_function() << std::endl;
+        std::cout << "plugin " << name << " says: " << instance->some_function() << std::endl;
     }
 }
