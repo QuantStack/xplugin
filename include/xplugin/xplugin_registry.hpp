@@ -14,7 +14,6 @@
 #include <string>
 #include <type_traits>
 #include <unordered_map>
-#include <unordered_set>
 
 #include <xplugin/xlazy_shared_library_plugin_factory.hpp>
 #include <xplugin/xplugin_config.hpp>
@@ -103,7 +102,6 @@ class xplugin_registry_impl
 
     inline std::size_t size() const;
     inline bool empty() const;
-    inline std::unordered_set<std::string> plugin_names();
     inline bool contains(const std::string &name) const;
 
     inline iterator begin();
@@ -255,17 +253,6 @@ xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::xplugin_registry_impl(const st
             }
         }
     }
-}
-
-template <class FACTORY_BASE, bool THREAD_SAVE>
-std::unordered_set<std::string> xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::plugin_names()
-{
-    std::unordered_set<std::string> res;
-    for (const auto &[key, value] : m_lazy_shared_lib_factories)
-    {
-        res.insert(key);
-    }
-    return res;
 }
 
 template <class FACTORY_BASE, bool THREAD_SAVE>

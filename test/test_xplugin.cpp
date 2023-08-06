@@ -25,12 +25,6 @@ TEST_CASE("test_xplugin")
     {
         CHECK_EQ(registry.size(), 3);
 
-        auto names = registry.plugin_names();
-        CHECK_EQ(names.size(), 3);
-        CHECK(names.count("plugin_01"));
-        CHECK(names.count("plugin_02"));
-        CHECK(names.count("plugin_03"));
-
         // factories are references
         auto factory_01 = registry["plugin_01"];
         auto factory_02 = registry["plugin_02"];
@@ -160,12 +154,6 @@ TEST_CASE("test_xregistry_getter")
 
     CHECK_EQ(registry.size(), 3);
 
-    auto names = registry.plugin_names();
-    CHECK_EQ(names.size(), 3);
-    CHECK(names.count("plugin_01"));
-    CHECK(names.count("plugin_02"));
-    CHECK(names.count("plugin_03"));
-
     // factories are references
     auto factory_01 = registry["plugin_01"];
     auto factory_02 = registry["plugin_02"];
@@ -204,12 +192,6 @@ TEST_CASE("test_xregistry_open_same_lib_multiple_times")
     {
         CHECK_EQ(registry->size(), 3);
 
-        auto names = registry->plugin_names();
-        CHECK_EQ(names.size(), 3);
-        CHECK(names.count("plugin_01"));
-        CHECK(names.count("plugin_02"));
-        CHECK(names.count("plugin_03"));
-
         // factories are references
         auto factory_01 = registry->operator[]("plugin_01");
         auto factory_02 = registry->operator[]("plugin_02");
@@ -246,12 +228,6 @@ TEST_CASE("parallel_access")
     {
         plugin_registry_type registry("testplugin_a");
         auto f = [&]() {
-            auto names = registry.plugin_names();
-            CHECK_EQ(names.size(), 3);
-            CHECK(names.count("plugin_01"));
-            CHECK(names.count("plugin_02"));
-            CHECK(names.count("plugin_03"));
-
             // factories are references
             auto factory_01 = registry["plugin_01"];
             auto factory_02 = registry["plugin_02"];

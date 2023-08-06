@@ -18,12 +18,6 @@ int main(int argc, char **argv)
 
     plugin_registry_type registry(plugin_directory);
 
-    std::cout << "available plugins:" << std::endl;
-    for (auto &p : registry.plugin_names())
-    {
-        std::cout << p << std::endl;
-    }
-
     for (auto [name, factory] : registry)
     {
         auto instance = factory->create("main_fubar");
