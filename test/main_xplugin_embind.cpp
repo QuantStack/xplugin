@@ -19,9 +19,9 @@ int run_tests()
         return 1;
     }
 
-    auto plugin_01 = registry["plugin_01"].create(1, "a");
-    auto plugin_02 = registry["plugin_02"].create(2, "b");
-    auto plugin_03 = registry["plugin_03"].create(3, "c");
+    auto plugin_01 = registry["plugin_01"]->create(1, "a");
+    auto plugin_02 = registry["plugin_02"]->create(2, "b");
+    auto plugin_03 = registry["plugin_03"]->create(3, "c");
 
     if (!plugin_01)
     {

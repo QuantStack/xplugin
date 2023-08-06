@@ -107,6 +107,7 @@ class xplugin_registry_impl
     inline factory_base_type *operator[](const std::string &name);
 
     inline std::size_t size() const;
+    inline bool empty() const;
     inline std::unordered_set<std::string> plugin_names();
     inline bool contains(const std::string &name) const;
 
@@ -389,6 +390,13 @@ std::size_t xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::size() const
 {
     scoped_lock_type lock(m_mutex);
     return m_lazy_shared_lib_factories.size();
+}
+
+template <class FACTORY_BASE, bool THREAD_SAVE>
+bool xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::empty() const
+{
+    scoped_lock_type lock(m_mutex);
+    return m_lazy_shared_lib_factories.empty();
 }
 
 template <class FACTORY_BASE, bool THREAD_SAVE>
