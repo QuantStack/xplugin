@@ -25,6 +25,8 @@ class tagged_factory : public FACTORY
 
 TEST_CASE("test_xplugin")
 {
+    std::cout << "test_xplugin" << std::endl;
+
     using base_type = plugin::PluginBase;
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
     using plugin_registry_type = xp::xplugin_registry<factory_base_type>;
@@ -75,6 +77,7 @@ TEST_CASE("test_xplugin")
 
         SUBCASE("increment")
         {
+            std::cout << "increment" << std::endl;
             auto begin = registry.begin();
             auto end = registry.end();
             CHECK(begin != end);
@@ -100,6 +103,7 @@ TEST_CASE("test_xplugin")
 
         SUBCASE("dereference")
         {
+            std::cout << "dereference" << std::endl;
             auto begin = registry.begin();
             auto pair = *begin;
             std::cout << "The value is" << pair.first << std::endl;
@@ -108,7 +112,7 @@ TEST_CASE("test_xplugin")
 
         SUBCASE("iterator-values-copy")
         {
-
+            std::cout << "iterator-values-copy" << std::endl;
             std::set<std::string> plugin_names;
             for (auto p : registry)
             {
@@ -123,7 +127,7 @@ TEST_CASE("test_xplugin")
         }
         SUBCASE("iterator-values-ref")
         {
-
+            std::cout << "iterator-values-ref" << std::endl;
             std::set<std::string> plugin_names;
             for (auto &p : registry)
             {
@@ -138,6 +142,7 @@ TEST_CASE("test_xplugin")
         }
         SUBCASE("iterator-unpack")
         {
+            std::cout << "iterator-unpack" << std::endl;
             std::set<std::string> plugin_names;
             for (auto [name, factory] : registry)
             {
@@ -154,6 +159,8 @@ TEST_CASE("test_xplugin")
 
 TEST_CASE("test_xregistry_getter")
 {
+    std::cout << "test_xregistry_getter" << std::endl;
+
     using base_type = plugin::PluginBase;
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
     // to get a different singleton for each test
@@ -242,6 +249,7 @@ TEST_CASE("test_xregistry_open_same_lib_multiple_times")
 
 TEST_CASE("test_xregistry_single_plugin")
 {
+    std::cout << "test_xregistry_single_plugin" << std::endl;
     using base_type = plugin::PluginBase;
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
 
@@ -280,6 +288,7 @@ TEST_CASE("test_xregistry_single_plugin")
 
 TEST_CASE("test_xregistry_single_plugin_with_multiple_search_dirs")
 {
+    std::cout << "test_xregistry_single_plugin_with_multiple_search_dirs" << std::endl;
     using base_type = plugin::PluginBase;
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
 
@@ -333,6 +342,7 @@ TEST_CASE("test_xregistry_non_exisiting_single_plugin")
 #ifndef XPLUGIN_NO_THREADS
 TEST_CASE("parallel_access")
 {
+    std::cout << "parallel_access" << std::endl;
     using base_type = plugin::PluginBase;
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
     using test_factory_type = tagged_factory<factory_base_type, __LINE__>;
@@ -377,6 +387,7 @@ TEST_CASE("parallel_access")
 #ifndef XPLUGIN_NO_THREADS
 TEST_CASE("parallel_iterator_access")
 {
+    std::cout << "parallel_iterator_access" << std::endl;
     using base_type = plugin::PluginBase;
     using factory_base_type = xp::xfactory_base<base_type, int, std::string>;
     using test_factory_type = tagged_factory<factory_base_type, __LINE__>;
