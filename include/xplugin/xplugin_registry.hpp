@@ -170,11 +170,11 @@ inline xplugin_registry_iterator<REGISTRY>::xplugin_registry_iterator(registry_t
         m_names = m_registry->plugin_names();
         if (end)
         {
-            m_name_iterator = m_names.end();
+            m_name_iterator = m_names.cend();
         }
         else
         {
-            m_name_iterator = m_names.begin();
+            m_name_iterator = m_names.cbegin();
         }
     }
 }
@@ -213,7 +213,7 @@ inline void xplugin_registry_iterator<REGISTRY>::set_current_value() const
 template <class REGISTRY>
 inline bool xplugin_registry_iterator<REGISTRY>::operator!=(const xplugin_registry_iterator &rhs) const
 {
-    return m_registry != rhs.m_registry || m_name_iterator != rhs.m_name_iterator;
+    return (m_registry != rhs.m_registry) || (m_name_iterator != rhs.m_name_iterator);
 }
 
 template <class REGISTRY>
