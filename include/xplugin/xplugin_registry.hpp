@@ -241,7 +241,6 @@ xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::xplugin_registry_impl(const st
                                                                         const std::string &extension)
 {
 
-    std::size_t n_added = 0;
     for (const auto &entry : std::filesystem::directory_iterator(path))
     {
         if (entry.path().extension() == extension)
@@ -252,17 +251,7 @@ xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::xplugin_registry_impl(const st
             if (name.substr(0, prefix.size()) == prefix)
             {
                 name = name.substr(prefix.size());
-
-                // check if name is already in registry
-                if (m_lazy_shared_lib_factories.find(name) != m_lazy_shared_lib_factories.end())
-                {
-                    continue;
-                }
-                else
-                {
-                    m_lazy_shared_lib_factories.emplace(name, entry.path());
-                    ++n_added;
-                }
+                m_lazy_shared_lib_factories.emplace(name, entry.path());
             }
         }
     }

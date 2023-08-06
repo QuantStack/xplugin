@@ -14,8 +14,8 @@ int main(int argc, char **argv)
     std::string plugin_directory = argv[1];
 
     using factory_base_type = PluginFactoryBase;
-    auto &registry = xp::get_registry<factory_base_type>();
-    registry.add_from_directory(plugin_directory);
+    using plugin_registry_type = xp::xplugin_registry<factory_base_type>;
+    plugin_registry_type registry(plugin_directory);
 
     for (auto &p : registry.plugin_names())
     {
