@@ -114,7 +114,7 @@ jobs:
           cache-environment: true
           post-cleanup: 'all'
 
-      - name: build and test
+      - name: build
         shell: cmd /C CALL {0}
         run: |
           mkdir bld
@@ -128,14 +128,14 @@ jobs:
            -DCMAKE_INSTALL_PREFIX="%CONDA_PREFIX%
           cmake --build . --config Release
 
-      - name: Run C++ tests with threads
+      - name: Run C++ tests without threads
         shell: cmd /C CALL {0}
         run: |
           cd bld
           cd test
           cpp_test_no_threads.exe
 
-      - name: Run C++ tests
+      - name: Run C++ tests with threads
         shell: cmd /C CALL {0}
         run: |
           cd bld
