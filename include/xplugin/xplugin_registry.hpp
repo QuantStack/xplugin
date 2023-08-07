@@ -27,6 +27,9 @@ namespace detail
 template <class FACTORY_BASE, bool THREAD_SAFE>
 class xplugin_registry_impl;
 
+/// @brief Iterator for xplugin_registry_impl
+/// @tparam REGISTRY
+/// @tparam BASE_ITERATOR
 template <class REGISTRY, class BASE_ITERATOR>
 class xplugin_registry_iterator
 {
@@ -70,6 +73,9 @@ class xplugin_registry_iterator
     mutable value_type m_current_value;
 };
 
+/// @brief A registry for plugins.
+/// @tparam FACTORY_BASE
+/// @tparam THREAD_SAFE
 template <class FACTORY_BASE, bool THREAD_SAFE>
 class xplugin_registry_impl
 {
@@ -84,6 +90,7 @@ class xplugin_registry_impl
 
     using self_type = xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>;
 
+  public:
     using factory_base_type = FACTORY_BASE;
 
   private:
@@ -122,9 +129,13 @@ class xplugin_registry_impl
 
 } // namespace detail
 
+/// @brief A non-thread-safe registry for plugins.
+/// @tparam FACTORY_BASE
 template <class FACTORY_BASE>
 using xplugin_registry = detail::xplugin_registry_impl<FACTORY_BASE, false>;
 
+/// @brief A thread-safe registry for plugins.
+/// @tparam FACTORY_BASE
 template <class FACTORY_BASE>
 using xthread_save_plugin_registry = detail::xplugin_registry_impl<FACTORY_BASE, true>;
 
