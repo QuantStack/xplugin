@@ -25,12 +25,10 @@ TEST_CASE("test_xplugin")
     {
         CHECK_EQ(registry.size(), 3);
 
-        // factories are references
         auto factory_01 = registry["plugin_01"];
         auto factory_02 = registry["plugin_02"];
         auto factory_03 = registry["plugin_03"];
 
-        // plugin instances are in unique_ptrs
         auto plugin_01 = factory_01->create(1, "a");
         auto plugin_02 = factory_02->create(2, "b");
         auto plugin_03 = factory_03->create(3, "c");
@@ -153,8 +151,6 @@ TEST_CASE("test_xregistry_getter")
     plugin_registry_type registry("testplugin_a");
 
     CHECK_EQ(registry.size(), 3);
-
-    // factories are references
     auto factory_01 = registry["plugin_01"];
     auto factory_02 = registry["plugin_02"];
     auto factory_03 = registry["plugin_03"];
@@ -192,7 +188,6 @@ TEST_CASE("test_xregistry_open_same_lib_multiple_times")
     {
         CHECK_EQ(registry->size(), 3);
 
-        // factories are references
         auto factory_01 = registry->operator[]("plugin_01");
         auto factory_02 = registry->operator[]("plugin_02");
         auto factory_03 = registry->operator[]("plugin_03");
@@ -210,7 +205,6 @@ TEST_CASE("test_xregistry_open_same_lib_multiple_times")
         CHECK_EQ(plugin_03->name(), "Plugin03");
     }
 
-    // delete all registries
     for (auto &registry : registries)
     {
         delete registry;
@@ -228,7 +222,6 @@ TEST_CASE("parallel_access")
     {
         plugin_registry_type registry("testplugin_a");
         auto f = [&]() {
-            // factories are references
             auto factory_01 = registry["plugin_01"];
             auto factory_02 = registry["plugin_02"];
             auto factory_03 = registry["plugin_03"];
