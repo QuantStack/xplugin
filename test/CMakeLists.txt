@@ -5,27 +5,37 @@ add_custom_target(all_plugins)
 add_subdirectory(testplugin_a)
 
 if(NOT EMSCRIPTEN)
-
     add_subdirectory(testlib)
 
     find_package(doctest REQUIRED)
-    # Make test executable
-    add_executable(cpp_tests main_test.cpp
+
+    SET(TEST_SOURCES main_test.cpp
         test_xplugin.cpp
         test_xshared_library.cpp
     )
 
-    target_link_libraries(cpp_tests PRIVATE xplugin_host doctest::doctest)
-    target_include_directories(cpp_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+    # Make test executable (one with threading support, one without)
+    add_executable(cpp_tests            ${TEST_SOURCES})
+    add_executable(cpp_tests_no_threads ${TEST_SOURCES})
 
-    # add dependencies st. test is built after all plugins
-    add_dependencies(cpp_tests all_plugins)
+    # compile definition to disable threading
+    target_compile_definitions(cpp_tests_no_threads PUBLIC XPLUGIN_NO_THREADS)
 
-    set_target_properties(cpp_tests PROPERTIES
-        POSITION_INDEPENDENT_CODE ON
-    )
+    # link threading library to cpp_tests
+    find_package(Threads REQUIRED)
+    target_link_libraries(cpp_tests PRIVATE Threads::Threads)
 
-    add_test(NAME tests COMMAND cpp_tests )
+    #  function to set properties for both test executables
+    function(set_tests_properties  test_target)
+        target_link_libraries(${test_target} PRIVATE xplugin_host doctest::doctest)
+        target_include_directories(${test_target} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+        add_dependencies(${test_target} all_plugins)
+        set_target_properties(${test_target} PROPERTIES POSITION_INDEPENDENT_CODE ON)
+        add_test(NAME ${test_target} COMMAND ${test_target} )
+    endfunction(set_tests_properties )
+
+    set_tests_properties(cpp_tests)
+    set_tests_properties(cpp_tests_no_threads)
 
 else()
 
@@ -42,5 +52,4 @@ else()
     )
 
     set_target_properties(xplugin_embind PROPERTIES POSITION_INDEPENDENT_CODE ON)
-
 endif()

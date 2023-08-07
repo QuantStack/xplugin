@@ -99,12 +99,10 @@ int main(int argc, char** argv)
     std::string plugin_directory = argv[1];
 
 
-    plugin_registry_type registry;
-    registry.add_from_directory(plugin_directory);
+    plugin_registry_type registry(plugin_directory);
 
-    for (auto& name : registry.plugin_names()){
+    for (auto [name, factory] : registry){
         std::cout << name << std::endl;
-        auto factory = registry.create_factory(name);
         auto plugin = factory->create();
         plugin->do_something();
     }
@@ -215,15 +213,13 @@ int main(int argc, char** argv)
     std::string plugin_directory = argv[1];
 
 
-    plugin_registry_type registry;
-    registry.add_from_directory(plugin_directory);
+    plugin_registry_type registry(plugin_directory);
 
     int some_data = 42;
     std::string some_other_data = "Hello World";
 
-    for (auto& name : registry.plugin_names()){
+    for (auto [name, factory] : registry){
         std::cout << name << std::endl;
-        auto factory = registry.create_factory(name);
         auto plugin = factory->create(some_data, some_other_data);
         plugin->do_something();
     }

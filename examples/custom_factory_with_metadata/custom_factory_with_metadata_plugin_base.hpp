@@ -1,6 +1,7 @@
 #ifndef CUSTOM_FACTORY_WITH_METADATA_PLUGIN_BASE_HPP
 #define CUSTOM_FACTORY_WITH_METADATA_PLUGIN_BASE_HPP
 
+#include <memory>
 #include <string>
 
 class PluginBase
@@ -19,7 +20,7 @@ class PluginFactoryBase
     virtual ~PluginFactoryBase() = default;
 
     // the factory method
-    virtual PluginBase *create() = 0;
+    virtual std::unique_ptr<PluginBase> create() = 0;
 
     // some additional metadata
     virtual std::string name() const = 0;

@@ -90,7 +90,8 @@ xshared_library &xshared_library::operator=(xshared_library &&other) noexcept
     return *this;
 }
 
-xshared_library::xshared_library(std::filesystem::path path) : m_handle(nullptr)
+xshared_library::xshared_library(std::filesystem::path path)
+    : m_handle(nullptr)
 {
     m_handle = dlopen(path.string().c_str(), RTLD_NOW | RTLD_GLOBAL);
     if (!m_handle)
@@ -138,7 +139,8 @@ xshared_library &xshared_library::operator=(xshared_library &&other) noexcept
     return *this;
 }
 
-xshared_library::xshared_library(std::filesystem::path path) : m_handle(LoadLibrary(path.string().c_str()))
+xshared_library::xshared_library(std::filesystem::path path)
+    : m_handle(LoadLibrary(path.string().c_str()))
 {
     if (!m_handle)
     {

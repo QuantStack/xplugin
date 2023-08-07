@@ -11,37 +11,16 @@
 
 int run_tests()
 {
-    xp::xplugin_registry<xp::xfactory_base<plugin::PluginBase, int, std::string>> registry;
-    registry.add_from_directory("/plugins/");
+    xp::xplugin_registry<xp::xfactory_base<plugin::PluginBase, int, std::string>> registry("/plugins/");
     if (registry.size() != 3)
     {
         std::cout << "Test failed: registry.size() != 3" << std::endl;
         return 1;
     }
 
-    auto factory_01 = registry.create_factory("plugin_01");
-    auto factory_02 = registry.create_factory("plugin_02");
-    auto factory_03 = registry.create_factory("plugin_03");
-
-    if (!factory_01)
-    {
-        std::cout << "Test failed: factory_01" << std::endl;
-        return 1;
-    }
-    if (!factory_02)
-    {
-        std::cout << "Test failed: factory_02" << std::endl;
-        return 1;
-    }
-    if (!factory_03)
-    {
-        std::cout << "Test failed: factory_03" << std::endl;
-        return 1;
-    }
-
-    auto plugin_01 = factory_01->create(1, "a");
-    auto plugin_02 = factory_02->create(2, "b");
-    auto plugin_03 = factory_03->create(3, "c");
+    auto plugin_01 = registry["plugin_01"]->create(1, "a");
+    auto plugin_02 = registry["plugin_02"]->create(2, "b");
+    auto plugin_03 = registry["plugin_03"]->create(3, "c");
 
     if (!plugin_01)
     {

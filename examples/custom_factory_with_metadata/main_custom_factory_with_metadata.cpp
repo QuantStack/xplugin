@@ -14,19 +14,18 @@ int main(int argc, char **argv)
     std::string plugin_directory = argv[1];
 
     using factory_base_type = PluginFactoryBase;
-    auto &registry = xp::get_registry<factory_base_type>();
-    registry.add_from_directory(plugin_directory);
+    using plugin_registry_type = xp::xplugin_registry<factory_base_type>;
+    plugin_registry_type registry(plugin_directory);
 
-    for (auto &p : registry.plugin_names())
+    for (auto [name, factory] : registry)
     {
-        auto factory = registry.create_factory(p);
 
-        std::cout << "plugin " << p << " factory metadata: " << std::endl;
+        std::cout << "plugin " << name << " factory metadata: " << std::endl;
         std::cout << "  name: " << factory->name() << std::endl;
         std::cout << "  description: " << factory->description() << std::endl;
         std::cout << "  version: " << factory->version() << std::endl;
 
         auto instance = factory->create();
-        std::cout << "plugin " << p << " says: " << instance->some_function() << std::endl;
+        std::cout << "plugin " << name << " says: " << instance->some_function() << std::endl;
     }
 }

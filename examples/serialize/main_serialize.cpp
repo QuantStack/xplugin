@@ -36,24 +36,22 @@ int main(int argc, char **argv)
 
     // the type base type of the factory
     using factory_base_type = xp::xfactory_base<SerializeBase>;
+    using plugin_registry_type = xp::xplugin_registry<factory_base_type>;
 
-    // get the plugin registry for that base type
-    auto &registry = xp::get_registry<factory_base_type>();
-
-    // add plugins from the plugin directory
-    registry.add_from_directory(plugin_directory);
+    // create the registry
+    plugin_registry_type registry(plugin_directory);
 
     // some data to serialize / deserialize
     std::unordered_map<std::string, double> data = {{"a", 1}, {"b", 2}, {"c", 3}};
 
     // use all plugins
     ///////////////////////////////////////////
-    for (const auto &plugin_name : registry.plugin_names())
+    for (auto [plugin_name, factory] : registry)
     {
         // create and use plugin_serialize_json
-        auto plugin = registry.create_factory(plugin_name)->create();
+        auto plugin = factory->create();
         auto serialized = plugin->serialize(data);
-        std::cout << "serialized with" << plugin->name() << ":" << std::endl << serialized << std::endl;
+        std::cout << plugin_name << " serialized with" << plugin->name() << ":" << std::endl << serialized << std::endl;
 
         // deserialize with plugin_serialize_json
         auto deserialized = plugin->deserialize(serialized);

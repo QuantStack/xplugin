@@ -16,19 +16,11 @@ int main(int argc, char **argv)
     using factory_type = xp::xfactory_base<fubar::FubarBase, const std::string &>;
     using plugin_registry_type = xp::xplugin_registry<factory_type>;
 
-    plugin_registry_type registry;
-    registry.add_from_directory(plugin_directory);
+    plugin_registry_type registry(plugin_directory);
 
-    std::cout << "available plugins:" << std::endl;
-    for (auto &p : registry.plugin_names())
+    for (auto [name, factory] : registry)
     {
-        std::cout << p << std::endl;
-    }
-
-    for (auto &p : registry.plugin_names())
-    {
-        auto factory = registry.create_factory(p);
         auto instance = factory->create("main_fubar");
-        std::cout << "plugin " << p << " says: " << instance->fubar() << std::endl;
+        std::cout << "plugin " << name << " says: " << instance->fubar() << std::endl;
     }
 }
