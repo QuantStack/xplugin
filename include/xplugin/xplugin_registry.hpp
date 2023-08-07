@@ -5,8 +5,8 @@
  *                                                                          *
  * The full license is in the file LICENSE, distributed with this software. *
  ****************************************************************************/
-#ifndef XPLUGIN_REGISTRY_impl_HPP
-#define XPLUGIN_REGISTRY_impl_HPP
+#ifndef XPLUGIN_REGISTRY_HPP
+#define XPLUGIN_REGISTRY_HPP
 
 #include <filesystem>
 #include <iterator>
@@ -311,4 +311,4 @@ std::string xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::get_default_librar
 
 } // namespace xp
 
-#endif // XPLUGIN_REGISTRY_impl_HPP
+#endif // XPLUGIN_REGISTRY_HPP
