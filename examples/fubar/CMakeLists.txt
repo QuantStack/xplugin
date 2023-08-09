@@ -11,3 +11,8 @@ target_link_libraries(main_fubar PUBLIC xplugin_host)
 set_target_properties(main_fubar PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 xplugin_add_emscripten_main_module_flags(main_fubar)
+
+# if tests are enabled, add a the example to the tests
+if (XPLUGIN_BUILD_TESTS)
+    add_test(NAME example_fubar COMMAND main_fubar ${CMAKE_CURRENT_BINARY_DIR})
+endif()

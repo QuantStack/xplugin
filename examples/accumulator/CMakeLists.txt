@@ -15,3 +15,9 @@ target_compile_features(main_accumulator PRIVATE cxx_std_17)
 set_target_properties(main_accumulator PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 xplugin_add_emscripten_main_module_flags(main_accumulator)
+
+
+# if tests are enabled, add a the example to the tests
+if (XPLUGIN_BUILD_TESTS)
+    add_test(NAME example_accumulator COMMAND main_accumulator ${CMAKE_CURRENT_BINARY_DIR})
+endif()

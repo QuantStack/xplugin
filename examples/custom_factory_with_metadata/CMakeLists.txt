@@ -11,3 +11,8 @@ target_link_libraries(main_custom_factory_with_metadata PUBLIC xplugin_host)
 set_target_properties(main_custom_factory_with_metadata PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 xplugin_add_emscripten_main_module_flags(main_custom_factory_with_metadata)
+
+# if tests are enabled, add a the example to the tests
+if (XPLUGIN_BUILD_TESTS)
+    add_test(NAME example_custom_factory_with_metadata COMMAND main_custom_factory_with_metadata ${CMAKE_CURRENT_BINARY_DIR})
+endif()
