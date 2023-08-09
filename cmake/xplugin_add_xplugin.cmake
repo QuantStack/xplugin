@@ -7,7 +7,6 @@ function(add_xplugin target_name)
         # add compile definitions
         target_compile_definitions(${target_name} PRIVATE  XPLUGIN_EXPORTS)
 
-        #set_property(TARGET ${target_name} PROPERTY WINDOWS_EXPORT_ALL_SYMBOLS true)
     endif()
 
     set_target_properties(${target_name} PROPERTIES
