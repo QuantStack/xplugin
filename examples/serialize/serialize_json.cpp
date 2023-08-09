@@ -36,7 +36,7 @@ class SerializeJson : public SerializeBase
     }
 };
 
-template class XPLUGIN_API xp::xfactory<SerializeJson, SerializeBase, const std::string &>;
+template class XPLUGIN_API xp::xfactory<SerializeJson, SerializeBase>;
 
 using factory_type = xp::xfactory<SerializeJson, SerializeBase>;
 XPLUGIN_CREATE_XPLUGIN_FACTORY(factory_type);
