@@ -4,7 +4,9 @@
 #include <memory>
 #include <string>
 
-class PluginBase
+#include <xplugin/xplugin_config.hpp>
+
+class XPLUGIN_API PluginBase
 {
   public:
     virtual ~PluginBase()
@@ -14,7 +16,7 @@ class PluginBase
     virtual std::string some_function() const = 0;
 };
 
-class PluginFactoryBase
+class XPLUGIN_API PluginFactoryBase
 {
   public:
     virtual ~PluginFactoryBase() = default;

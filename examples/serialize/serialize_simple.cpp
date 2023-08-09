@@ -2,7 +2,7 @@
 #include <sstream>
 #include <xplugin/xfactory.hpp>
 
-class SerializeSimple : public SerializeBase
+class XPLUGIN_API SerializeSimple : public SerializeBase
 {
   public:
     virtual ~SerializeSimple() = default;
@@ -35,6 +35,8 @@ class SerializeSimple : public SerializeBase
         return ret;
     }
 };
+
+template class XPLUGIN_API xp::xfactory<SerializeSimple, SerializeBase>;
 
 using factory_type = xp::xfactory<SerializeSimple, SerializeBase>;
 XPLUGIN_CREATE_XPLUGIN_FACTORY(factory_type);

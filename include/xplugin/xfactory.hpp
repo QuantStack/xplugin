@@ -14,7 +14,7 @@
 #include <memory>
 
 #define XPLUGIN_CREATE_XPLUGIN_FACTORY(FACTORY_TYPE)                                                                   \
-    extern "C" XPLUGIN_EXPORT typename FACTORY_TYPE::factory_base_type *create_plugin_factory()                        \
+    extern "C" XPLUGIN_API typename FACTORY_TYPE::factory_base_type *create_plugin_factory()                           \
     {                                                                                                                  \
         return new FACTORY_TYPE();                                                                                     \
     }

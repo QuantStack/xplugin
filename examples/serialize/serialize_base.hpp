@@ -4,7 +4,9 @@
 #include <string>
 #include <unordered_map>
 
-class SerializeBase
+#include <xplugin/xplugin_config.hpp>
+
+class XPLUGIN_API SerializeBase
 {
   public:
     virtual ~SerializeBase() = default;

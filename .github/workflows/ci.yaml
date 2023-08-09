@@ -53,26 +53,13 @@ jobs:
         shell: bash -l {0}
         run: |
             cd bld
-            ctest -V
+            ctest -V -R test
 
-      - name: Run examples
+      - name: Run C++ examples
         shell: bash -l {0}
         run: |
-            cd bld/examples/
-
-            pushd accumulator
-            ./main_accumulator .
-            popd
-
-            pushd serialize
-            ./main_serialize .
-            popd
-
-            pushd custom_factory_with_metadata
-            ./main_custom_factory_with_metadata .
-            popd
-
-
+            cd bld
+            ctest -V -R example
 
       - name: Install
         shell: bash -l {0}
@@ -123,7 +110,7 @@ jobs:
            -G Ninja ^
            -DCMAKE_BUILD_TYPE=Release ^
            -DXPLUGIN_BUILD_TESTS=ON ^
-           -DXPLUGIN_BUILD_EXAMPLES=OFF ^
+           -DXPLUGIN_BUILD_EXAMPLES=ON ^
            -DCMAKE_PREFIX_PATH="%CONDA_PREFIX%\Library" ^
            -DCMAKE_INSTALL_PREFIX="%CONDA_PREFIX%
           cmake --build . --config Release
@@ -132,7 +119,13 @@ jobs:
         shell: cmd /C CALL {0}
         run: |
           cd bld
-          ctest -V --config Release
+          ctest -V --config Release -R test
+
+      - name: Run C++ examples
+        shell: cmd /C CALL {0}
+        run: |
+          cd bld
+          ctest -V --config Release -R example
 
       - name: Install
         shell: cmd /C CALL {0}

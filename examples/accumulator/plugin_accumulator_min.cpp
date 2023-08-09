@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-class AccumulatorMin : public acc::AccumulatorBase
+class XPLUGIN_API AccumulatorMin : public acc::AccumulatorBase
 {
   public:
     AccumulatorMin() = default;

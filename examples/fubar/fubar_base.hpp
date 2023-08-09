@@ -4,9 +4,11 @@
 #include <string>
 #include <vector>
 
+#include <xplugin/xplugin_config.hpp>
+
 namespace fubar
 {
-class FubarBase
+class XPLUGIN_API FubarBase
 {
   public:
     virtual ~FubarBase()
