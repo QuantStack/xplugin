@@ -4,9 +4,11 @@
 #include <string>
 #include <vector>
 
+#include <xplugin/xplugin_config.hpp> // XPLUGIN_API
+
 namespace acc
 {
-class AccumulatorBase
+class XPLUGIN_API AccumulatorBase
 {
   public:
     virtual ~AccumulatorBase()

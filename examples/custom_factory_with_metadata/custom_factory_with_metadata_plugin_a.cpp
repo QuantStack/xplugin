@@ -3,7 +3,7 @@
 // for XPLUGIN_CREATE_XPLUGIN_FACTORY macro
 #include <xplugin/xfactory.hpp>
 
-class PluginA : public PluginBase
+class XPLUGIN_API PluginA : public PluginBase
 {
   public:
     PluginA() = default;
@@ -19,7 +19,7 @@ class PluginA : public PluginBase
     std::string m_b;
 };
 
-class PluginAFactory : public PluginFactoryBase
+class XPLUGIN_API PluginAFactory : public PluginFactoryBase
 {
   public:
     using factory_base_type = PluginFactoryBase;

@@ -20,5 +20,7 @@ class Foo : public fubar::FubarBase
     std::string name_;
 };
 
+template class XPLUGIN_API xp::xfactory<Foo, fubar::FubarBase, const std::string &>;
+
 using factory_type = xp::xfactory<Foo, fubar::FubarBase, const std::string &>;
 XPLUGIN_CREATE_XPLUGIN_FACTORY(factory_type);

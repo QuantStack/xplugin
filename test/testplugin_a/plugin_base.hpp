@@ -6,7 +6,7 @@
 #include <string>
 namespace plugin
 {
-class PluginBase
+class XPLUGIN_API PluginBase
 {
   public:
     virtual ~PluginBase() = default;
@@ -17,9 +17,6 @@ class PluginBase
     };
 };
 
-// all plugin instances expect to be constructed with the same arguments
-// in this case, an int and a string.
-using PluginFactoryBase = xp::xfactory_base<PluginBase, int, std::string>;
 }; // namespace plugin
 
 #endif // PLUGIN_BASE_HPP

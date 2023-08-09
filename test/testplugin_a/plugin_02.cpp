@@ -4,7 +4,7 @@
 // the base factory for the plugin
 #include <xplugin/xfactory.hpp>
 
-class Plugin02 : public plugin::PluginBase
+class XPLUGIN_API Plugin02 : public plugin::PluginBase
 {
   public:
     Plugin02(int a, std::string b)
@@ -21,6 +21,8 @@ class Plugin02 : public plugin::PluginBase
     int m_a;
     std::string m_b;
 };
+
+template class XPLUGIN_API xp::xfactory<Plugin02, plugin::PluginBase, int, std::string>;
 
 using factory_type = xp::xfactory<Plugin02, plugin::PluginBase, int, std::string>;
 XPLUGIN_CREATE_XPLUGIN_FACTORY(factory_type);
