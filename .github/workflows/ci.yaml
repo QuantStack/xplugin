@@ -119,13 +119,13 @@ jobs:
         shell: cmd /C CALL {0}
         run: |
           cd bld
-          ctest -V --config Release -R test
+          ctest -V --build-config Release -R test
 
       - name: Run C++ examples
         shell: cmd /C CALL {0}
         run: |
           cd bld
-          ctest -V --config Release -R example
+          ctest -V --build-config Release -R example
 
       - name: Install
         shell: cmd /C CALL {0}

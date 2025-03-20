@@ -49,10 +49,11 @@ message(STATUS "Building xplugin v${${PROJECT_NAME}_VERSION}")
 # Headers
 ################################################################
 set(XPLUGIN_HEADERS
-${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_config.hpp
-${XPLUGIN_INCLUDE_DIR}/xplugin/xshared_library.hpp
-${XPLUGIN_INCLUDE_DIR}/xplugin/xfactory.hpp
-${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_registry.hpp
+    ${XPLUGIN_INCLUDE_DIR}/xplugin/xfactory.hpp
+    ${XPLUGIN_INCLUDE_DIR}/xplugin/xlazy_shared_library_plugin_factory.hpp
+    ${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_config.hpp
+    ${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_registry.hpp
+    ${XPLUGIN_INCLUDE_DIR}/xplugin/xshared_library.hpp
 )
 
 ################################################################

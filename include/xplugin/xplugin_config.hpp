@@ -10,14 +10,13 @@
 #define XPLUGIN_CONFIG_HPP
 
 #ifdef _WIN32
-#ifdef XPLUGIN_EXPORTS
-#define XPLUGIN_API __declspec(dllexport)
+#    ifdef XPLUGIN_EXPORTS
+#        define XPLUGIN_API __declspec(dllexport)
+#    else
+#        define XPLUGIN_API __declspec(dllimport)
+#    endif
 #else
-#define XPLUGIN_API __declspec(dllimport)
-#endif
-
-#else
-#define XPLUGIN_API
+#    define XPLUGIN_API
 #endif
 
 #define XPLUGIN_VERSION_MAJOR 0

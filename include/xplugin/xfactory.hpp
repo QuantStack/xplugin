@@ -22,32 +22,40 @@
 namespace xp
 {
 
-template <class BASE_TYPE, class... ARGS>
-class xfactory_base
-{
-  public:
-    using base_type = BASE_TYPE;
-    virtual ~xfactory_base() = default;
-    virtual std::unique_ptr<base_type> create(ARGS...) = 0;
-};
+    template <class BASE_TYPE, class... ARGS>
+    class xfactory_base
+    {
+    public:
+        using base_type = BASE_TYPE;
+        
+        xfactory_base() = default;
+        virtual ~xfactory_base() = default;
 
-// default implementation of the factory
-template <class CONCRETE_TYPE, class BASE_TYPE, class... ARGS>
-class xfactory : public xfactory_base<BASE_TYPE, ARGS...>
-{
-  public:
-    using concrete_type = CONCRETE_TYPE;
-    using base_type = BASE_TYPE;
-    using factory_base_type = xfactory_base<BASE_TYPE, ARGS...>;
-    virtual ~xfactory() = default;
-    std::unique_ptr<base_type> create(ARGS... args) override;
-};
+        xfactory_base(const xfactory_base&) = delete;
+        xfactory_base& operator=(const xfactory_base&) = delete;
+        xfactory_base(xfactory_base&&) = delete;
+        xfactory_base& operator=(xfactory_base&&) = delete;
 
-template <class CONCRETE_TYPE, class BASE_TYPE, class... ARGS>
-auto xfactory<CONCRETE_TYPE, BASE_TYPE, ARGS...>::create(ARGS... args) -> std::unique_ptr<base_type>
-{
-    return std::make_unique<concrete_type>(args...);
-}
+        virtual std::unique_ptr<base_type> create(ARGS...) = 0;
+    };
+
+    // default implementation of the factory
+    template <class CONCRETE_TYPE, class BASE_TYPE, class... ARGS>
+    class xfactory : public xfactory_base<BASE_TYPE, ARGS...>
+    {
+    public:
+        using concrete_type = CONCRETE_TYPE;
+        using base_type = BASE_TYPE;
+        using factory_base_type = xfactory_base<BASE_TYPE, ARGS...>;
+        virtual ~xfactory() = default;
+        std::unique_ptr<base_type> create(ARGS... args) override;
+    };
+
+    template <class CONCRETE_TYPE, class BASE_TYPE, class... ARGS>
+    auto xfactory<CONCRETE_TYPE, BASE_TYPE, ARGS...>::create(ARGS... args) -> std::unique_ptr<base_type>
+    {
+        return std::make_unique<concrete_type>(args...);
+    }
 
 } // namespace xp
 
