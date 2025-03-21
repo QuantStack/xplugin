@@ -85,7 +85,7 @@ if(EMSCRIPTEN)
 
 
     set(EMS
-        "SHELL: -s EXTRA_EXPORTED_RUNTIME_METHODS=['FS','PATH']"
+        "SHELL: -s EXTRA_EXPORTED_RUNTIME_METHODS=['FS','PATH','loadDynamicLibrary']"
     )
     target_compile_options(xplugin_host INTERFACE ${EMS})
     target_link_options(xplugin_host INTERFACE ${EMS})
