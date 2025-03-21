@@ -175,7 +175,7 @@ jobs:
         shell: bash -l {0}
         run: |
           $MAMBA_EXE install  -c conda-forge -c https://repo.prefix.dev/emscripten-forge-dev \
-          emscripten_emscripten-wasm32
+          emscripten_emscripten-wasm32 --yes
 
       - name: install playwright
         shell: bash -l {0}
