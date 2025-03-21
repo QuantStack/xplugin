@@ -5,6 +5,7 @@
  *                                                                          *
  * The full license is in the file LICENSE, distributed with this software. *
  ****************************************************************************/
+
 #ifndef XPLUGIN_REGISTRY_HPP
 #define XPLUGIN_REGISTRY_HPP
 
@@ -17,10 +18,10 @@
 
 #include <xplugin/xlazy_shared_library_plugin_factory.hpp>
 #include <xplugin/xplugin_config.hpp>
+#include <xplugin/xplugin_util.hpp>
 
 namespace xp::detail
 {
-
     template <class FACTORY_BASE, bool THREAD_SAFE>
     class xplugin_registry_impl;
 
@@ -95,11 +96,15 @@ namespace xp::detail
         using const_iterator = xplugin_registry_iterator<self_type, typename storage_map_type::const_iterator>;
         using iterator = xplugin_registry_iterator<self_type, typename storage_map_type::iterator>;
 
-        xplugin_registry_impl(const std::filesystem::path &path,
-                                    const std::string &prefix = get_default_library_prefix(),
-                                    const std::string &extension = get_default_library_extension());
+        explicit xplugin_registry_impl(const std::filesystem::path& path,
+                                       const std::string& prefix = get_default_library_prefix(),
+                                       const std::string& extension = get_default_library_extension());
 
-        factory_base_type *operator[](const std::string &name);
+        template <class R, std::enable_if_t<xp::util::is_range_of_v<R, std::filesystem::path>, int> = 3>
+        explicit xplugin_registry_impl(R r,
+                                       const std::string& prefix = get_default_library_prefix());
+
+        factory_base_type* operator[](const std::string& name);
 
         std::size_t size() const;
         bool empty() const;
@@ -115,6 +120,8 @@ namespace xp::detail
         const_iterator cend() const;
 
     private:
+
+        void add_entry(const std::filesystem::path& path, const std::string& prefix);
 
         static std::string get_default_library_extension();
         static std::string get_default_library_prefix();
@@ -199,51 +206,51 @@ namespace xp::detail
     }
 
     // registry implementation
-    template <class FACTORY_BASE, bool THREAD_SAVE>
-    typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::iterator xplugin_registry_impl<FACTORY_BASE,
-                                                                                            THREAD_SAVE>::begin()
+    template <class FACTORY_BASE, bool THREAD_SAFE>
+    typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>::iterator xplugin_registry_impl<FACTORY_BASE,
+                                                                                            THREAD_SAFE>::begin()
     {
         return iterator(m_lazy_shared_lib_factories.begin());
     }
 
-    template <class FACTORY_BASE, bool THREAD_SAVE>
-    typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::iterator xplugin_registry_impl<FACTORY_BASE,
-                                                                                            THREAD_SAVE>::end()
+    template <class FACTORY_BASE, bool THREAD_SAFE>
+    typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>::iterator xplugin_registry_impl<FACTORY_BASE,
+                                                                                            THREAD_SAFE>::end()
     {
         return iterator(m_lazy_shared_lib_factories.end());
     }
 
     // const iterator
-    template <class FACTORY_BASE, bool THREAD_SAVE>
-    typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::const_iterator xplugin_registry_impl<
-        FACTORY_BASE, THREAD_SAVE>::begin() const
+    template <class FACTORY_BASE, bool THREAD_SAFE>
+    typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>::const_iterator xplugin_registry_impl<
+        FACTORY_BASE, THREAD_SAFE>::begin() const
     {
         return const_iterator(m_lazy_shared_lib_factories.cbegin());
     }
 
-    template <class FACTORY_BASE, bool THREAD_SAVE>
-    typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::const_iterator xplugin_registry_impl<
-        FACTORY_BASE, THREAD_SAVE>::end() const
+    template <class FACTORY_BASE, bool THREAD_SAFE>
+    typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>::const_iterator xplugin_registry_impl<
+        FACTORY_BASE, THREAD_SAFE>::end() const
     {
         return const_iterator(m_lazy_shared_lib_factories.cend());
     }
 
-    template <class FACTORY_BASE, bool THREAD_SAVE>
-    typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::const_iterator xplugin_registry_impl<
-        FACTORY_BASE, THREAD_SAVE>::cbegin() const
+    template <class FACTORY_BASE, bool THREAD_SAFE>
+    typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>::const_iterator xplugin_registry_impl<
+        FACTORY_BASE, THREAD_SAFE>::cbegin() const
     {
         return const_iterator(m_lazy_shared_lib_factories.cbegin());
     }
 
-    template <class FACTORY_BASE, bool THREAD_SAVE>
-    typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::const_iterator xplugin_registry_impl<
-        FACTORY_BASE, THREAD_SAVE>::cend() const
+    template <class FACTORY_BASE, bool THREAD_SAFE>
+    typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>::const_iterator xplugin_registry_impl<
+        FACTORY_BASE, THREAD_SAFE>::cend() const
     {
         return const_iterator(m_lazy_shared_lib_factories.cend());
     }
 
-    template <class FACTORY_BASE, bool THREAD_SAVE>
-    xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::xplugin_registry_impl(const std::filesystem::path &path,
+    template <class FACTORY_BASE, bool THREAD_SAFE>
+    xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>::xplugin_registry_impl(const std::filesystem::path &path,
                                                                             const std::string &prefix,
                                                                             const std::string &extension)
     {
@@ -252,27 +259,30 @@ namespace xp::detail
         {
             if (entry.path().extension() == extension)
             {
-                std::string name = entry.path().stem().string();
-
-                // remove prefix
-                if (name.substr(0, prefix.size()) == prefix)
-                {
-                    name = name.substr(prefix.size());
-                    m_lazy_shared_lib_factories.emplace(name, entry.path());
-                }
+                add_entry(entry.path(), prefix);
             }
         }
     }
 
-    template <class FACTORY_BASE, bool THREAD_SAVE>
-    bool xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::contains(const std::string &name) const
+    template <class FACTORY_BASE, bool THREAD_SAFE>
+    template <class R, std::enable_if_t<xp::util::is_range_of_v<R, std::filesystem::path>, int>>
+    xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>::xplugin_registry_impl(R r, const std::string& prefix)
+    {
+        for (const auto& entry: r)
+        {
+            add_entry(entry, prefix);
+        }
+    }
+    
+    template <class FACTORY_BASE, bool THREAD_SAFE>
+    bool xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>::contains(const std::string &name) const
     {
         return m_lazy_shared_lib_factories.find(name) != m_lazy_shared_lib_factories.end();
     }
 
-    template <class FACTORY_BASE, bool THREAD_SAVE>
-    typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::factory_base_type *xplugin_registry_impl<
-        FACTORY_BASE, THREAD_SAVE>::operator[](const std::string &name)
+    template <class FACTORY_BASE, bool THREAD_SAFE>
+    typename xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>::factory_base_type *xplugin_registry_impl<
+        FACTORY_BASE, THREAD_SAFE>::operator[](const std::string &name)
     {
         auto find_res = m_lazy_shared_lib_factories.find(name);
         if (find_res == m_lazy_shared_lib_factories.end())
@@ -282,20 +292,32 @@ namespace xp::detail
         return find_res->second.factory();
     }
 
-    template <class FACTORY_BASE, bool THREAD_SAVE>
-    std::size_t xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::size() const
+    template <class FACTORY_BASE, bool THREAD_SAFE>
+    std::size_t xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>::size() const
     {
         return m_lazy_shared_lib_factories.size();
     }
 
-    template <class FACTORY_BASE, bool THREAD_SAVE>
-    bool xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::empty() const
+    template <class FACTORY_BASE, bool THREAD_SAFE>
+    bool xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>::empty() const
     {
         return m_lazy_shared_lib_factories.empty();
     }
 
-    template <class FACTORY_BASE, bool THREAD_SAVE>
-    std::string xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::get_default_library_extension()
+    template <class FACTORY_BASE, bool THREAD_SAFE>
+    void xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>::add_entry(const std::filesystem::path& p, const std::string& prefix)
+    {
+        std::string name = p.stem().string();
+        // remove prefix
+        if (name.substr(0, prefix.size()) == prefix)
+        {
+            name = name.substr(prefix.size());
+            m_lazy_shared_lib_factories.emplace(name, p);
+        }
+    }
+
+    template <class FACTORY_BASE, bool THREAD_SAFE>
+    std::string xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>::get_default_library_extension()
     {
 #ifdef _WIN32
         return ".dll";
@@ -306,8 +328,8 @@ namespace xp::detail
 #endif
     }
 
-    template <class FACTORY_BASE, bool THREAD_SAVE>
-    std::string xplugin_registry_impl<FACTORY_BASE, THREAD_SAVE>::get_default_library_prefix()
+    template <class FACTORY_BASE, bool THREAD_SAFE>
+    std::string xplugin_registry_impl<FACTORY_BASE, THREAD_SAFE>::get_default_library_prefix()
     {
 #ifdef _WIN32
         return "";
