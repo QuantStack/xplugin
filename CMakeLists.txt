@@ -87,8 +87,8 @@ if(EMSCRIPTEN)
     set(EMS
         "SHELL: -s EXTRA_EXPORTED_RUNTIME_METHODS=['FS']"
     )
-    target_compile_options(xplugin_host PRIVATE ${EMS})
-    target_link_options(xplugin_host PRIVATE ${EMS})
+    target_compile_options(xplugin_host INTERFACE ${EMS})
+    target_link_options(xplugin_host INTERFACE ${EMS})
 
     # compiler flags
     set_target_properties(xplugin_host PROPERTIES COMPILE_FLAGS "-s MAIN_MODULE=1")
