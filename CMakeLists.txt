@@ -84,7 +84,7 @@ if(EMSCRIPTEN)
     # compiler flags
     set_target_properties(xplugin_host PROPERTIES COMPILE_FLAGS "-s MAIN_MODULE=1")
     set_target_properties(xplugin_plugin PROPERTIES COMPILE_FLAGS "-s SIDE_MODULE=1")
-    set_target_properties(xplugin_host PROPERTIES LINK_FLAGS "-s MAIN_MODULE=1")
+    set_target_properties(xplugin_host PROPERTIES LINK_FLAGS "-s MAIN_MODULE=1 -s \"EXTRA_EXPORTED_RUNTIME_METHODS=['FS']\"")
     set_target_properties(xplugin_plugin PROPERTIES LINK_FLAGS "-s SIDE_MODULE=1")
 endif()
 
