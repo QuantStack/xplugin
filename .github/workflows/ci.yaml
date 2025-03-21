@@ -151,9 +151,6 @@ jobs:
 
   emscripten:
     strategy:
-      matrix:
-        include:
-          - emscripten_version: 3.1.27
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
@@ -174,25 +171,19 @@ jobs:
       - name: install emscripten
         shell: bash -l {0}
         run: |
-          git clone https://github.com/emscripten-core/emsdk.git
-          cd emsdk
-          ./emsdk install ${{ matrix.emscripten_version }}
-          source ./emsdk_env.sh
+          $MAMBA_EXE install  -c conda-forge -c https://repo.prefix.dev/emscripten-forge-dev \
+          emscripten_emscripten-wasm32 --yes
 
-      #- name: install playwright
-      #  shell: bash -l {0}
-      #  run: |
-      #    playwright install
+      - name: install playwright
+        shell: bash -l {0}
+        run: |
+          playwright install
 
-      #- name: run emscripten tests
-      #  shell: bash -l {0}
-      #  run: |
-      #    cd  emsdk
-      #    ./emsdk activate ${{ matrix.emscripten_version }}
-      #    source ./emsdk_env.sh
-      #    cd ..
-      #    chmod +x ./test/emscripten/test_emscripten.sh
-      #    ./test/emscripten/test_emscripten.sh
+      - name: run emscripten tests
+        shell: bash -l {0}
+        run: |
+          chmod +x ./test/emscripten/test_emscripten.sh
+          ./test/emscripten/test_emscripten.sh
 
   docs:
     strategy:

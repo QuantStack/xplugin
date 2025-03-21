@@ -81,6 +81,11 @@ endif()
 # Flags
 ################################################################
 if(EMSCRIPTEN)
+    # extra flags to ensure runtime methods are exported
+    set(EMS"SHELL: -s EXTRA_EXPORTED_RUNTIME_METHODS=['FS','PATH','loadDynamicLibrary']")
+    target_compile_options(xplugin_host INTERFACE ${EMS})
+    target_link_options(xplugin_host INTERFACE ${EMS})
+
     # compiler flags
     set_target_properties(xplugin_host PROPERTIES COMPILE_FLAGS "-s MAIN_MODULE=1")
     set_target_properties(xplugin_plugin PROPERTIES COMPILE_FLAGS "-s SIDE_MODULE=1")
