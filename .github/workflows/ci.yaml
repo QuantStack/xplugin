@@ -174,25 +174,23 @@ jobs:
       - name: install emscripten
         shell: bash -l {0}
         run: |
-          git clone https://github.com/emscripten-core/emsdk.git
-          cd emsdk
-          ./emsdk install ${{ matrix.emscripten_version }}
+          $MAMBA_EXE create -n emsdk -c conda-forge -c https://repo.prefix.dev/emscripten-forge-dev \
+          emscripten_emscripten-wasm32
+
+      - name: install playwright
+        shell: bash -l {0}
+        run: |
+          playwright install
+
+      - name: run emscripten tests
+        shell: bash -l {0}
+        run: |
+          cd  emsdk
+          ./emsdk activate ${{ matrix.emscripten_version }}
           source ./emsdk_env.sh
-
-      #- name: install playwright
-      #  shell: bash -l {0}
-      #  run: |
-      #    playwright install
-
-      #- name: run emscripten tests
-      #  shell: bash -l {0}
-      #  run: |
-      #    cd  emsdk
-      #    ./emsdk activate ${{ matrix.emscripten_version }}
-      #    source ./emsdk_env.sh
-      #    cd ..
-      #    chmod +x ./test/emscripten/test_emscripten.sh
-      #    ./test/emscripten/test_emscripten.sh
+          cd ..
+          chmod +x ./test/emscripten/test_emscripten.sh
+          ./test/emscripten/test_emscripten.sh
 
   docs:
     strategy:

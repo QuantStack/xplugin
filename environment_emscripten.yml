@@ -6,4 +6,4 @@ channels:
 dependencies:
   - cmake
   - python
-  - microsoft::playwright
+  - microsoft::playwright <= 1.50
