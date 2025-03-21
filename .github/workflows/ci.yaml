@@ -174,7 +174,7 @@ jobs:
       - name: install emscripten
         shell: bash -l {0}
         run: |
-          $MAMBA_EXE create -n emsdk -c conda-forge -c https://repo.prefix.dev/emscripten-forge-dev \
+          $MAMBA_EXE install -n emsdk -c conda-forge -c https://repo.prefix.dev/emscripten-forge-dev \
           emscripten_emscripten-wasm32
 
       - name: install playwright
@@ -185,10 +185,6 @@ jobs:
       - name: run emscripten tests
         shell: bash -l {0}
         run: |
-          cd  emsdk
-          ./emsdk activate ${{ matrix.emscripten_version }}
-          source ./emsdk_env.sh
-          cd ..
           chmod +x ./test/emscripten/test_emscripten.sh
           ./test/emscripten/test_emscripten.sh
 
