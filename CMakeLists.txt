@@ -82,11 +82,7 @@ endif()
 ################################################################
 if(EMSCRIPTEN)
 
-
-
-    set(EMS
-        "SHELL: -s EXTRA_EXPORTED_RUNTIME_METHODS=['FS']"
-    )
+    set(EMS "SHELL: -s EXTRA_EXPORTED_RUNTIME_METHODS=['FS', 'PATH']")
     target_compile_options(xplugin_host INTERFACE ${EMS})
     target_link_options(xplugin_host INTERFACE ${EMS})
 
