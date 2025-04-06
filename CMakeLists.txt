@@ -12,6 +12,7 @@ project(xplugin)
 
 
 set(XPLUGIN_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(XPLUGIN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # cmake modules
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
@@ -55,6 +56,15 @@ set(XPLUGIN_HEADERS
     ${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_util.hpp
     ${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_registry.hpp
     ${XPLUGIN_INCLUDE_DIR}/xplugin/xshared_library.hpp
+    ${XPLUGIN_INCLUDE_DIR}/xplugin/xmagics.hpp
+    ${XPLUGIN_SOURCE_DIR}/os.hpp
+)
+
+################################################################
+# Source files
+################################################################
+set(XPLUGIN_SOURCES
+    ${XPLUGIN_SOURCE_DIR}/os.cpp
 )
 
 ################################################################
@@ -98,6 +108,8 @@ endif()
 
 set_property(TARGET xplugin PROPERTY CXX_STANDARD 17)
 target_compile_features(xplugin INTERFACE cxx_std_17)
+
+target_sources(xplugin PRIVATE ${XPLUGIN_SOURCES})
 
 target_include_directories(xplugin INTERFACE $<BUILD_INTERFACE:${XPLUGIN_INCLUDE_DIR}>
                                                          $<INSTALL_INTERFACE:include>)
