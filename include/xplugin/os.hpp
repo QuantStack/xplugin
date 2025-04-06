@@ -2,8 +2,8 @@
 #define XPLUGIN_OS_MAGIC_HPP
 
 #include <string>
-#include "../include/xplugin/xmagics.hpp"
-#include "../include/xplugin/xplugin_config.hpp"
+#include "xmagics.hpp"
+#include "xplugin_config.hpp"
 
 namespace xp
 {

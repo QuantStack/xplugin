@@ -57,7 +57,7 @@ set(XPLUGIN_HEADERS
     ${XPLUGIN_INCLUDE_DIR}/xplugin/xplugin_registry.hpp
     ${XPLUGIN_INCLUDE_DIR}/xplugin/xshared_library.hpp
     ${XPLUGIN_INCLUDE_DIR}/xplugin/xmagics.hpp
-    ${XPLUGIN_SOURCE_DIR}/os.hpp
+    ${XPLUGIN_INCLUDE_DIR}/xplugin/os.hpp # Updated path
 )
 
 ################################################################
